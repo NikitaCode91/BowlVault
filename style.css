@@ -1,0 +1,1362 @@
+/* 1. style.css */
+
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    color: #141414;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+}
+
+:root {
+    --clr-prim: #3d80ff;
+    --clr-sec: #ff5858;
+    --clr-bg-card: #fff;
+    --clr-bg-page: #fafafa;
+    --clr-text-muted: #6b6b6b;
+    --radius: 0.75rem;
+    --shadow: 0 2px 12px #699dfc;
+}
+
+/* Header & Nav Bar */
+
+header {
+  background: var(--clr-prim);
+  color: #fff;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border-bottom: 2px solid var(--clr-sec);
+}
+
+/* === Logo img === */
+
+.corner-logo {
+    position: absolute;
+    top: 2.5rem;
+    left: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid var(--clr-sec); 
+    filter: drop-shadow(0 0 5px #ff4b5c);
+    z-index: 1000;
+}
+
+.corner-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(0.9);
+}
+
+header h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.sub-title {
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+#title {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+/* Nav */
+
+nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    padding-left: 0.6rem;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+    padding: 0.25rem 0.5rem;
+    transition: opacity 0.2s ease;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 2px;
+    width: 100%;
+    background: var(--clr-sec);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: all 0.2s ease;
+}
+
+nav a:hover {
+    opacity: 0.9;
+}
+
+nav a:hover::after,
+nav a[aria-current="page"]::after {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Main Dashboard Grid */
+
+main.dashboard {
+    width: 95%;
+    max-width: 1100px;
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: min-content;
+    gap: 2rem;
+}
+
+/* Summary (Quick Stats) */
+.summary {
+    background: var(--clr-bg-card);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+}
+
+/* Summary List */
+.summary ul {
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+}
+
+.summary li {
+    font-weight: 500;  
+}
+
+.summary li span {
+  margin-left: 0.5rem; 
+}
+
+.summary span {
+    font-weight: 700;
+    color: var(--clr-prim);
+}
+
+/* Recent Games Section */
+.recent-games {
+    background: var(--clr-bg-card);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    grid-column: 1 / -1; /* full width */
+    margin-left: 4rem;
+}
+
+/* Recent Games Header */
+.recent-games h2 {
+    margin-bottom: 0.25rem;
+}
+
+.game-subhead {
+    display: flex;                 
+    justify-content: center;
+    text-align: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--card-bg);
+    font-weight: 600;            
+    gap: 4.5rem;
+    background-color: #c9d9f7;
+    border: 1px solid rgb(160, 160, 160);
+    border-radius: 10px 10px 10px;
+}
+
+/* Recent Games List */
+.recent-games ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Each game as a single row */
+.recent-games li {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Date · Ball · Lane · Score · Place */
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #f1f5ff;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    text-align: center;
+    align-items: center;
+}
+
+/* Recent Games text styling */
+.recent-games li span {
+    font-weight: 700;
+    color: var(--clr-prim);    
+}
+
+/* === Pink Recent games === */
+
+.everyday-pink span {
+  color: var(--accent-pink) !important;
+}
+
+
+/* === Clear games button === */
+
+/* Clear Button Container */
+.clear-btn-container {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+    margin-right: 8rem;
+    text-align: left; 
+}
+
+/* Clear Button */
+#clearRecentGames {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(90deg, #00c59a, #ff4b5c); 
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 8px #00c59a, 0 0 15px #ff4b5c;
+    transition: all 0.25s ease;
+    margin-left: 8rem;
+}
+
+#clearRecentGames:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px #00c59a, 0 0 25px #ff4b5c;
+}
+
+/* Motivational Quote / Daily Boost */
+.motivational-quote {
+    background: var(--clr-bg-card);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    grid-column: 1 / -1; /* full width */
+    margin: 2rem;
+}
+
+blockquote {
+    font-style: italic;
+    color: var(--clr-text-muted);
+    position: relative;
+    padding-left: 2rem;
+}
+
+blockquote::before {
+    content: "❝";
+    font-size: 2rem;
+    position: absolute;
+    left: -0.25rem;
+    top: -0.25rem;
+    color: var(--clr-sec);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: auto;
+    padding: 1rem 0;
+    font-size: 0.875rem;
+    color: var(--clr-text-muted);
+}
+
+/* Responsive Layout */
+@media (min-width: 600px) {
+    main.dashboard {
+        grid-template-columns: 1fr; /* keep single column, Recent Games full width */
+    }
+
+    /* Make summary span 2 cols */
+    .summary {
+        grid-column: span 2;
+    }
+}
+
+@media (min-width: 920px) {
+    main.dashboard {
+        grid-template-columns: 1fr; /* still single column layout */
+    }
+       .summary {
+        grid-column: span 3;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .summary ul {
+        display: flex;
+        gap: 2rem;
+    }
+}
+
+/* Small Enhancements */
+a,
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Responsive tweaks */
+@media (max-width: 500px) {
+    .recent-games li {
+        grid-template-columns: repeat(5, 1fr); /* still show in a row */
+        font-size: 0.70rem;
+    }
+
+    .game-subhead {
+        font-size: 0.75rem;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+
+
+/* === Scroll & Sizing ===*/
+
+/* Wrapper for Recent Games to make it scrollable */
+.recent-games-wrapper {
+    max-height: 300px; 
+    overflow-y: auto; 
+}
+
+/* Scrollbar styling for modern look */
+.recent-games-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.recent-games-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--clr-prim);
+    border-radius: 4px;
+}
+
+body.dark-mode .recent-games-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--clr-sec);
+    border-radius: 4px;
+}
+
+.recent-games-wrapper::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
+
+#gameList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; 
+    padding: 0.5rem 0; 
+}
+
+/* Dashboard flex for small screens */
+@media (max-width: 920px) {
+    main.dashboard {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .summary,
+    .recent-games {
+        margin-left: 0;
+    }
+}
+
+/* Quick Stats flex for small screens */
+@media (max-width: 600px) {
+    .summary ul {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .game-subhead {
+        flex-direction: row;
+        gap: 1rem;
+        font-size: 0.75rem;
+        padding: 0.20rem 0.5rem;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+
+
+
+
+
+/* === Dark Mode === */
+
+/* Title Neon glow in dark mode */
+body.dark-mode #myBallVaultTitle {
+  color: var(--clr-prim);
+  text-shadow:
+    0 0 6px var(--clr-prim),
+    0 0 15px var(--clr-prim),
+    0 0 20px var(--clr-sec);
+}
+
+/* Add Ball form wrapper - dark mode background & border */
+body.dark-mode .add-new-wrapper {
+  background: #00ffc8;
+  border: 2px dashed var(--clr-prim);
+  padding: 1rem;
+  border-radius: var(--radius);
+  box-shadow: 0 0 10px var(--clr-prim);
+  color: #ddd;
+}
+
+
+/* Dark mode toggle button */
+
+/* Neon toggle button container */
+.header-button-container {
+  position: relative;
+  left: 85%;
+  margin: 10px;
+}
+
+/* Neon toggle button */
+.neon-btn {
+  background: #121217;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.neon-btn:hover {
+  background: var(--clr-sec);
+  color: #111;
+  box-shadow:
+    0 0 10px var(--clr-sec),
+    0 0 18px var(--clr-sec),
+    0 0 25px var(--clr-prim);
+}
+
+/* Emoji inside the neon toggle button */
+.neon-btn .emoji {
+  display: inline-block;
+  font-size: 1.6rem;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.neon-btn.toggled .emoji {
+  transform: rotate(360deg) scale(1.2);
+  opacity: 0.8;
+}
+
+
+
+
+
+/* === Dark mode === */
+
+:root {
+  --bg: #121212;
+  --card-bg: #1a1a1a;
+  --accent: #00ffc8;
+  --accent-pink: #ff4b5c;
+  --accent-yellow: #fcd34d;
+  --text: #f5f5f5;
+  --subtext: #cccccc;
+  --radius: 1.25rem;
+  --shadow-dark: 0 1px 10px #03d3a6;
+}
+
+body.dark-mode {
+    background: #111;
+    color: #eee;
+}
+
+body.dark-mode header {
+    background: #222;
+    color: var(--accent);
+    box-shadow: var(--shadow-dark);
+    border-bottom: 2px solid var(--accent);
+}
+
+body.dark-mode #title {
+    text-shadow:
+        0 0 6px var(--accent),
+        0 0 15px var(--accent-pink),
+        0 0 20px var(--accent-pink);
+}
+
+/* Sut title */
+body.dark-mode .sub-title {
+  color: var(--clr-sec);
+}
+
+/* Nav */
+body.dark-mode nav ul {
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+body.dark-mode nav a {
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  padding: 0.4rem 0.6rem;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+body.dark-mode nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 100%;
+  background-color: var(--accent);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: right;
+}
+
+body.dark-mode nav a:hover,
+body.dark-mode nav a[aria-current="page"] {
+  color: var(--clr-sec);
+  text-shadow:
+    0 0 6px var(--clr-sec),
+    0 0 10px var(--clr-sec);
+}
+
+body.dark-mode nav a:hover::after,
+body.dark-mode nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* info boxes */
+
+body.dark-mode main.dashboard .summary,
+body.dark-mode main.dashboard .recent-games,
+body.dark-mode main.dashboard .motivational-quote {
+    background: #1a1a1a;
+    color: #eee;
+    box-shadow: var(--shadow-dark);
+}
+
+body.dark-mode .motivational-quote {
+  margin: 2rem;
+  background: #1a1a1a;
+  box-shadow: var(--shadow-dark);
+}
+
+body.dark-mode .recent-games li {
+    background: #252525;
+    color: #eee;
+}
+
+body.dark-mode .summary span,
+body.dark-mode .recent-games li span {
+    color: #00ffc8;
+}
+
+body.dark-mode blockquote {
+    color: #aaa;
+}
+
+body.dark-mode blockquote::before {
+    color: #f0f;
+}
+
+body.dark-mode footer {
+    color: #777;
+}
+
+body.dark-mode .game-subhead {
+    color: #c7c7c7;
+    background-color: #2c2c2c;
+    border: 1px solid var(--clr-text-muted);
+    border-radius: 10px 10px 10px;
+}
+
+/* Optional: Logo neon glow (if needed) */
+body.dark-mode .logo,
+body.dark-mode .corner-logo {
+  filter: drop-shadow(0 0 5px #0ff);
+  border: 2px solid var(--accent);
+}
+
+
+
+
+
+
+/* === Profile Circle Button === */
+
+#profile-circle {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid var(--clr-sec);
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  background-color: var(--bg-sec);
+  filter: drop-shadow(0 0 5px #ff4b5c);
+}
+
+#profile-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Fix for small screens */
+@media (max-width: 600px) {
+  #profile-circle {
+    width: 70px;  /* slightly bigger for mobile visibility */
+    height: 70px;
+  }
+
+  #profile-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* === Profile Modal Visibility === */
+.profile-modal.hidden {
+  display: none;
+}
+
+.profile-modal.active {
+  display: flex;
+}
+
+
+
+/* === Profile === */
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.profile-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 95%;
+  max-width: 520px;
+  max-height: 90vh;
+  background: #fff;
+  color: #222;
+  transform: translate(-50%, -50%);
+  border: 2px dashed var(--clr-prim);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  overflow-y: auto;
+  padding: 1.2rem 1.5rem 3.5rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.8rem;
+  z-index: 9999;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.profile-modal.active {
+  display: flex;
+}
+
+#profile-modal {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 1.2rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  color: var(--clr-prim);
+}
+
+.close-btn:hover {
+  transform: rotate(90deg);
+}
+
+/* Inline Fields is Ball Weight */
+.inline-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 4rem;
+  margin-bottom: 0.8rem;
+  margin-top: 0.8rem;
+  gap: 0.2rem;
+}
+
+.inline-field label {
+  font-size: 0.85rem;
+  flex: 1;
+  font-weight: 500;
+}
+
+.inline-field input {
+  flex: 2;
+  padding: 0.3rem 1rem;
+  font-size: 0.85rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+}
+
+#ball-weight {
+  width: 70px !important;
+  flex: 0 0 auto;
+  padding: 0.3rem;
+}
+
+/* Centered Labels */
+
+.handedness-label,
+.purpose-label {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin: 0.3rem 0;
+  color: #333;
+}
+
+/* Handedness Switch */
+.hand-switch {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.hand-switch input[type="radio"] {
+  display: none;
+}
+
+.hand-switch label {
+  flex: 1;
+  text-align: center;
+  background: #eee;
+  padding: 0.45rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: background 0.2s ease;
+}
+
+.hand-switch input[type="radio"]:checked + label {
+  background: var(--clr-prim);
+  color: #fff;
+  border-color: var(--clr-prim);
+}
+
+/* Purpose Buttons */
+.purpose-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  margin-top: 0.3rem;
+  margin-bottom: 2rem;
+}
+
+.tag {
+  background: #eee;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+}
+
+.tag:hover {
+  background: var(--clr-prim);
+  color: #fff;
+  border-color: var(--clr-prim);
+}
+
+.tag.selected {
+  background: var(--clr-sec);
+  color: #fff;
+  border-color: var(--clr-sec);
+  box-shadow: 0 0 6px var(--clr-sec);
+}
+
+/* center-labels */
+.center-labels {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+  font-weight: bold;
+}
+
+/* Profile Pic */
+.profile-pic-preview {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #bbb;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid var(--clr-prim);
+  box-shadow: 0 0 6px var(--clr-prim);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.profile-pic-preview:hover {
+  transform: scale(1.1);
+  border: 2px solid var(--clr-sec);
+  box-shadow: 0 0 8px var(--clr-sec);
+}
+
+/* Ball Row */
+
+.ball-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.form-label {
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.short-input {
+  flex: 2;
+  padding: 0.3rem 1rem;
+  font-size: 0.85rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+}
+
+.ball-row .inline-field {
+  flex: 1;
+  margin: 0;
+}
+
+.ball-row .inline-field input {
+  width: 80px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.ball-row label[for="fav-ball"] {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.fav-ball-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fav-ball-pic {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--clr-prim);
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.fav-ball-pic:hover {
+  transform: scale(1.1);
+  border: 2px solid var(--clr-sec);
+  box-shadow: 0 0 8px var(--clr-sec);
+}
+
+.ball-weight-group,
+.fav-ball-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* spacing between label and field/image */
+}
+
+/* Save Button */
+#save-profile {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.65rem;
+  background: #0070f3;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.25s ease;
+}
+
+#save-profile:hover {
+  background: var(--clr-sec);
+}
+
+/* Scroll Styling */
+.profile-modal::-webkit-scrollbar {
+  width: 8px;
+}
+.profile-modal::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+input:focus {
+  outline: none;
+  border: 2px solid #3d80ff; /* bright blue */
+  box-shadow: 0 0 3px #3d80ff;
+}
+
+input {
+  text-align: center;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+
+@media (max-width: 600px) {
+  #profile-circle {
+    width: 60px;
+    height: 60px;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  /* Smaller Logo */
+  .corner-logo {
+    top: 1rem;
+    left: 1rem;
+    height: 60px; 
+  }
+
+  .profile-modal {
+    width: 95%; 
+    padding: 1rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0.5rem;
+  }
+
+  .profile-content {
+    gap: 0.75rem;
+  }
+
+  .inline-field {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    margin-top: 1rem;
+  }
+
+  /* Ball Row */
+  .ball-row {
+    flex-direction: row;         /* weight + favorite ball side by side */
+    justify-content: flex-start;
+    gap: 1.5rem;                /* spacing between weight and ball */
+    margin-left: 0;
+  }
+
+  /* Ball weight group */
+  .ball-weight-group {
+    flex: 0 0 auto;             /* don’t stretch */
+  }
+
+  /* Favorite Ball group */
+  .fav-ball-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;               /* space between image and input */
+  }
+
+
+
+  /* Ball weight input */
+  #ball-weight {
+    width: 60px;                /* smaller input to fit neatly */
+    flex: 0 0 auto;
+  }
+
+  /* Favorite ball image circular */
+  .fav-ball-group img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    border: 2px solid var(--clr-prim);
+  }
+
+  button#save-profile {
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .inline-field:nth-of-type(7) { 
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem; 
+    width: auto;
+    margin-left: 1rem;  
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+}
+
+
+
+
+
+/* === DARK MODE FOR PROFILE MODAL === */
+
+body.dark-mode .profile-modal {
+  background: #1e1e1e;
+  color: #eee;
+  border-color: #00ffc8;
+  box-shadow: 0 0 20px #00000080;
+}
+
+body.dark-mode .inline-field input,
+body.dark-mode .short-input {
+  background: #2a2a2a;
+  color: #eee;
+  border: 1px solid #555;
+}
+
+body.dark-mode .inline-field input:focus,
+body.dark-mode .short-input:focus {
+  border-color: #00ffc8;
+  box-shadow: 0 0 4px #00ffc8;
+}
+
+body.dark-mode .hand-switch label {
+  background: #333;
+  color: #ccc;
+  border-color: #555;
+}
+
+body.dark-mode .hand-switch input[type="radio"]:checked + label {
+  background: #00ffc8;
+  color: #000;
+  border-color: #00ffc8;
+}
+
+body.dark-mode .tag {
+  background: #333;
+  color: #ccc;
+  border-color: #555;
+  box-shadow: 0 0 6px #00ffc8;
+}
+
+body.dark-mode .tag:hover,
+body.dark-mode .tag.selected {
+  background: #00ffc8;
+  color: #000;
+  border-color: #00ffc8;
+}
+
+body.dark-mode .profile-pic-preview,
+body.dark-mode .fav-ball-pic {
+  border-color: #00ffc8;
+  box-shadow: 0 0 6px #00ffc8;
+}
+
+body.dark-mode #save-profile {
+  background: #00ffc8;
+  color: #000;
+}
+
+body.dark-mode #save-profile:hover {
+  background: var(--clr-sec); /* optional: keep your alert red hover */
+  color: #fff;
+}
+
+body.dark-mode .handedness-label,
+body.dark-mode .purpose-label {
+  color: #ccc;
+}
+
+
+
+
+
+
+/* === Game Mode Colors === */
+
+
+.text-2v2 span {
+    color: #2da000 !important; 
+}
+
+.text-3v3 span {
+    color: #d18800 !important; 
+}
+
+.text-4v4 span {
+    color: #fd1616 !important; 
+}
+
+.text-practice span {
+    color: #e0405b !important;
+}
+
+/* === Buttons Container === */
+.game-sort {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    
+}
+
+/* === Base Button Styling === */
+.sort-btn {
+    padding: 0.4rem 0.8rem;
+    min-width: 75px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    font-size: 0.90rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 4px 6px #0000001a;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* --- Active / Clicked Btn --- */
+.sort-btn.active { 
+    border: 2px solid #fff;
+    box-shadow: 0 0 8px #fff;
+}
+
+/* --- Light Mode Color-Coded Buttons --- */
+.sort-btn[data-mode="all"]       {
+   background-color: #1e90ff; 
+}
+
+.sort-btn[data-mode="2v2"]       {
+   background-color: green; 
+}
+
+.sort-btn[data-mode="3v3"]       {
+   background-color: orange; 
+}
+
+.sort-btn[data-mode="4v4"]       {
+   background-color: red; 
+}
+
+.sort-btn[data-mode="practice"]  {
+   background-color: #e0405b; 
+}
+
+
+/* === Dark Mode === */
+body.dark-mode .sort-btn {
+    background-color: #333;
+    color: #eee;
+}
+
+body.dark-mode .sort-btn[data-mode="all"]       {
+  background-color: #1e90ff;   
+}
+
+body.dark-mode .sort-btn[data-mode="2v2"]       {
+  background-color: #2a7f2a;   
+}
+
+body.dark-mode .sort-btn[data-mode="3v3"]       {
+  background-color: #e69500;   
+}
+
+body.dark-mode .sort-btn[data-mode="4v4"]       {
+  background-color: #b22222;   
+}
+
+body.dark-mode .sort-btn[data-mode="practice"]  {
+  background-color: #e0405b;   
+}
+
+
+
+/* --- Dark Mode Hover Effect (keep same colors) --- */
+body.dark-mode .sort-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px #0000004d;
+}
+
+.sort-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px #0000004d;
+}
+
+@media (max-width: 600px) {
+    .game-sort {
+        gap: 0.25rem;
+        justify-content: center;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 0 0.5rem;
+    }
+
+    .sort-btn {
+        padding: 0.3rem 0.6rem;
+        min-width: 60px;
+        font-size: 0.85rem;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* === Hover / Hold Delete Feedback === */
+.recent-games li.delete-hold {
+    position: relative;
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(255,0,0,0.5);
+    border: 2px solid #ff0000;
+}
+
+/* Delete confirmation popup */
+.delete-confirm {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border: 2px solid #ff4b5c;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    z-index: 50;
+    display: flex;
+    gap: 0.5rem;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(255,0,0,0.6);
+}
+
+/* Sort button active state */
+.sort-btn.active {
+    background-color: var(--clr-sec);
+    color: #fff;
+    box-shadow: 0 0 8px var(--clr-sec);
+}
+
+

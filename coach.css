@@ -1,0 +1,575 @@
+/* === Base Reset (inherits from global style.css) === */
+
+:root {
+  --clr-prim: #3d80ff;
+  --clr-sec: #ff5858;
+  --clr-bg-card: #fff;
+  --clr-bg-page: #fafafa;
+  --clr-text-muted: #6b6b6b;
+  --radius: 0.75rem;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --tip-bg-default: #f0f0f0;  /* light gray */
+  --tip-bg-hover: #ff5858;    /* pink */
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--clr-bg-page);
+  color: #141414;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* === Header and Navigation === */
+header {
+  position: relative;
+  padding-top: 2.5rem;
+  text-align: center;
+  background: var(--clr-prim);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow);
+  border-bottom: 2px solid var(--clr-sec);
+}
+
+header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.sub-title {
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding-left: 0.5rem;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  padding: 0.25rem 0.5rem;
+  transition: opacity 0.2s ease;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background: var(--clr-sec);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: all 0.2s ease;
+}
+
+nav a:hover {
+  opacity: 0.9;
+}
+
+nav a:hover::after,
+nav a[aria-current="page"]::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+header h3.subtitle {
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--clr-bg-page);           
+  margin-top: 1rem;  
+  margin-bottom: 1.3rem;  
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* === Main Container === */
+#coach-container {
+  width: 95%;
+  max-width: 1000px;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* === Step Card Style === */
+.step,
+#tips-section {
+  background: var(--clr-bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* === Section Headings === */
+.step h2,
+#tips-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+  color: var(--clr-prim);
+}
+
+/* === Button Group === */
+.choice-group {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* === Choice Buttons === */
+.choice-btn {
+  background: var(--clr-prim);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: background 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.choice-btn:hover {
+  background: var(--clr-sec);
+  transform: scale(1.05);
+}
+
+/* === Tips Section === */
+#tips-section {
+  animation: fadeInUp 0.4s ease-in-out;
+}
+
+/* === Category Cards Container === */
+#categories-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* === Category Card === */
+.category-card {
+  background: var(--clr-bg-card);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* stronger shadow */
+  overflow: hidden;
+  margin-bottom: 1.5rem; /* space between cards */
+  transition: box-shadow 0.3s ease;
+  cursor: pointer;
+  padding: 0; /* remove inner padding here, do padding inside sections */
+  display: flex;
+  flex-direction: column;
+}
+
+.category-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* === Category Header === */
+.category-header {
+  background: var(--clr-prim);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
+/* Prevent category title text from rotating */
+.category-header span:first-child {
+  display: inline-block;
+  transform: none !important;
+}
+
+/* Arrow rotation on open */
+.category-card.open .category-header span:last-child {
+  transform: rotate(90deg);
+  transition: transform 0.3s ease;
+}
+
+/* === Category Content (Tips) === */
+.category-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem 2rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #ddd;
+  background: #bbd1fd;
+  display: none;
+  flex-wrap: wrap;
+  justify-content: center; 
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+.category-card.open .category-content {
+  display: flex;
+  animation: bounceIn 0.3s ease forwards;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+}
+
+/* === Individual Tip Cards === */
+.tip-card {
+  background: var(--tip-bg-default);
+  color: #141414;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  flex: 1 1 250px;
+  max-width: 350px;
+  margin: 0.75rem 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  cursor: default;
+  user-select: none;
+  transition: background 0.3s ease, color 0.3s ease;
+  position: relative;
+}
+
+.tip-card:nth-child(odd) {
+  transform: translateX(-10%);
+}
+
+.tip-card:nth-child(even) {
+  transform: translateX(10%);
+}
+
+.tip-card:hover {
+  background: var(--tip-bg-hover);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(255, 88, 88, 0.5);
+}
+
+/* === Pagination Controls === */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pagination-controls button {
+  background: var(--clr-sec);
+  border: none;
+  color: white;
+  font-weight: 700;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pagination-controls button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background: #ff3b3b;
+}
+
+/* === choice-btn === */
+.choice-btn.selected {
+  box-shadow: 0 0 12px var(--clr-sec);
+  transform: scale(1.05);
+  background: var(--clr-sec);
+  color: #111;
+}
+
+/* === Hidden Utility === */
+.hidden {
+  display: none;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+  .choice-btn {
+    width: 100%;
+  }
+
+  #coach-container {
+    gap: 1.5rem;
+  }
+
+  .category-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+/* === Dark mode Toggle button === */
+
+
+body.dark-mode {
+  background: #121217;
+}
+
+/* Neon toggle button container */
+.header-button-container {
+  position: relative;
+  left: 85%;
+  margin: 10px;
+}
+
+/* Neon toggle button */
+.neon-btn {
+  background: #121217;
+  border: none;
+  border-radius: 50%;
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.neon-btn:hover {
+  background: var(--clr-sec);
+  color: #111;
+  box-shadow:
+    0 0 10px var(--clr-sec),
+    0 0 18px var(--clr-sec),
+    0 0 25px var(--clr-prim);
+}
+
+/* Emoji inside the neon toggle button */
+.neon-btn .emoji {
+  display: inline-block;
+  font-size: 1.6rem;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.neon-btn.toggled .emoji {
+  transform: rotate(360deg) scale(1.2);
+  opacity: 0.8;
+}
+
+
+
+/* === Dark Mode === */
+
+
+.dark-mode {
+  --clr-prim: #00ffc8;
+  --clr-sec: #ff4b5c;
+  --clr-bg-card: #1a1a1a;
+  --clr-bg-page: #121212;
+  --clr-text-muted: #cccccc;
+  --radius: 0.75rem;
+  --shadow: 0 0 12px #00ffc880;
+  --tip-bg-default: #2a2a2a;
+  --tip-bg-hover: var(--clr-sec);
+}
+
+/* Page Background & Text */
+body.dark-mode {
+  background: var(--clr-bg-page);
+  color: #f5f5f5;
+}
+
+/* Header */
+body.dark-mode header {
+  background: #1f1f1f;
+  border-bottom: 2px solid var(--clr-prim);
+  box-shadow: var(--shadow);
+}
+
+body.dark-mode header h1 {
+  color: var(--clr-prim);
+  text-shadow:
+    0 0 6px var(--clr-prim),
+    0 0 15px var(--clr-sec),
+    0 0 20px var(--clr-sec);
+}
+
+body.dark-mode .sub-title {
+  color: var(--clr-sec);
+}
+
+/* === Nav Links (Dark Mode) === */
+body.dark-mode nav a {
+  color: var(--clr-text-muted);
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  padding: 0.4rem 0.6rem;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+body.dark-mode nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 100%;
+  background-color: var(--clr-prim);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: right;
+}
+
+body.dark-mode nav a:hover,
+body.dark-mode nav a[aria-current="page"] {
+  color: var(--clr-sec);
+  text-shadow:
+    0 0 6px var(--clr-sec),
+    0 0 10px var(--clr-sec);
+}
+
+body.dark-mode nav a:hover::after,
+body.dark-mode nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+body.dark-mode header h3.subtitle {
+  color: var(--clr-sec);           
+}
+
+/* Step & Tips Section */
+body.dark-mode .step,
+body.dark-mode #tips-section {
+  background: var(--clr-bg-card);
+  box-shadow: var(--shadow);
+}
+
+body.dark-mode .step h2,
+body.dark-mode #tips-section h2 {
+  color: var(--clr-prim);
+}
+
+/* Choice Buttons */
+body.dark-mode .choice-btn {
+  background: var(--clr-prim);
+  color: #111;
+}
+
+body.dark-mode .choice-btn:hover {
+  background: var(--clr-sec);
+  color: #111;
+  box-shadow: 0 0 16px var(--clr-sec);
+}
+
+/* Category Cards */
+body.dark-mode .category-card {
+  background: var(--clr-bg-card);
+  box-shadow: var(--shadow);
+}
+
+body.dark-mode .category-header {
+  background: var(--clr-prim);
+  color: #111;
+}
+
+body.dark-mode .category-content {
+  background: #222;
+  border-top: 1px solid var(--clr-prim);
+}
+
+/* Tip Cards */
+body.dark-mode .tip-card {
+  background: var(--tip-bg-default);
+  color: var(--clr-text-muted);
+  box-shadow: var(--shadow);
+}
+
+body.dark-mode .tip-card:hover {
+  background: #c54a4a;
+  color: #fff;
+  box-shadow:
+    0 0 10px var(--clr-sec),
+    0 0 18px var(--clr-sec),
+    0 0 25px var(--clr-prim);
+}
+
+/* Pagination Buttons */
+body.dark-mode .pagination-controls button {
+  background: var(--clr-sec);
+}
+
+body.dark-mode .pagination-controls button:hover:not(:disabled) {
+  background: #ff3b3b;
+}
+
+body.dark-mode .pagination-controls button:disabled {
+  background: #555;
+  color: #999;
+}

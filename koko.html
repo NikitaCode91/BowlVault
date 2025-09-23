@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Koko's Shop</title>
+  <link rel="stylesheet" href="koko.css">
+  <script src="koko.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+</head>
+<body>
+
+  <header class="koko-header">
+    <div class="header-title">
+      <h1>Koko's Shop</h1>
+      <p class="sub-title">Discover your next perfect ball - stylish, powerful, unforgettable.🔮</p>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="myballs.html">Ball Vault</a></li>       
+        <li><a href="add.html">Add Game</a></li>
+        <li><a href="coach.html">Coach & Tips</a></li>
+        <li><a href="koko.html" class="koko" aria-current="page">Koko's Shop</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="header-button-container">
+    <button id="theme-toggle" class="neon-btn" aria-label="Toggle dark/light mode">
+      <span class="emoji">🌙</span>
+    </button>
+  </div>
+
+  <div class="shop-grid">
+    <article class="shop-card">
+      <div class="ball-photo-wrap">
+        <img src="/images/Stealth-mode.jpg" alt="Stealth Mode" class="ball-photo" />
+      </div>  
+      <div class="card-content">
+        <h3 class="card-title">Stealth Mode</h3>
+        <p class="card-price">R1 899.00</p>
+        <p class="card-desc">💣 The Stealth Mode by Track is a strong solid reactive ball,
+          featuring the Track Stealth core wrapped in the HK22 base with the QR-9 Solid coverstock — making
+          it one of Track's most aggressive and oil-hungry balls.</p>
+      </div>
+      <div class="card-footer">
+        <div class="social">
+          <button class="like-btn" aria-label="Like this item" data-id="Stealth-mode">
+            <i class="fa-solid fa-heart"></i>
+            <span class="like-count">389</span>
+          </button>
+            <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="pinterest"><i class="fab fa-pinterest-p"></i></a>
+            <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card">
+      <div class="ball-photo-wrap">
+        <img src="/images/Ultimate-Defender.jpg" alt="Ultimate Defender" class="ball-photo" />
+      </div>      
+      <div class="card-content">
+        <h3 class="card-title">Ultimate Defender</h3>
+        <p class="card-price">R1 599.00</p>
+        <p class="card-desc">🛡️ The Ultimate Defender features the A.C.T. 3.0 Hybrid coverstock, which gives it a
+          controlled but strong mid-lane read. This makes it great for medium to heavy oil conditions, offering a
+          smooth, predictable arc rather than a snappy hook - ideal when you want stability and control rather
+          than violent backend motion.</p>
+      </div>
+      <div class="card-footer">
+        <div class="social">
+          <button class="like-btn" aria-label="Like this item" data-id="Ultimate Defender">
+            <i class="fa-solid fa-heart"></i>
+            <span class="like-count">212</span>
+          </button>
+          <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="pinterest"><i class="fab fa-pinterest-p"></i></a>
+          <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card">
+      <div class="ball-photo-wrap">
+        <img src="/images/hazmat.jpg" alt="Hazmat" class="ball-photo" />
+      </div>  
+      <div class="card-content">
+        <h3 class="card-title">Hazmat</h3>
+        <p class="card-price">R1 299.00</p>
+        <p class="card-desc">🧪 The Hazmat is known for its explosive backend reaction,
+          thanks to its HK22 base coverstock - a high-performance formula that creates
+          more friction downlane. This means it grips the lane strongly in the backend
+          and makes a sharp, angular turn toward the pins, making it a favorite for bowlers who
+          like aggressive motion.</p>
+      </div>
+      <div class="card-footer">
+        <div class="social">
+          <button class="like-btn" aria-label="Like this item" data-id="Hazmat">
+            <i class="fa-solid fa-heart"></i>
+            <span class="like-count">128</span>
+          </button>    
+          <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="pinterest"><i class="fab fa-pinterest-p"></i></a>
+          <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card">
+      <div class="ball-photo-wrap">
+        <img src="/images/Archive.jpg" alt="Archive" class="ball-photo" />
+      </div> 
+      <div class="card-content">
+        <h3 class="card-title">Archive</h3>
+        <p class="card-price">R1 499.00</p>
+        <p class="card-desc">📚 The Archive Solid features the eTrax™ Plus Solid coverstock, paired with the low
+          RG Rondure™ core — a combination designed for strong mid-lane traction and smooth, continuous motion
+          through the backend.</p>
+      </div>
+      <div class="card-footer">
+        <div class="social">
+          <button class="like-btn" aria-label="Like this item" data-id="Archive">
+            <i class="fa-solid fa-heart"></i>
+            <span class="like-count">172</span>
+          </button>       
+          <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="pinterest"><i class="fab fa-pinterest-p"></i></a>
+          <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card">
+      <div class="ball-photo-wrap">
+        <img src="/images/Venom.jpg" alt="Blue Coral Venom" class="ball-photo" />
+      </div>      
+      <div class="card-content">
+        <h3 class="card-title">Blue Coral Venom</h3>
+        <p class="card-price">R1 749.00</p>
+        <p class="card-desc">🌊🐍 The Blue Coral Venom is a hybrid in the Venom line, combining the best
+          of both solid and pearl coverstocks. It uses the Leverage MFS Hybrid coverstock and the Gear core,
+          which makes it stronger than the Venom Shock but still super controllable.</p>
+      </div>
+      <div class="card-footer">
+        <div class="social">
+          <button class="like-btn" aria-label="Like this item" data-id="Blue Coral Venom">
+            <i class="fa-solid fa-heart"></i>
+            <span class="like-count">345</span>
+          </button>        
+          <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="pinterest"><i class="fab fa-pinterest-p"></i></a>
+          <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card">
+      <div class="ball-photo-wrap">
+        <img src="/images/Blizzard Glacier.jpg" alt="Blizzard Glacier" class="ball-photo" />
+      </div>     
+      <div class="card-content">
+        <h3 class="card-title">Blizzard Glacier</h3>
+        <p class="card-price">R1 899.00</p>
+        <p class="card-desc">🌬️ The Blizzard Glacier by 900 Global features the S70 Pearl Reactive coverstock
+          and the Shrapnel 2.0 symmetric core, making it a clean and snappy ball for medium oil conditions.</p>
+      </div>
+      <div class="card-footer">
+        <div class="social">
+          <button class="like-btn" aria-label="Like this item" data-id="Blizzard Glacier">
+            <i class="fa-solid fa-heart"></i>
+            <span class="like-count">389</span>
+          </button>        
+          <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="pinterest"><i class="fab fa-pinterest-p"></i></a>
+          <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card">
+      <div class="ball-photo-wrap">
+        <img src="/images/Hammer.jpg" alt="Nu Blue Hammer" class="ball-photo" />
+      </div>     
+      <div class="card-content">
+        <h3 class="card-title">Nu Blue Hammer</h3>
+        <p class="card-price">R1 899.00</p>
+        <p class="card-desc">🔨 The NU Blue Hammer looks like a urethane ball, but it's not. It uses a reactive
+          cover disguised as urethane, designed to mimic the smooth, early-rolling shape of urethane without the
+          typical limitations.</p>
+      </div>
+      <div class="card-footer">
+        <div class="social">
+          <button class="like-btn" aria-label="Like this item" data-id="Nu Blue Hammer">
+            <i class="fa-solid fa-heart"></i>
+            <span class="like-count">389</span>
+          </button>        
+          <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="pinterest"><i class="fab fa-pinterest-p"></i></a>
+          <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="shop-card">
+      <div class="ball-photo-wrap">
+        <img src="/images/8-Ball.jpg" alt="8 Ball" class="ball-photo"/>
+      </div>     
+      <div class="card-content">
+        <h3 class="card-title">8 Ball</h3>
+        <p class="card-price">R1 899.00</p>
+        <p class="card-desc">🎱 The Radical 8 Ball is a solid reactive ball with a symmetrical core,
+          designed for smooth, benchmark-style motion. It uses the Ai-27 Solid coverstock, giving it
+          strong traction in the mid-lane and a predictable arc on the backend.</p>
+      </div>
+      <div class="card-footer">
+        <div class="social">
+          <button class="like-btn" aria-label="Like this item" data-id="8 Ball">
+            <i class="fa-solid fa-heart"></i>
+            <span class="like-count">389</span>
+          </button>        
+          <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="pinterest"><i class="fab fa-pinterest-p"></i></a>
+          <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <footer class="colorful-footer">
+    <div class="footer-row">
+      <div class="footer-column">
+        <h4>Contact Us</h4>
+        <p><strong>Alan (Sales):</strong><br> +27 82 4567</p>
+        <p><strong>Gareth (Measurements):</strong><br> +27 83 987 6543</p>
+      </div>
+      <div class="footer-column">
+        <h4>Koko's Promise</h4>
+        <p>"Precision fit, power roll - because every pin counts."</p>
+        <p>&copy; 2025 Koko's Shop. All rights reserved.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Stay Connected</h4>
+        <p>
+          <a href="#">Facebook</a>
+          <a href="#">Instagram</a>
+          <a href="#">Email Us</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BowlVault - Coaching</title>
+
+  <link rel="stylesheet" href="coach.css" />
+  <script src="coach.js" defer></script>
+</head>
+
+<body>
+
+  <!-- Header with Navigation -->
+  <header>
+    <h1 id="title">Tips & Mentorship</h1>
+    <h3 class="sub-title">Guiding your perfect strike, one tip at a time...📈</h3>
+    <nav>
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="myballs.html">Ball Vault</a></li>       
+        <li><a href="add.html">Add Game</a></li>
+        <li><a href="coach.html" class="active" aria-current="page">Coach & Tips</a></li>
+        <li><a href="koko.html" class="koko">Koko's Shop</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="header-button-container">
+    <button id="theme-toggle" class="neon-btn" aria-label="Toggle dark/light mode">
+      <span class="emoji">🌙</span>
+    </button>
+  </div>
+
+  <!-- Main Coaching Section -->
+  <main id="coach-container">
+
+    <!-- Step 1: Select Bowling Hand -->
+    <section id="step-1" class="step">
+      <h2>What's your bowling hand?</h2>
+      <div class="choice-group">
+        <button class="choice-btn" data-hand="left">🤚 Lefty</button>
+        <button class="choice-btn" data-hand="right">✋ Righty</button>
+      </div>
+    </section>
+
+    <!-- Step 2: Select Bowling Style -->
+    <section id="step-2" class="step hidden">
+      <h2>What's your bowling style?</h2>
+      <div class="choice-group">
+        <button class="choice-btn" data-style="1-handed">👆 One - Handed</button>
+        <button class="choice-btn" data-style="2-handed">✌️ Two - Handed</button>
+      </div>
+    </section>
+
+    <!-- Coaching Tips Section -->
+    <section id="tips-section" class="hidden">
+      <h2>🏆 Your Coaching Tips</h2>
+      <div id="categories-container">
+        <!-- Category cards inserted here by JS -->
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BowlVault - dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+
+    <!-- === To Work on Phone === -->
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<header>
+    <img src="/images/Logo.jpg" alt="Logo" class="corner-logo">
+    <h1 id="title">BowlVault!</h1>
+    <p class="sub-title">Your stats await.📊</p>
+    
+    <nav>
+        <ul>
+            <li><a href="index.html" aria-current="page">Dashboard</a></li>
+            <li><a href="myballs.html">Ball Vault</a></li>               
+            <li><a href="add.html">Add Game</a></li>
+            <li><a href="coach.html">Coach & Tips</a></li>
+            <li><a href="koko.html" class="koko">Koko's Shop</a></li>
+        </ul>
+       <div id="profile-circle" class="profile"></div> 
+    </nav> 
+</header>
+
+<div class="header-button-container">
+    <button id="theme-toggle" class="neon-btn" aria-label="Toggle dark/light mode">
+        <span class="emoji">🌙</span>
+    </button>
+</div>
+
+<main class="dashboard">
+    <section class="summary">
+        <h2>🏆 Quick Stats</h2>
+        <ul>
+            <li>Games Played: <span id="gamesPlayed">0</span></li>
+            <li>High Score: <span id="highScore">0</span></li>
+            <li>Favorite Ball: <span id="favoriteBall">None</span></li>
+        </ul>
+    </section>
+
+    <section class="recent-games">
+        <h2>📥 Recent Games</h2>
+
+        <!-- Sort/filter buttons -->
+        <div class="game-sort">
+            <button class="sort-btn" data-mode="all">All</button>
+            <button class="sort-btn" data-mode="2v2">2v2</button>
+            <button class="sort-btn" data-mode="3v3">3v3</button>
+            <button class="sort-btn" data-mode="4v4">4v4</button>
+            <button class="sort-btn" data-mode="practice">Practice</button>
+        </div>
+
+        <small class="game-subhead">
+          <span>Date</span>
+          <span>•</span>
+          <span>Ball</span>
+          <span>•</span>
+          <span>Lane</span>
+          <span>•</span>
+          <span>Score</span>
+          <span>•</span>
+          <span>Place</span>
+        </small>   
+
+        <!-- Scrollable wrapper for games -->
+        <div class="recent-games-wrapper">
+            <ul id="gameList">
+                <!-- JS will add games here -->
+            </ul>
+        </div>
+        
+    </section>        
+</main>
+
+<div class="clear-btn-container">
+    <button id="clearRecentGames">Clear Stats & Recent Games</button>
+</div>
+
+<section class="motivational-quote">
+    <h2>🔥 Daily Boost</h2>
+    <blockquote id="quote">
+        "Hard work beats talent when talent doesn't work hard."
+    </blockquote>
+</section>   
+
+<footer>
+    <p>&copy; 2025 Your Bowling Journey</p>
+</footer>
+
+
+
+<!-- === Profile Modal === -->
+
+<div id="profile-modal" class="profile-modal hidden">
+  <div class="profile-content">
+    <span class="close-btn" id="close-btn">👋</span>
+
+    <div id="profile-pic-preview" class="profile-pic-preview" title="Click to change">
+      <img id="profile-pic-img">
+    </div>
+    <input type="file" id="profile-pic" accept="image/*" style="display: none;">
+
+    <div class="inline-field">
+      <label for="first-name">First Name:</label>
+      <input type="text" id="first-name">
+    </div>
+    <div class="inline-field">
+      <label for="surname">Surname:</label>
+      <input type="text" id="surname">
+    </div>
+    <div class="inline-field">
+      <label for="gamer-name">Gamer Name:</label>
+      <input type="text" id="gamer-name">
+    </div>
+
+    <label class="center-labels">Handedness:</label>
+    <div class="hand-switch">
+      <input type="radio" id="hand-1-left" name="handed" value="1L"><label for="hand-1-left">✋</label>
+      <input type="radio" id="hand-1-right" name="handed" value="1R"><label for="hand-1-right">🤚</label>
+      <input type="radio" id="hand-2-left" name="handed" value="2L"><label for="hand-2-left">✋-🤲</label>
+      <input type="radio" id="hand-2-right" name="handed" value="2R"><label for="hand-2-right">🤲-🤚</label>
+    </div>
+
+    <label class="center-labels">Playing Purpose:</label>
+    <div class="purpose-options">
+      <button class="tag" data-value="Fun">Just for Fun</button>
+      <button class="tag" data-value="League">League</button>
+      <button class="tag" data-value="Practice">Practice</button>
+      <button class="tag" data-value="Tournament">Tournaments</button>
+    </div>
+    
+    <div class="inline-field fav-ball-name-field">
+      <label for="fav-ball-name">Favorite Ball Name:</label>
+      <input type="text" id="fav-ball-name" class="fav-input">
+    </div>
+
+    <div class="ball-row">
+      <div class="ball-weight-group">
+        <label for="ball-weight" class="form-label">Ball Weight (lbs):</label>
+        <input type="number" id="ball-weight" class="short-input" />
+      </div>
+
+      <div class="fav-ball-group">
+        <label for="fav-ball" class="form-label">Favorite Ball:</label>
+        <img src="path/to/ball-image.png" class="fav-ball-pic" id="fav-ball">
+        <input type="file" id="fav-ball-img" accept="image/*" style="display: none;">
+      </div>
+    </div>
+
+    <button id="save-profile">Save</button>
+  </div>
+</div>
+
+
+<!-- === To Work on Phone === -->
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registered!', reg))
+        .catch(err => console.log('Service Worker failed:', err));
+    });
+  }
+</script>
+
+</body>
+</html>
+
