@@ -7,7 +7,9 @@ const assetsToCache = [
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
-  "./images/logo.png"      
+  "./images/logo.png", 
+  "./images/8-Ball.jpg",
+  "./images/Archive.jpg"    
 ];
 
 self.addEventListener("install", event => {
