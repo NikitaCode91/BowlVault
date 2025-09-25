@@ -943,8 +943,6 @@ body.dark-mode #size-4v4 {
   background: #ff5858; 
 }
 
-
-
 /* === Save First Modal === */
 
 .save-first {
@@ -1001,6 +999,7 @@ body.dark-mode #size-4v4 {
   text-align: center;
 }
 
+/* === FIXED Save First Buttons === */
 .save-first-actions {
   display: flex;
   justify-content: center;
@@ -1008,33 +1007,36 @@ body.dark-mode #size-4v4 {
 }
 
 .save-first-btn {
+  display: inline-block;
   padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
   font-size: 0.95rem;
+  border: none;
+  border-radius: 8px; /* ensures rectangular, same as endgame */
+  cursor: pointer;
   transition: 0.2s;
+  box-sizing: border-box;
+  text-align: center;
+  min-width: 80px; /* optional: ensures consistent width */
 }
 
-/* Buttons light mode */
 .save-first-primary {
-  background: var(--clr-prim); 
+  background: var(--clr-prim);
   color: #fff;
 }
 
 .save-first-cancel {
-  background: #555; 
+  background: #555;
   color: #fff;
 }
 
 .save-first-primary:hover,
 .save-first-cancel:hover {
-  background: #ff9292; 
+  background: #ff9292;
 }
 
 .save-first-primary:active,
 .save-first-cancel:active {
-  background: #ff5858; 
+  background: #ff5858;
 }
 
 /* Pop Up little smaller for mobile */
@@ -1045,7 +1047,6 @@ body.dark-mode #size-4v4 {
     padding: 16px;    
   }
 }
-
 
 /* === Dark Mode Overrides === */
 
@@ -1058,19 +1059,21 @@ body.dark-mode .save-first-content {
 }
 
 body.dark-mode .endgame-primary,
-.save-first-primary {
+body.dark-mode .save-first-primary {
   background: #00ffaed5;
 }
 
 body.dark-mode .endgame-primary:hover,
 body.dark-mode .endgame-cancel:hover,
-body.dark-mode .save-first-primary:hover {
+body.dark-mode .save-first-primary:hover, 
+body.dark-mode .save-first-cancel:hover {
   background: #ff9292;
 }
 
 body.dark-mode .endgame-primary:active,
 body.dark-mode .endgame-cancel:active,
-body.dark-mode .save-first-primary:active {
+body.dark-mode .save-first-primary:active, 
+body.dark-mode .save-first-cancel:active {
   background: #ff5858;
 }
 
