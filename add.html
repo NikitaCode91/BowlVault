@@ -148,6 +148,7 @@
     </div>
 
     <!-- Select Match Type -->
+
     <div id="leagueSizeModal" class="modal">
       <div class="modal-content">
         <h2>Select Match Type</h2>
@@ -157,6 +158,33 @@
         <button id="close-size-modal" class="close-btn">Cancel</button>
       </div>
     </div>
+
+    <!-- End Game confirmation -->
+     
+<div id="endgameModal" class="endgame" role="dialog" aria-modal="true" aria-labelledby="endgameTitle" aria-hidden="true">
+  <div id="endgameContent" class="endgame-content">
+    <!-- Title can be added if you want -->
+    <p id="endgameMessage" class="endgame-message"></p>
+
+    <div id="endgameActions" class="endgame-actions">
+      <button id="endgamePrimaryBtn" class="endgame-btn endgame-primary">OK</button>
+      <button id="endgameCancelBtn"  class="endgame-btn endgame-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Save Game (first-time) -->
+
+<div id="saveFirstModal" class="save-first" role="dialog" aria-modal="true" aria-labelledby="saveFirstTitle" aria-hidden="true">
+  <div id="saveFirstContent" class="save-first-content">
+    <p id="saveFirstMessage" class="save-first-message"></p>
+
+    <div id="saveFirstActions" class="save-first-actions">
+      <button id="saveFirstPrimaryBtn" class="save-first-btn save-first-primary">Continue</button>
+      <button id="saveFirstCancelBtn"  class="save-first-btn save-first-cancel">Go Back</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

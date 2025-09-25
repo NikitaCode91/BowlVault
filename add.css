@@ -1,4 +1,5 @@
 /* Add Game */
+
 :root {
   --clr-prim: #3d80ff;
   --clr-sec: #ff5858;
@@ -851,3 +852,229 @@ body.dark-mode #size-4v4 {
   color: white;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+/* === Endgame Modal === */
+
+.endgame {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.endgame-content {
+  background: #a1a1a1; 
+  border: 1px solid var(--clr-prim);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  color: #fff; 
+  box-shadow: 0 4px 15px rgb(51, 113, 170);
+}
+
+.endgame-heading,
+.endgame-message {
+  color: #fff;
+}
+
+.endgame-heading {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.endgame-message {
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.endgame-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.endgame-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: 0.2s;
+}
+
+.endgame-primary {
+  background: var(--clr-prim); 
+  color: #fff;
+}
+
+.endgame-cancel {
+  background: #555; 
+  color: #fff;
+}
+
+.endgame-primary:hover,
+.endgame-cancel:hover {
+  background: #ff9292; 
+}
+
+.endgame-primary:active,
+.endgame-cancel:active {
+  background: #ff5858; 
+}
+
+
+
+/* === Save First Modal === */
+
+.save-first {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.save-first-content {
+  background: #a1a1a1; 
+  border: 1px solid var(--clr-prim);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 380px;
+  width: 90%;
+  text-align: left;
+  color: #fff; 
+  box-shadow: 0 4px 15px rgb(51, 113, 170);
+}
+
+/* Save First text */
+.save-first-heading {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.save-first-details {
+  margin-bottom: 15px;
+}
+
+.save-first-details .lane,
+.save-first-details .place {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  text-align: left; 
+  margin-left: 4px; 
+}
+
+.save-first-message {
+  font-size: 1.05rem;
+  color: #fff; 
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.save-first-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.save-first-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: 0.2s;
+}
+
+/* Buttons light mode */
+.save-first-primary {
+  background: var(--clr-prim); 
+  color: #fff;
+}
+
+.save-first-cancel {
+  background: #555; 
+  color: #fff;
+}
+
+.save-first-primary:hover,
+.save-first-cancel:hover {
+  background: #ff9292; 
+}
+
+.save-first-primary:active,
+.save-first-cancel:active {
+  background: #ff5858; 
+}
+
+/* Pop Up little smaller for mobile */
+@media (max-width: 480px) {
+  .endgame-content,
+  .save-first-content {
+    max-width: 340px;
+    padding: 16px;    
+  }
+}
+
+
+/* === Dark Mode Overrides === */
+
+body.dark-mode .endgame-content,
+body.dark-mode .save-first-content {
+  background: #222;
+  color: #eee;
+  border: 1px solid #00ffc8;
+  box-shadow: 0 4px 15px #00ffc8;
+}
+
+body.dark-mode .endgame-primary,
+.save-first-primary {
+  background: #00ffaed5;
+}
+
+body.dark-mode .endgame-primary:hover,
+body.dark-mode .endgame-cancel:hover,
+body.dark-mode .save-first-primary:hover {
+  background: #ff9292;
+}
+
+body.dark-mode .endgame-primary:active,
+body.dark-mode .endgame-cancel:active,
+body.dark-mode .save-first-primary:active {
+  background: #ff5858;
+}
+
+body.dark-mode .endgame-cancel,
+body.dark-mode .save-first-cancel {
+  background: #555;
+}

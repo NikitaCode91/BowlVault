@@ -25,11 +25,17 @@ if (toggleBtn) {
 
 
 
+
+
+
+
 "use strict";
 
 /* =========================
    Add Game - Fixed JS for Dashboard Integration
    (League-only scoring; practice UI kept)
+   Updated to use custom .endgame and .save-first modals
+   Save-first modal now shows heading + lane/place + message
 ========================= */
 
 // --- GAME STATE --- //
@@ -57,7 +63,7 @@ const selectedBallDisplay = document.getElementById("selected-ball-display");
 const placeInput = document.getElementById("placeInput");
 const laneInput = document.getElementById("laneInput");
 
-// --- MODALS --- //
+// --- MODALS (custom IDs from your HTML) --- //
 const playerTypeModal = document.getElementById("playerTypeModal");
 const practiceBtn = document.getElementById("practice-btn");
 const leagueBtn = document.getElementById("league-btn");
@@ -73,6 +79,17 @@ const size2v2Btn = document.getElementById("size-2v2");
 const size3v3Btn = document.getElementById("size-3v3");
 const size4v4Btn = document.getElementById("size-4v4");
 const closeSizeModal = document.getElementById("close-size-modal");
+
+// --- Your new modals --- //
+const endgameModal = document.getElementById("endgameModal");
+const endgameMessageEl = document.getElementById("endgameMessage");
+const endgamePrimaryBtn = document.getElementById("endgamePrimaryBtn");
+const endgameCancelBtn = document.getElementById("endgameCancelBtn");
+
+const saveFirstModal = document.getElementById("saveFirstModal");
+const saveFirstMessageEl = document.getElementById("saveFirstMessage");
+const saveFirstPrimaryBtn = document.getElementById("saveFirstPrimaryBtn");
+const saveFirstCancelBtn = document.getElementById("saveFirstCancelBtn");
 
 // --- CONFIRMATION FLAG --- //
 let confirmShown = sessionStorage.getItem("confirmShown") === "true";
@@ -292,6 +309,84 @@ if(strikeBtn) strikeBtn.addEventListener("click", () => addRoll(remainingPins())
 if(missBtn) missBtn.addEventListener("click", () => addRoll(0, "-"));
 if(foulBtn) foulBtn.addEventListener("click", () => addRoll(0, "F"));
 
+// --- Helper: show endgame custom modal --- //
+function showEndgameConfirm(message = "Are you sure you want to end the game?") {
+    return new Promise((resolve) => {
+        // fallback to native confirm if modal not present
+        if (!endgameModal || !endgamePrimaryBtn || !endgameCancelBtn || !endgameMessageEl) {
+            const ok = window.confirm(message);
+            resolve(ok);
+            return;
+        }
+
+        // build heading + message so it matches the new style
+        endgameMessageEl.innerHTML = `
+          <div class="endgame-heading">End Game</div>
+          <div class="endgame-message">${escapeHtml(message)}</div>
+        `;
+        endgamePrimaryBtn.textContent = "OK";
+        endgameCancelBtn.textContent = "Cancel";
+
+        endgameModal.style.display = "flex";
+        endgameModal.setAttribute("aria-hidden", "false");
+
+        function cleanup() {
+            endgamePrimaryBtn.removeEventListener("click", onPrimary);
+            endgameCancelBtn.removeEventListener("click", onCancel);
+            endgameModal.style.display = "none";
+            endgameModal.setAttribute("aria-hidden", "true");
+        }
+
+        function onPrimary(e) { e && e.preventDefault(); cleanup(); resolve(true); }
+        function onCancel(e)  { e && e.preventDefault(); cleanup(); resolve(false); }
+
+        endgamePrimaryBtn.addEventListener("click", onPrimary);
+        endgameCancelBtn.addEventListener("click", onCancel);
+    });
+}
+
+// --- Helper: show save-first custom modal --- //
+// now accepts the lane/place values and a short message; it builds heading, details and message
+function showSaveFirstConfirm(laneVal = "?", placeVal = "?", note = "Press Continue to proceed or Go Back to cancel.") {
+    return new Promise((resolve) => {
+        if (!saveFirstModal || !saveFirstPrimaryBtn || !saveFirstCancelBtn || !saveFirstMessageEl) {
+            // fallback to native confirm with a simple string
+            const ok = window.confirm(`Double-check:\nLane: ${laneVal}\nPlace: ${placeVal}\n\nPress OK to Continue or Cancel to Go Back.`);
+            resolve(ok);
+            return;
+        }
+
+        // Build the structured HTML inside the modal message container
+        saveFirstMessageEl.innerHTML = `
+          <div class="save-first-heading">Double-check</div>
+          <div class="save-first-details">
+            <div class="lane"><strong>Lane:</strong> ${escapeHtml(laneVal)}</div>
+            <div class="place"><strong>Place:</strong> ${escapeHtml(placeVal)}</div>
+          </div>
+          <div class="save-first-message">${escapeHtml(note)}</div>
+        `;
+
+        saveFirstPrimaryBtn.textContent = "Continue";
+        saveFirstCancelBtn.textContent = "Go Back";
+
+        saveFirstModal.style.display = "flex";
+        saveFirstModal.setAttribute("aria-hidden", "false");
+
+        function cleanup() {
+            saveFirstPrimaryBtn.removeEventListener("click", onPrimary);
+            saveFirstCancelBtn.removeEventListener("click", onCancel);
+            saveFirstModal.style.display = "none";
+            saveFirstModal.setAttribute("aria-hidden", "true");
+        }
+
+        function onPrimary(e) { e && e.preventDefault(); cleanup(); resolve(true); }
+        function onCancel(e)  { e && e.preventDefault(); cleanup(); resolve(false); }
+
+        saveFirstPrimaryBtn.addEventListener("click", onPrimary);
+        saveFirstCancelBtn.addEventListener("click", onCancel);
+    });
+}
+
 // --- MAIN BUTTON LOGIC --- //
 if(mainBtn){mainBtn.addEventListener("click", () => {
     if(!gameStarted){
@@ -299,7 +394,9 @@ if(mainBtn){mainBtn.addEventListener("click", () => {
         return;
     }
     if(mainBtn.textContent === "End Game"){
-        if(confirm("Are you sure you want to end the game?")) resetGame();
+        showEndgameConfirm("Are you sure you want to end the game?").then(proceed => {
+            if (proceed) resetGame();
+        });
         return;
     }
     if(mainBtn.textContent === "Save Game"){
@@ -333,22 +430,33 @@ function saveGameAndReset(){
     const dateISO = (new Date()).toISOString();
     const newGame = { date: dateISO, ball: ballToSave, lane: laneVal, score: finalScore, place: placeVal, mode: gameMode, leagueSize: leagueSize };
 
-    if(!confirmShown){
-        const proceed = confirm(`Double-check:\nLane: ${laneVal}\nPlace: ${placeVal}\nPress OK to Continue or Cancel to Go Back.`);
-        if(!proceed) return;
+    // performSave encapsulates the actual saving & reset flow
+    function performSave() {
         confirmShown = true;
         sessionStorage.setItem("confirmShown", "true");
+
+        const gamesKey = "bowlvault_games";
+        const existing = JSON.parse(localStorage.getItem(gamesKey) || "[]");
+        existing.push(newGame);
+        localStorage.setItem(gamesKey, JSON.stringify(existing));
+        localStorage.setItem("lastGameData", JSON.stringify(newGame));
+        localStorage.removeItem("pickedBallsForGame");
+
+        resetGame();
+        if (typeof updateDashboardGames === "function") updateDashboardGames();
     }
 
-    const gamesKey = "bowlvault_games";
-    const existing = JSON.parse(localStorage.getItem(gamesKey) || "[]");
-    existing.push(newGame);
-    localStorage.setItem(gamesKey, JSON.stringify(existing));
-    localStorage.setItem("lastGameData", JSON.stringify(newGame));
-    localStorage.removeItem("pickedBallsForGame");
+    // if not shown before, use the save-first custom modal (with structured content)
+    if(!confirmShown){
+        showSaveFirstConfirm(laneVal, placeVal, "Press Continue to proceed or Go Back to cancel.").then(proceed => {
+            if(!proceed) return;
+            performSave();
+        });
+        return; // wait for modal result
+    }
 
-    resetGame();
-    if (typeof updateDashboardGames === "function") updateDashboardGames();
+    // else save immediately
+    performSave();
 }
 
 // --- RESET GAME --- //
@@ -441,3 +549,14 @@ updateMainBtn("Start Game");
 loadSelectedBallDisplay();
 checkReturnFromBallVault();
 if (typeof updateDashboardGames === "function") updateDashboardGames();
+
+// --- Small helper: escape HTML to avoid injection when inserting values ---
+function escapeHtml(str) {
+  if (typeof str !== "string") return str;
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
