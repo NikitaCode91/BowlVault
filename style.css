@@ -1285,7 +1285,7 @@ body.dark-mode .sort-btn:hover {
 /* iPads: portrait and landscape */
 @media (min-width: 600px) and (max-width: 1366px) { 
     .game-subhead {
-        gap: 3rem !important;
+        gap: 2.5rem !important;
     }
 }
 

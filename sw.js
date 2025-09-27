@@ -9,7 +9,7 @@ const assetsToCache = [
   "./icons/icon-512.png",
   "./images/Ultimate-Defender.jpg" ,
   "./images/Stealth-mode.jpg",
-  "/images/hazmat.jpg"
+  "./images/"
 ];
 
 self.addEventListener("install", event => {
