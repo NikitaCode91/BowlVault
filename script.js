@@ -30,6 +30,11 @@ toggleBtn.addEventListener("click", () => {
 
 
 
+
+
+
+
+
 "use strict";
 
 const gamesKey = "bowlvault_games";
@@ -68,7 +73,7 @@ function renderGames() {
   if (!list) return;
   list.innerHTML = "";
 
-  // --- Filter logic FIXED ---
+  // --- Filter logic ---
   const filteredGames = currentFilter === "all"
     ? games
     : games.filter(g => {
@@ -86,7 +91,7 @@ function renderGames() {
     .forEach((game, index) => {
       const li = document.createElement("li");
 
-      // Correctly assign class for coloring
+      // Assign class for coloring
       let cls = "";
       if ((game.mode || "").toLowerCase() === "practice") cls = modeClasses["practice"];
       else if (["2v2", "3v3", "4v4"].includes(game.leagueSize)) cls = modeClasses[game.leagueSize];
@@ -101,42 +106,6 @@ function renderGames() {
         <span>${game.score}</span>
         <span>${game.place}</span>
       `;
-
-      // Long press to delete
-      let pressTimer;
-      li.addEventListener('mousedown', () => {
-        li.classList.add('delete-hold');
-        pressTimer = setTimeout(() => {
-          li.classList.remove('delete-hold');
-
-          const confirmDiv = document.createElement('div');
-          confirmDiv.className = 'delete-confirm';
-          confirmDiv.innerHTML = `Delete this game?<button class="yes-btn">Yes</button><button class="no-btn">No</button>`;
-          li.appendChild(confirmDiv);
-
-          confirmDiv.querySelector('.yes-btn').addEventListener('click', () => {
-            games.splice(index, 1);
-            localStorage.setItem(gamesKey, JSON.stringify(games));
-            updateStats();
-            renderGames();
-          });
-
-          confirmDiv.querySelector('.no-btn').addEventListener('click', () => {
-            li.removeChild(confirmDiv);
-          });
-
-        }, 1000);
-      });
-
-      li.addEventListener('mouseup', () => {
-        li.classList.remove('delete-hold');
-        clearTimeout(pressTimer);
-      });
-
-      li.addEventListener('mouseleave', () => {
-        li.classList.remove('delete-hold');
-        clearTimeout(pressTimer);
-      });
 
       list.appendChild(li);
     });
@@ -373,22 +342,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // === Daily Boost === //
-
 document.addEventListener('DOMContentLoaded', () => {
   const quotes = [
-    // --- Normal Boosts ---
-    "Hard work beats talent when talent doesn’t work hard. 💪",
-    "Dreams don’t work unless you do. ✨",
+    "Hard work beats talent when talent doesn't work hard. 💪",
+    "Dreams don't work unless you do. ✨",
     "Small steps every day lead to big results. 🚀",
     "Great things never come from comfort zones. 🌟",
     "Discipline is choosing between what you want now and what you want most. 🏋",
-    "Don’t stop when you’re tired, stop when you’re done. 🔥",
+    "Don't stop when you're tired, stop when you’re done. 🔥",
     "The secret of getting ahead is getting started. 🏁",
     "Fall seven times and stand up eight. 💥",
     "Energy and persistence conquer all things. ⚡",
     "Success is the sum of small efforts repeated daily. 🏆",
-
-    // --- Funny Boosts ---
     "Stop scrolling. Start doing. 😏",
     "Excuses don't burn calories. 🍕➡💪",
     "Your couch is winning. Get up. 🛋❌",
@@ -399,8 +364,6 @@ document.addEventListener('DOMContentLoaded', () => {
     "Coffee won't fix lazy. Move. ☕🏃",
     "Netflix won't clap for you. 📺👏❌",
     "Be stronger than your excuses. 💥😤",
-
-    // --- Angry / Tough Love Boosts ---
     "Nobody cares, work harder. 😡💪",
     "Push yourself. No one else will. ⚔",
     "Winners are not afraid of losing. Failure is part of success. 🏆🔥",

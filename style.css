@@ -214,16 +214,8 @@ main.dashboard {
     color: var(--clr-prim);    
 }
 
-/* === Pink Recent games === */
-
-.everyday-pink span {
-  color: var(--accent-pink) !important;
-}
-
-
 /* === Clear games button === */
 
-/* Clear Button Container */
 .clear-btn-container {
     display: flex;
     justify-content: center;
@@ -356,9 +348,9 @@ button:disabled {
     width: 8px;
 }
 
-.recent-games-wrapper::-webkit-scrollbar-thumb {
-    background-color: var(--clr-prim);
-    border-radius: 4px;
+.recent-games-wrapper::-webkit-scrollbar-thumb {  
+  background-color: var(--clr-prim); 
+  border-radius: 4px;
 }
 
 body.dark-mode .recent-games-wrapper::-webkit-scrollbar-thumb {
@@ -1168,20 +1160,21 @@ body.dark-mode .purpose-label {
 }
 
 .text-practice span {
-    color: #e0405b !important;
+    color: #ff4766 !important;
 }
 
 /* === Buttons Container === */
+
 .game-sort {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-    margin-bottom: 1rem;
-    
+    margin-bottom: 1rem;  
 }
 
 /* === Base Button Styling === */
+
 .sort-btn {
     padding: 0.4rem 0.8rem;
     min-width: 75px;
@@ -1198,11 +1191,6 @@ body.dark-mode .purpose-label {
     margin-bottom: 1rem;
 }
 
-/* --- Active / Clicked Btn --- */
-.sort-btn.active { 
-    border: 2px solid #fff;
-    box-shadow: 0 0 8px #fff;
-}
 
 /* --- Light Mode Color-Coded Buttons --- */
 .sort-btn[data-mode="all"]       {
@@ -1222,11 +1210,21 @@ body.dark-mode .purpose-label {
 }
 
 .sort-btn[data-mode="practice"]  {
-   background-color: #e0405b; 
+   background-color: #ff4766; 
+}
+
+/* Sort button active state */
+.sort-btn.active {
+  border: 2px solid #fff;
+    box-shadow: 0 0 8px #fff;
+    background-color: var(--clr-sec);
+    color: #fff;
+    box-shadow: 0 0 8px var(--clr-sec);
 }
 
 
 /* === Dark Mode === */
+
 body.dark-mode .sort-btn {
     background-color: #333;
     color: #eee;
@@ -1265,6 +1263,9 @@ body.dark-mode .sort-btn:hover {
     box-shadow: 0 6px 10px #0000004d;
 }
 
+
+
+/* Phones */
 @media (max-width: 600px) {
     .game-sort {
         gap: 0.25rem;
@@ -1281,62 +1282,14 @@ body.dark-mode .sort-btn:hover {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* === Hover / Hold Delete Feedback === */
-.recent-games li.delete-hold {
-    position: relative;
-    transform: scale(1.02);
-    box-shadow: 0 0 10px rgba(255,0,0,0.5);
-    border: 2px solid #ff0000;
+/* iPads: portrait and landscape */
+@media (min-width: 600px) and (max-width: 1366px) { 
+    .game-subhead {
+        gap: 3rem !important;
+    }
 }
 
-/* Delete confirmation popup */
-.delete-confirm {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    border: 2px solid #ff4b5c;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    z-index: 50;
-    display: flex;
-    gap: 0.5rem;
-    font-weight: bold;
-    box-shadow: 0 0 8px rgba(255,0,0,0.6);
-}
 
-/* Sort button active state */
-.sort-btn.active {
-    background-color: var(--clr-sec);
-    color: #fff;
-    box-shadow: 0 0 8px var(--clr-sec);
-}
 
+/* === Recent Games Pop Up === */
 

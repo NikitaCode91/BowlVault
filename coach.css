@@ -268,9 +268,9 @@ header h3.subtitle {
 }
 
 .tip-card:hover {
-  background: var(--tip-bg-hover);
+  background: #ff86a0;
   color: #fff;
-  box-shadow: 0 6px 20px rgba(255, 88, 88, 0.5);
+  box-shadow: 0 6px 20px #ff585880;
 }
 
 /* === Pagination Controls === */
@@ -546,13 +546,12 @@ body.dark-mode .category-content {
 
 /* Tip Cards */
 body.dark-mode .tip-card {
-  background: var(--tip-bg-default);
   color: var(--clr-text-muted);
   box-shadow: var(--shadow);
 }
 
 body.dark-mode .tip-card:hover {
-  background: #c54a4a;
+  background: #ff94b7de;
   color: #fff;
   box-shadow:
     0 0 10px var(--clr-sec),
