@@ -1285,7 +1285,7 @@ body.dark-mode .sort-btn:hover {
 /* iPads (tablets) */
 @media (min-width: 601px) and (max-width: 1024px) {
     .game-subhead {
-        gap: 2.2rem;
+        gap: 4rem !important;
     }
 }
 
@@ -1293,6 +1293,22 @@ body.dark-mode .sort-btn:hover {
 @media (min-width: 1025px) {
     .game-subhead {
         gap: 5rem;
+    }
+}
+
+
+
+/* Phones in portrait */
+@media (max-width: 602px) and (orientation: portrait) {
+    .game-subhead {
+        gap: 1rem;
+    }
+}
+
+/* Phones in landscape */
+@media (max-width: 900px) and (orientation: landscape) {
+    .game-subhead {
+        gap: 1.5rem;
     }
 }
 
