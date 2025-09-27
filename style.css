@@ -1282,10 +1282,17 @@ body.dark-mode .sort-btn:hover {
     }
 }
 
-/* iPads: portrait and landscape */
-@media (min-width: 600px) and (max-width: 1366px) { 
+/* iPads (tablets) */
+@media (min-width: 601px) and (max-width: 1024px) {
     .game-subhead {
-        gap: 2.5rem !important;
+        gap: 2.5rem;
+    }
+}
+
+/* Laptops and up */
+@media (min-width: 1025px) {
+    .game-subhead {
+        gap: 5rem;
     }
 }
 
