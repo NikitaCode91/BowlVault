@@ -1285,7 +1285,7 @@ body.dark-mode .sort-btn:hover {
 /* iPads (tablets) */
 @media (min-width: 601px) and (max-width: 1024px) {
     .game-subhead {
-        gap: 2.5rem;
+        gap: 2.2rem;
     }
 }
 
