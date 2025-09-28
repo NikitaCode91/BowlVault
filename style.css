@@ -170,20 +170,6 @@ main.dashboard {
     margin-bottom: 0.25rem;
 }
 
-.game-subhead {
-    display: flex;                 
-    justify-content: center;
-    text-align: center;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--card-bg);
-    font-weight: 600;            
-    gap: 4.5rem;
-    background-color: #c9d9f7;
-    border: 1px solid rgb(160, 160, 160);
-    border-radius: 10px 10px 10px;
-}
 
 /* Recent Games List */
 .recent-games ul {
@@ -295,7 +281,8 @@ footer {
     main.dashboard {
         grid-template-columns: 1fr; /* still single column layout */
     }
-       .summary {
+
+    .summary {
         grid-column: span 3;
         display: flex;
         justify-content: space-around;
@@ -324,12 +311,6 @@ button:disabled {
     .recent-games li {
         grid-template-columns: repeat(5, 1fr); /* still show in a row */
         font-size: 0.70rem;
-    }
-
-    .game-subhead {
-        font-size: 0.75rem;
-        max-width: 100%;
-        box-sizing: border-box;
     }
 }
 
@@ -389,15 +370,6 @@ body.dark-mode .recent-games-wrapper::-webkit-scrollbar-thumb {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-    }
-
-    .game-subhead {
-        flex-direction: row;
-        gap: 1rem;
-        font-size: 0.75rem;
-        padding: 0.20rem 0.5rem;
-        max-width: 100%;
-        box-sizing: border-box;
     }
 }
 
@@ -1170,7 +1142,7 @@ body.dark-mode .purpose-label {
     justify-content: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-    margin-bottom: 1rem;  
+    margin-bottom: 1rem;    
 }
 
 /* === Base Button Styling === */
@@ -1265,6 +1237,30 @@ body.dark-mode .sort-btn:hover {
 
 
 
+.game-subhead {
+    display: flex;                 
+    justify-content: center;
+    text-align: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--card-bg);
+    font-weight: 600;            
+    gap: 4.5rem;
+    background-color: #c9d9f7;
+    border: 1px solid rgb(160, 160, 160);
+    border-radius: 10px 10px 10px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 500px) {
+    .game-subhead {
+        font-size: 0.75rem;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
 /* Phones */
 @media (max-width: 600px) {
     .game-sort {
@@ -1275,40 +1271,42 @@ body.dark-mode .sort-btn:hover {
         padding: 0 0.5rem;
     }
 
-    .sort-btn {
-        padding: 0.3rem 0.6rem;
-        min-width: 60px;
-        font-size: 0.85rem;
+    .game-subhead {
+        flex-direction: row;
+        gap: 1rem;
+        font-size: 0.75rem;
+        padding: 0.20rem 0.5rem;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 }
 
 /* iPads (tablets) */
 @media (min-width: 601px) and (max-width: 1024px) {
     .game-subhead {
-        gap: 4rem !important;
+        gap: 2.4rem;
     }
 }
 
 /* Laptops and up */
 @media (min-width: 1025px) {
     .game-subhead {
-        gap: 5rem;
+        gap: 4.6rem;
     }
 }
 
 
-
 /* Phones in portrait */
-@media (max-width: 602px) and (orientation: portrait) {
+@media (max-width: 600px) and (orientation: portrait) {
     .game-subhead {
-        gap: 1rem;
+        gap: 1rem; 
     }
 }
 
 /* Phones in landscape */
 @media (max-width: 900px) and (orientation: landscape) {
     .game-subhead {
-        gap: 1.5rem;
+        gap: 2.6rem; 
     }
 }
 
