@@ -93,10 +93,7 @@
     <p>&copy; 2025 Your Bowling Journey</p>
 </footer>
 
-
-
 <!-- === Profile Modal === -->
-
 <div id="profile-modal" class="profile-modal hidden">
   <div class="profile-content">
     <span class="close-btn" id="close-btn">👋</span>
@@ -157,9 +154,19 @@
   </div>
 </div>
 
+<!-- === Clear Stats Modal === -->
+<div id="clear-modal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Clear All Games?</h3>
+    <p>Are you sure you want to clear all stats & recent games? This cannot be undone.</p>
+    <div class="modal-buttons">
+      <button id="cancel-clear" class="btn cancel">Cancel</button>
+      <button id="confirm-clear" class="btn btn-danger">Clear</button>
+    </div>
+  </div>
+</div>
 
 <!-- === To Work on Phone === -->
-
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -172,3 +179,4 @@
 
 </body>
 </html>
+

@@ -30,11 +30,6 @@ toggleBtn.addEventListener("click", () => {
 
 
 
-
-
-
-
-
 "use strict";
 
 const gamesKey = "bowlvault_games";
@@ -73,7 +68,6 @@ function renderGames() {
   if (!list) return;
   list.innerHTML = "";
 
-  // --- Filter logic ---
   const filteredGames = currentFilter === "all"
     ? games
     : games.filter(g => {
@@ -91,7 +85,6 @@ function renderGames() {
     .forEach((game, index) => {
       const li = document.createElement("li");
 
-      // Assign class for coloring
       let cls = "";
       if ((game.mode || "").toLowerCase() === "practice") cls = modeClasses["practice"];
       else if (["2v2", "3v3", "4v4"].includes(game.leagueSize)) cls = modeClasses[game.leagueSize];
@@ -107,6 +100,42 @@ function renderGames() {
         <span>${game.place}</span>
       `;
 
+      // Long press to delete
+      let pressTimer;
+      li.addEventListener('mousedown', () => {
+        li.classList.add('delete-hold');
+        pressTimer = setTimeout(() => {
+          li.classList.remove('delete-hold');
+
+          const confirmDiv = document.createElement('div');
+          confirmDiv.className = 'delete-confirm';
+          confirmDiv.innerHTML = `Delete this game?<button class="yes-btn">Yes</button><button class="no-btn">No</button>`;
+          li.appendChild(confirmDiv);
+
+          confirmDiv.querySelector('.yes-btn').addEventListener('click', () => {
+            games.splice(index, 1);
+            localStorage.setItem(gamesKey, JSON.stringify(games));
+            updateStats();
+            renderGames();
+          });
+
+          confirmDiv.querySelector('.no-btn').addEventListener('click', () => {
+            li.removeChild(confirmDiv);
+          });
+
+        }, 1000);
+      });
+
+      li.addEventListener('mouseup', () => {
+        li.classList.remove('delete-hold');
+        clearTimeout(pressTimer);
+      });
+
+      li.addEventListener('mouseleave', () => {
+        li.classList.remove('delete-hold');
+        clearTimeout(pressTimer);
+      });
+
       list.appendChild(li);
     });
 
@@ -120,7 +149,7 @@ function renderGames() {
 document.querySelectorAll(".sort-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     currentFilter = btn.dataset.mode;
-    localStorage.setItem("lastFilter", currentFilter); // Save last filter
+    localStorage.setItem("lastFilter", currentFilter);
     renderGames();
   });
 });
@@ -129,16 +158,31 @@ document.querySelectorAll(".sort-btn").forEach(btn => {
 updateStats();
 renderGames();
 
-// --- Clear all games ---
+// --- Clear all games using modal ---
 const clearBtn = document.getElementById("clearRecentGames");
-if (clearBtn) {
+const clearModal = document.getElementById("clear-modal");
+const cancelClear = document.getElementById("cancel-clear");
+const confirmClear = document.getElementById("confirm-clear");
+
+if (clearBtn && clearModal && cancelClear && confirmClear) {
   clearBtn.addEventListener("click", () => {
-    if (confirm("Are you sure you want to clear all games? This cannot be undone.")) {
-      games = [];
-      localStorage.setItem(gamesKey, JSON.stringify([]));
-      updateStats();
-      renderGames();
-    }
+    clearModal.classList.add("active");
+  });
+
+  cancelClear.addEventListener("click", () => {
+    clearModal.classList.remove("active");
+  });
+
+  confirmClear.addEventListener("click", () => {
+    games = [];
+    localStorage.setItem(gamesKey, JSON.stringify([]));
+    updateStats();
+    renderGames();
+    clearModal.classList.remove("active");
+  });
+
+  clearModal.addEventListener("click", e => {
+    if (e.target === clearModal) clearModal.classList.remove("active");
   });
 }
 
@@ -148,6 +192,11 @@ window.updateDashboardGames = () => {
   updateStats();
   renderGames();
 };
+
+// Clicking outside modal closes it
+clearModal.addEventListener("click", (e) => {
+  if (e.target === clearModal) clearModal.classList.remove("active");
+});
 
 // === Profile modal & logic === //
 document.addEventListener('DOMContentLoaded', () => {
@@ -349,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
     "Small steps every day lead to big results. 🚀",
     "Great things never come from comfort zones. 🌟",
     "Discipline is choosing between what you want now and what you want most. 🏋",
-    "Don't stop when you're tired, stop when you’re done. 🔥",
+    "Don't stop when you're tired, stop when you're done. 🔥",
     "The secret of getting ahead is getting started. 🏁",
     "Fall seven times and stand up eight. 💥",
     "Energy and persistence conquer all things. ⚡",
@@ -361,8 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
     "Future you is watching. Don't disappoint them. 👀",
     "Sweat now, shine later. 💦✨",
     "Your bed is lying to you. Get up. 🛏❌",
-    "Coffee won't fix lazy. Move. ☕🏃",
-    "Netflix won't clap for you. 📺👏❌",
     "Be stronger than your excuses. 💥😤",
     "Nobody cares, work harder. 😡💪",
     "Push yourself. No one else will. ⚔",

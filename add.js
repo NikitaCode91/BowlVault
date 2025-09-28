@@ -31,12 +31,6 @@ if (toggleBtn) {
 
 "use strict";
 
-/* =========================
-   Add Game - Fixed JS for Dashboard Integration
-   (League-only scoring; practice UI kept)
-   Updated to use custom .endgame and .save-first modals
-   Save-first modal now shows heading + lane/place + message
-========================= */
 
 // --- GAME STATE --- //
 let gameStarted = false;

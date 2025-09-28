@@ -170,6 +170,20 @@ main.dashboard {
     margin-bottom: 0.25rem;
 }
 
+.game-subhead {
+    display: flex;                 
+    justify-content: center;
+    text-align: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--card-bg);
+    font-weight: 600;            
+    gap: 4.5rem;
+    background-color: #c9d9f7;
+    border: 1px solid rgb(160, 160, 160);
+    border-radius: 10px 10px 10px;
+}
 
 /* Recent Games List */
 .recent-games ul {
@@ -200,8 +214,16 @@ main.dashboard {
     color: var(--clr-prim);    
 }
 
+/* === Pink Recent games === */
+
+.everyday-pink span {
+  color: var(--accent-pink) !important;
+}
+
+
 /* === Clear games button === */
 
+/* Clear Button Container */
 .clear-btn-container {
     display: flex;
     justify-content: center;
@@ -229,6 +251,8 @@ main.dashboard {
     transform: scale(1.05);
     box-shadow: 0 0 12px #00c59a, 0 0 25px #ff4b5c;
 }
+
+
 
 /* Motivational Quote / Daily Boost */
 .motivational-quote {
@@ -281,8 +305,7 @@ footer {
     main.dashboard {
         grid-template-columns: 1fr; /* still single column layout */
     }
-
-    .summary {
+       .summary {
         grid-column: span 3;
         display: flex;
         justify-content: space-around;
@@ -312,6 +335,12 @@ button:disabled {
         grid-template-columns: repeat(5, 1fr); /* still show in a row */
         font-size: 0.70rem;
     }
+
+    .game-subhead {
+        font-size: 0.75rem;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
 }
 
 
@@ -329,9 +358,9 @@ button:disabled {
     width: 8px;
 }
 
-.recent-games-wrapper::-webkit-scrollbar-thumb {  
-  background-color: var(--clr-prim); 
-  border-radius: 4px;
+.recent-games-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--clr-prim);
+    border-radius: 4px;
 }
 
 body.dark-mode .recent-games-wrapper::-webkit-scrollbar-thumb {
@@ -370,6 +399,15 @@ body.dark-mode .recent-games-wrapper::-webkit-scrollbar-thumb {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .game-subhead {
+        flex-direction: row;
+        gap: 1rem;
+        font-size: 0.75rem;
+        padding: 0.20rem 0.5rem;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 }
 
@@ -1132,21 +1170,20 @@ body.dark-mode .purpose-label {
 }
 
 .text-practice span {
-    color: #ff4766 !important;
+    color: #e0405b !important;
 }
 
 /* === Buttons Container === */
-
 .game-sort {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-    margin-bottom: 1rem;    
+    margin-bottom: 1rem;
+    
 }
 
 /* === Base Button Styling === */
-
 .sort-btn {
     padding: 0.4rem 0.8rem;
     min-width: 75px;
@@ -1163,6 +1200,11 @@ body.dark-mode .purpose-label {
     margin-bottom: 1rem;
 }
 
+/* --- Active / Clicked Btn --- */
+.sort-btn.active { 
+    border: 2px solid #fff;
+    box-shadow: 0 0 8px #fff;
+}
 
 /* --- Light Mode Color-Coded Buttons --- */
 .sort-btn[data-mode="all"]       {
@@ -1182,21 +1224,11 @@ body.dark-mode .purpose-label {
 }
 
 .sort-btn[data-mode="practice"]  {
-   background-color: #ff4766; 
-}
-
-/* Sort button active state */
-.sort-btn.active {
-  border: 2px solid #fff;
-    box-shadow: 0 0 8px #fff;
-    background-color: var(--clr-sec);
-    color: #fff;
-    box-shadow: 0 0 8px var(--clr-sec);
+   background-color: #e0405b; 
 }
 
 
 /* === Dark Mode === */
-
 body.dark-mode .sort-btn {
     background-color: #333;
     color: #eee;
@@ -1235,33 +1267,6 @@ body.dark-mode .sort-btn:hover {
     box-shadow: 0 6px 10px #0000004d;
 }
 
-
-
-.game-subhead {
-    display: flex;                 
-    justify-content: center;
-    text-align: center;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--card-bg);
-    font-weight: 600;            
-    gap: 4.5rem;
-    background-color: #c9d9f7;
-    border: 1px solid rgb(160, 160, 160);
-    border-radius: 10px 10px 10px;
-}
-
-/* Responsive tweaks */
-@media (max-width: 500px) {
-    .game-subhead {
-        font-size: 0.75rem;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-}
-
-/* Phones */
 @media (max-width: 600px) {
     .game-sort {
         gap: 0.25rem;
@@ -1271,46 +1276,150 @@ body.dark-mode .sort-btn:hover {
         padding: 0 0.5rem;
     }
 
-    .game-subhead {
-        flex-direction: row;
-        gap: 1rem;
-        font-size: 0.75rem;
-        padding: 0.20rem 0.5rem;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-}
-
-/* iPads (tablets) */
-@media (min-width: 601px) and (max-width: 1024px) {
-    .game-subhead {
-        gap: 2.4rem;
-    }
-}
-
-/* Laptops and up */
-@media (min-width: 1025px) {
-    .game-subhead {
-        gap: 4.6rem;
-    }
-}
-
-
-/* Phones in portrait */
-@media (max-width: 600px) and (orientation: portrait) {
-    .game-subhead {
-        gap: 1rem; 
-    }
-}
-
-/* Phones in landscape */
-@media (max-width: 900px) and (orientation: landscape) {
-    .game-subhead {
-        gap: 2.6rem; 
+    .sort-btn {
+        padding: 0.3rem 0.6rem;
+        min-width: 60px;
+        font-size: 0.85rem;
     }
 }
 
 
 
-/* === Recent Games Pop Up === */
+
+
+
+
+
+
+
+/* === Hover / Hold Delete Feedback === */
+.recent-games li.delete-hold {
+    position: relative;
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(255,0,0,0.5);
+    border: 2px solid #ff0000;
+}
+
+/* Delete confirmation popup */
+.delete-confirm {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border: 2px solid #ff4b5c;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    z-index: 50;
+    display: flex;
+    gap: 0.5rem;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(255,0,0,0.6);
+}
+
+/* Sort button active state */
+.sort-btn.active {
+    background-color: var(--clr-sec);
+    color: #fff;
+    box-shadow: 0 0 8px var(--clr-sec);
+}
+
+
+
+/* === Modal Overlay (Show above all) === */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5); 
+  z-index: 9998; 
+  display: none;
+}
+
+.modal-overlay.active {
+  display: block;
+}
+
+
+/* === Delete Recent Games Pop Up === */
+
+/* === Clear Stats Modal CSS === */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.modal-content h3 {
+  margin-bottom: 1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.btn.cancel {
+  background: #ccc;
+  color: #111;
+}
+
+.btn.cancel:hover {
+  background: #aaa;
+}
+
+.btn.btn-danger {
+  background: #ff5858;
+  color: #fff;
+}
+
+.btn.btn-danger:hover {
+  background: #e0405b;
+}
+
+
+
+
+
+
+
+
 
