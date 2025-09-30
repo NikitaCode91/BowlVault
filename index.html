@@ -79,7 +79,7 @@
 </main>
 
 <div class="clear-btn-container">
-    <button id="clearRecentGames">Clear Stats & Recent Games</button>
+    <button id="clearRecentGames" class="main-btn">Clear Stats & Recent Games</button>
 </div>
 
 <section class="motivational-quote">
@@ -93,13 +93,17 @@
     <p>&copy; 2025 Your Bowling Journey</p>
 </footer>
 
+
+
 <!-- === Profile Modal === -->
+
 <div id="profile-modal" class="profile-modal hidden">
   <div class="profile-content">
     <span class="close-btn" id="close-btn">👋</span>
 
     <div id="profile-pic-preview" class="profile-pic-preview" title="Click to change">
-      <img id="profile-pic-img">
+      <div id="profile-pic-img" src="./images/default-profile-img.jpg">
+      </div>
     </div>
     <input type="file" id="profile-pic" accept="image/*" style="display: none;">
 
@@ -145,7 +149,7 @@
 
       <div class="fav-ball-group">
         <label for="fav-ball" class="form-label">Favorite Ball:</label>
-        <img src="path/to/ball-image.png" class="fav-ball-pic" id="fav-ball">
+        <img class="fav-ball-pic" id="fav-ball">
         <input type="file" id="fav-ball-img" accept="image/*" style="display: none;">
       </div>
     </div>
@@ -154,19 +158,9 @@
   </div>
 </div>
 
-<!-- === Clear Stats Modal === -->
-<div id="clear-modal" class="modal hidden">
-  <div class="modal-content">
-    <h3>Clear All Games?</h3>
-    <p>Are you sure you want to clear all stats & recent games? This cannot be undone.</p>
-    <div class="modal-buttons">
-      <button id="cancel-clear" class="btn cancel">Cancel</button>
-      <button id="confirm-clear" class="btn btn-danger">Clear</button>
-    </div>
-  </div>
-</div>
 
 <!-- === To Work on Phone === -->
+
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -179,4 +173,6 @@
 
 </body>
 </html>
+
+
 

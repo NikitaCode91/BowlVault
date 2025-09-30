@@ -30,6 +30,7 @@ toggleBtn.addEventListener("click", () => {
 
 
 
+
 "use strict";
 
 const gamesKey = "bowlvault_games";
@@ -68,6 +69,7 @@ function renderGames() {
   if (!list) return;
   list.innerHTML = "";
 
+  // --- Filter logic ---
   const filteredGames = currentFilter === "all"
     ? games
     : games.filter(g => {
@@ -99,43 +101,6 @@ function renderGames() {
         <span>${game.score}</span>
         <span>${game.place}</span>
       `;
-
-      // Long press to delete
-      let pressTimer;
-      li.addEventListener('mousedown', () => {
-        li.classList.add('delete-hold');
-        pressTimer = setTimeout(() => {
-          li.classList.remove('delete-hold');
-
-          const confirmDiv = document.createElement('div');
-          confirmDiv.className = 'delete-confirm';
-          confirmDiv.innerHTML = `Delete this game?<button class="yes-btn">Yes</button><button class="no-btn">No</button>`;
-          li.appendChild(confirmDiv);
-
-          confirmDiv.querySelector('.yes-btn').addEventListener('click', () => {
-            games.splice(index, 1);
-            localStorage.setItem(gamesKey, JSON.stringify(games));
-            updateStats();
-            renderGames();
-          });
-
-          confirmDiv.querySelector('.no-btn').addEventListener('click', () => {
-            li.removeChild(confirmDiv);
-          });
-
-        }, 1000);
-      });
-
-      li.addEventListener('mouseup', () => {
-        li.classList.remove('delete-hold');
-        clearTimeout(pressTimer);
-      });
-
-      li.addEventListener('mouseleave', () => {
-        li.classList.remove('delete-hold');
-        clearTimeout(pressTimer);
-      });
-
       list.appendChild(li);
     });
 
@@ -158,47 +123,58 @@ document.querySelectorAll(".sort-btn").forEach(btn => {
 updateStats();
 renderGames();
 
-// --- Clear all games using modal ---
+// --- Clear all games ---
 const clearBtn = document.getElementById("clearRecentGames");
-const clearModal = document.getElementById("clear-modal");
-const cancelClear = document.getElementById("cancel-clear");
-const confirmClear = document.getElementById("confirm-clear");
-
-if (clearBtn && clearModal && cancelClear && confirmClear) {
+if (clearBtn) {
   clearBtn.addEventListener("click", () => {
-    clearModal.classList.add("active");
-  });
+    const overlay = document.createElement("div");
+    overlay.id = "deleteOverlay";
+    overlay.style.position = "fixed";
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.backgroundColor = "rgba(0,0,0,0.5)";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.zIndex = 9999;
 
-  cancelClear.addEventListener("click", () => {
-    clearModal.classList.remove("active");
-  });
+    const popup = document.createElement("div");
+    popup.id = "deletePopup";
+    popup.innerHTML = `
+      <h1 class="statsHeading">Clear All Stats</h1>
+      <p>Are you sure you want to clear all games? This cannot be undone.</p>
+      <div class="popupBtns">
+        <button id="yesClear">Yes</button>
+        <button id="noClear">No</button>
+      </div>
+    `;
+    overlay.appendChild(popup);
+    document.body.appendChild(overlay);
 
-  confirmClear.addEventListener("click", () => {
-    games = [];
-    localStorage.setItem(gamesKey, JSON.stringify([]));
-    updateStats();
-    renderGames();
-    clearModal.classList.remove("active");
-  });
+    document.getElementById("yesClear").addEventListener("click", () => {
+      games = [];
+      localStorage.setItem(gamesKey, JSON.stringify([]));
+      updateStats();
+      renderGames();
+      document.body.removeChild(overlay);
+    });
 
-  clearModal.addEventListener("click", e => {
-    if (e.target === clearModal) clearModal.classList.remove("active");
+    document.getElementById("noClear").addEventListener("click", () => {
+      document.body.removeChild(overlay);
+    });
   });
 }
 
-// --- Expose global function for AddGames.js ---
+// --- Expose for AddGames.js ---
 window.updateDashboardGames = () => {
   games = JSON.parse(localStorage.getItem(gamesKey)) || [];
   updateStats();
   renderGames();
 };
 
-// Clicking outside modal closes it
-clearModal.addEventListener("click", (e) => {
-  if (e.target === clearModal) clearModal.classList.remove("active");
-});
-
-// === Profile modal & logic === //
+// === Profile modal & logic (profile img only loads inside modal) === //
 document.addEventListener('DOMContentLoaded', () => {
   const profileCircle = document.getElementById('profile-circle');
   const profileModal = document.getElementById('profile-modal');
@@ -207,17 +183,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const profilePicPreview = document.getElementById('profile-pic-preview');
   const profilePicInput = document.getElementById('profile-pic');
-  const favBallImgInput = document.getElementById('fav-ball-img');
-  const favBall = document.getElementById('fav-ball');
 
   const firstName = document.getElementById('first-name');
   const surname = document.getElementById('surname');
   const gamerName = document.getElementById('gamer-name');
-  const handednessInputs = document.querySelectorAll('input[name="handed"]');
   const purposeButtons = document.querySelectorAll('.purpose-options .tag');
   const favBallName = document.getElementById('fav-ball-name');
   const ballWeight = document.getElementById('ball-weight');
+  const favBallImgInput = document.getElementById('fav-ball-img');
+  const favBall = document.getElementById('fav-ball');
+  const handedInputs = document.querySelectorAll('input[name="handed"]');
 
+  // --- Default image path ---
+  const defaultProfileImg = './images/default-profile-img.jpg';
+
+  // --- Load profile values ---
   function loadProfile() {
     firstName.value = localStorage.getItem('firstName') || '';
     surname.value = localStorage.getItem('surname') || '';
@@ -226,30 +206,34 @@ document.addEventListener('DOMContentLoaded', () => {
     ballWeight.value = localStorage.getItem('ballWeight') || '';
 
     const handed = localStorage.getItem('handed');
-    if (handed) {
-      const input = document.querySelector(`input[name="handed"][value="${handed}"]`);
-      if (input) input.checked = true;
-    }
+    handedInputs.forEach(input => {
+      input.checked = input.value === handed;
+    });
 
     const purposes = JSON.parse(localStorage.getItem('purposes') || '[]');
     purposeButtons.forEach(btn => {
       btn.classList.toggle('selected', purposes.includes(btn.dataset.value));
     });
 
-    const profileImg = localStorage.getItem('profilePic');
-    if (profileImg) {
-      profilePicPreview.style.backgroundImage = `url(${profileImg})`;
-      profileCircle.style.backgroundImage = `url(${profileImg})`;
-      profileCircle.style.backgroundSize = 'cover';
-      profileCircle.style.backgroundPosition = 'center';
-    }
+    const profileImg = localStorage.getItem('profilePic') || defaultProfileImg;
+    profilePicPreview.style.backgroundImage = `url(${profileImg})`;
+    profilePicPreview.dataset.tempImg = ''; // clear temp
+    profilePicPreview.style.backgroundSize = 'cover';
+    profilePicPreview.style.backgroundPosition = 'center';
 
-    const ballImg = localStorage.getItem('favBallImg');
-    if (ballImg) {
-      favBall.src = ballImg;
-    }
+    const favImg = localStorage.getItem('favBallImg') || '';
+    if(favImg && favBall) favBall.src = favImg;
   }
 
+  // --- Set top circle image on page load ---
+  const savedProfileImg = localStorage.getItem('profilePic') || defaultProfileImg;
+  if(profileCircle) {
+    profileCircle.style.backgroundImage = `url(${savedProfileImg})`;
+    profileCircle.style.backgroundSize = 'cover';
+    profileCircle.style.backgroundPosition = 'center';
+  }
+
+  // --- Open profile modal ---
   if(profileCircle) {
     profileCircle.addEventListener('click', () => {
       loadProfile();
@@ -261,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- Close modal ---
   function closeModal() {
     profileModal.classList.remove('active');
     profileModal.classList.add('hidden');
@@ -275,31 +260,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if(saveBtn) saveBtn.addEventListener('click', () => {
-    localStorage.setItem('firstName', firstName.value.trim());
-    localStorage.setItem('surname', surname.value.trim());
-    localStorage.setItem('gamerName', gamerName.value.trim());
-    localStorage.setItem('favBallName', favBallName.value.trim());
-    localStorage.setItem('ballWeight', ballWeight.value.trim());
-
-    const handedSelected = document.querySelector('input[name="handed"]:checked');
-    localStorage.setItem('handed', handedSelected ? handedSelected.value : '');
-
-    const selectedPurposes = [];
-    purposeButtons.forEach(btn => {
-      if (btn.classList.contains('selected')) selectedPurposes.push(btn.dataset.value);
-    });
-    localStorage.setItem('purposes', JSON.stringify(selectedPurposes));
-
-    closeModal();
-  });
-
-  purposeButtons.forEach(btn => btn.addEventListener('click', () => btn.classList.toggle('selected')));
-
-  // Profile pic upload
-  if(profilePicPreview && profilePicInput) {
-    profilePicPreview.addEventListener('click', () => profilePicInput.click());
-    profilePicInput.addEventListener('change', () => {
+  // --- Profile pic upload inside modal only ---
+  if (profilePicPreview && profilePicInput) {
+    profilePicPreview.addEventListener("click", () => profilePicInput.click());
+    profilePicInput.addEventListener("change", () => {
       const file = profilePicInput.files[0];
       if (file) {
         const reader = new FileReader();
@@ -307,35 +271,25 @@ document.addEventListener('DOMContentLoaded', () => {
           const img = new Image();
           img.src = reader.result;
           img.onload = () => {
-            const canvas = document.createElement('canvas');
+            const canvas = document.createElement("canvas");
             const maxSize = 200;
             let width = img.width;
             let height = img.height;
 
-            if(width > height) {
-              if(width > maxSize) {
-                height = Math.round(height * (maxSize / width));
-                width = maxSize;
-              }
+            if (width > height) {
+              if (width > maxSize) { height = Math.round(height * (maxSize / width)); width = maxSize; }
             } else {
-              if(height > maxSize) {
-                width = Math.round(width * (maxSize / height));
-                height = maxSize;
-              }
+              if (height > maxSize) { width = Math.round(width * (maxSize / height)); height = maxSize; }
             }
 
             canvas.width = width;
             canvas.height = height;
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0, width, height);
 
-            const resizedDataUrl = canvas.toDataURL('image/png');
-
+            const resizedDataUrl = canvas.toDataURL("image/png");
             profilePicPreview.style.backgroundImage = `url(${resizedDataUrl})`;
-            profileCircle.style.backgroundImage = `url(${resizedDataUrl})`;
-            profileCircle.style.backgroundSize = 'cover';
-            profileCircle.style.backgroundPosition = 'center';
-            localStorage.setItem('profilePic', resizedDataUrl);
+            profilePicPreview.dataset.tempImg = resizedDataUrl; // store temporarily
           };
         };
         reader.readAsDataURL(file);
@@ -343,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Favorite ball upload
+  // --- Favorite ball upload (now temp only) ---
   if(favBall && favBallImgInput) {
     favBall.addEventListener('click', () => favBallImgInput.click());
     favBallImgInput.addEventListener('change', () => {
@@ -359,17 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let width = img.width;
             let height = img.height;
 
-            if(width > height) {
-              if(width > maxSize) {
-                height = Math.round(height * (maxSize / width));
-                width = maxSize;
-              }
-            } else {
-              if(height > maxSize) {
-                width = Math.round(width * (maxSize / height));
-                height = maxSize;
-              }
-            }
+            if(width > height) { if(width > maxSize){ height = Math.round(height * (maxSize / width)); width = maxSize; } }
+            else { if(height > maxSize){ width = Math.round(width * (maxSize / height)); height = maxSize; } }
 
             canvas.width = width;
             canvas.height = height;
@@ -377,9 +322,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.drawImage(img, 0, 0, width, height);
 
             const resizedDataUrl = canvas.toDataURL('image/png');
-
+            favBall.dataset.tempImg = resizedDataUrl;
             favBall.src = resizedDataUrl;
-            localStorage.setItem('favBallImg', resizedDataUrl);
           };
         };
         reader.readAsDataURL(file);
@@ -387,7 +331,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  loadProfile();
+  if(saveBtn) saveBtn.addEventListener('click', () => {
+    // Save all profile fields
+    localStorage.setItem('firstName', firstName.value.trim());
+    localStorage.setItem('surname', surname.value.trim());
+    localStorage.setItem('gamerName', gamerName.value.trim());
+    localStorage.setItem('favBallName', favBallName.value.trim());
+    localStorage.setItem('ballWeight', ballWeight.value.trim());
+
+    // Handedness
+    const handedSelected = document.querySelector('input[name="handed"]:checked');
+    localStorage.setItem('handed', handedSelected ? handedSelected.value : '');
+
+    // Purposes
+    const selectedPurposes = [];
+    purposeButtons.forEach(btn => {
+      if(btn.classList.contains('selected')) selectedPurposes.push(btn.dataset.value);
+    });
+    localStorage.setItem('purposes', JSON.stringify(selectedPurposes));
+
+    // Profile image
+    const profileTempImg = profilePicPreview.dataset.tempImg;
+    if(profileTempImg) {
+      localStorage.setItem('profilePic', profileTempImg);
+      if(profileCircle) profileCircle.style.backgroundImage = `url(${profileTempImg})`;
+      delete profilePicPreview.dataset.tempImg; // clear temp
+    }
+
+    // Favorite ball image
+    const favBallTempImg = favBall.dataset.tempImg;
+    if(favBallTempImg) {
+      localStorage.setItem('favBallImg', favBallTempImg);
+      delete favBall.dataset.tempImg; // clear temp
+    }
+
+    closeModal();
+  });
+
+  // Toggle purposes
+  purposeButtons.forEach(btn => btn.addEventListener('click', () => btn.classList.toggle('selected')));
 });
 
 // === Daily Boost === //
@@ -410,6 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
     "Future you is watching. Don't disappoint them. 👀",
     "Sweat now, shine later. 💦✨",
     "Your bed is lying to you. Get up. 🛏❌",
+    "Coffee won't fix lazy. Move. ☕🏃",
+    "Netflix won't clap for you. 📺👏❌",
     "Be stronger than your excuses. 💥😤",
     "Nobody cares, work harder. 😡💪",
     "Push yourself. No one else will. ⚔",

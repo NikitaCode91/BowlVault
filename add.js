@@ -31,7 +31,6 @@ if (toggleBtn) {
 
 "use strict";
 
-
 // --- GAME STATE --- //
 let gameStarted = false;
 let currentFrame = 0;
@@ -303,7 +302,7 @@ if(strikeBtn) strikeBtn.addEventListener("click", () => addRoll(remainingPins())
 if(missBtn) missBtn.addEventListener("click", () => addRoll(0, "-"));
 if(foulBtn) foulBtn.addEventListener("click", () => addRoll(0, "F"));
 
-// --- Helper: show endgame custom modal --- //
+// --- Endgame Pop-up modal --- //
 function showEndgameConfirm(message = "Are you sure you want to end the game?") {
     return new Promise((resolve) => {
         // fallback to native confirm if modal not present
