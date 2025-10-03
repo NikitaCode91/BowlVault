@@ -237,7 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
       loadProfile();
       profileModal.classList.remove('hidden');
       profileModal.classList.add('active');
-      // ⚡ FIX: proper flex centering for modal
       profileModal.style.display = 'flex';
       profileModal.style.alignItems = 'center';
       profileModal.style.justifyContent = 'center';
@@ -250,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeModal() {
     profileModal.classList.remove('active');
     profileModal.classList.add('hidden');
-    profileModal.style.display = 'none'; // ⚡ hide modal properly
+    profileModal.style.display = 'none';
     profileModal.style.opacity = '0';
     profileModal.style.pointerEvents = 'none';
     document.body.classList.remove('modal-open');
@@ -412,11 +411,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-
-
-
-
-
 // === Click Game for Details pop up === //
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -435,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modalContent.innerHTML = `
       <div class="modal-header" style="display:flex; align-items:center; gap:10px;">
         <h2 style="margin:0;">Game Details</h2>
-        <span id="delete-icon">🗑️</span>
+        <span id="delete-icon">🗑</span>
       </div>
 
       <div class="modal-row"><span>Date:</span> <input type="date" id="modal-date"></div>
