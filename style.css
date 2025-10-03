@@ -1081,16 +1081,6 @@ input {
 
 
 
-
-
-
-
-
-
-
-
-
-
 /* === DARK MODE FOR PROFILE MODAL === */
 
 body.dark-mode .profile-modal {
@@ -1302,13 +1292,6 @@ body.dark-mode .sort-btn:hover {
 }
 
 
-
-
-
-
-
-
-
 /* === Clear-Stats All Modal === */
 
 #deleteOverlay {
@@ -1431,3 +1414,433 @@ body.dark-mode #deletePopup .popupBtns button#yesClear:active,
 body.dark-mode #deletePopup .popupBtns button#noClear:active {
   background: #ff5858;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- Click Game for Details Modal --- */
+
+#test-game-modal.hidden {
+  display: none; 
+}
+
+#test-game-modal {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+#test-game-modal .modal-content {
+  background: #d6d6d6;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  text-align: left;
+  position: relative;
+  box-sizing: border-box;
+  border: 3px solid transparent;
+  transition: border 0.3s, box-shadow 0.3s, background 0.3s, color 0.3s;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Border colors and subtle shadow by game type */
+#test-game-modal[data-mode="2v2"] .modal-content {
+  border-color: #2a7f2a;
+  box-shadow: 0 0 8px #2a7f2a66;
+}
+#test-game-modal[data-mode="3v3"] .modal-content {
+  border-color: #e69500;
+  box-shadow: 0 0 8px rgba(230,149,0,0.4);
+}
+#test-game-modal[data-mode="4v4"] .modal-content {
+  border-color: #b22222;
+  box-shadow: 0 0 8px rgba(178,34,34,0.4);
+}
+#test-game-modal[data-mode="practice"] .modal-content {
+  border-color: #e0405b;
+  box-shadow: 0 0 8px rgba(224,64,91,0.4);
+}
+
+/* Headings */
+#test-game-modal .modal-content h2 {
+  margin: 0 0 1rem;
+  font-size: 1.75rem; 
+  color: #222;
+  text-align: center;
+}
+
+#test-game-modal .modal-content .modal-header {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+#test-game-modal .modal-content .modal-header h2 {
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+#test-game-modal .modal-content .modal-header #delete-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 6px;
+}
+
+/* Modal rows (labels + inputs) aligned left */
+.modal-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  gap: 0.5rem; 
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.modal-row span {
+  display: inline-block;
+  width: 75px; 
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.modal-row input {
+  flex: 1;
+  min-width: 160px;
+  width: 100%;
+  padding: 0.45rem 0.7rem;
+  border-radius: 4px;
+  border: 2px solid #999;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.3s, box-shadow 0.3s, background 0.3s, color 0.3s;
+}
+
+/* Blue border on focus */
+.modal-row input:focus {
+  border-color: #3d80ff;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* Buttons layout */
+#test-game-modal .modal-content .button-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Buttons slightly smaller on all screens (requested) */
+#test-game-modal .modal-content button {
+  padding: 0.7rem 1.2rem; 
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  margin-top: -1rem;
+  font-size: 0.95rem; 
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+/* Save button */
+#modal-save {
+  background-color: #2196f3; 
+  color: white;
+}
+
+/* Close button */
+#close-test-modal {
+  background-color: #9e9e9e; 
+  color: white;
+}
+
+/* Pink hover and click effect for both buttons */
+#modal-save:hover,
+#close-test-modal:hover { 
+  background-color: #ff5858; 
+}
+
+#modal-save:active,
+#close-test-modal:active { 
+  background-color: #ff6f6f; 
+}
+
+/* --- Date input centering fix (left exactly as your working snippet) --- */
+.modal-row input[type="date"] {
+  text-align: center; /* works on desktop */
+}
+
+/* Extra wrapper trick for mobile */
+@media (max-width: 480px) {
+  .modal-row input[type="date"] {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+  .modal-row input[type="date"]::-webkit-datetime-edit {
+    text-align: center;
+    width: 100%;
+  }
+  .modal-row input[type="date"]::-moz-datetime-edit {
+    text-align: center;
+  }
+  .modal-row input[type="date"]::-ms-datetime-edit {
+    text-align: center;
+  }
+}
+
+/* Responsive tweaks (only button size & modal padding adjusted for mobile) */
+@media (max-width: 480px) {
+  #test-game-modal .modal-content {
+    padding: 1rem;
+    max-width: 95%;
+  }
+
+  /* Keep H2 slightly bigger on mobile too */
+  #test-game-modal .modal-content h2 {
+    font-size: 1.75rem;
+  }
+
+  /* Make buttons a bit smaller on mobile (requested) */
+  #test-game-modal .modal-content button {
+    font-size: 0.9rem;
+    padding: 0.7rem 1rem;
+  }
+
+  /* Keep original row behavior on mobile (no flex-direction change) */
+  .modal-row {
+    gap: 0.5rem; 
+  }
+
+  .modal-row input {
+    min-width: 150px; 
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  #test-game-modal .modal-content {
+    max-width: 380px;
+  }
+}
+
+/* --- Dark Mode Adjustments --- */
+body.dark-mode #test-game-modal {
+  background: rgba(0,0,0,0.8);
+}
+
+body.dark-mode #test-game-modal .modal-content {
+  background: #222;
+  color: #eee;
+  border-color: #00ffc8;
+  box-shadow: 0 4px 15px #00ffc8;
+}
+
+body.dark-mode #test-game-modal .modal-content h2 {
+  color: #eee;
+}
+
+body.dark-mode #test-game-modal .modal-row input {
+  background: #333;
+  color: #eee;
+  border-color: #00ffc8;
+}
+
+body.dark-mode #test-game-modal .modal-row input:focus {
+  border-color: #00ffc8;
+  box-shadow: 0 0 5px #00ffc8;
+}
+
+body.dark-mode #modal-save {
+  background-color: #00ffaed5;
+  color: #222;
+}
+
+body.dark-mode #close-test-modal {
+  background-color: #555;
+  color: #eee;
+}
+
+body.dark-mode #modal-save:hover,
+body.dark-mode #close-test-modal:hover {
+  background-color: #ff9292;
+}
+
+body.dark-mode #modal-save:active,
+body.dark-mode #close-test-modal:active {
+  background-color: #ff5858;
+}
+
+
+
+
+
+
+
+/* === Delete & Delete pop up === */
+
+/* === Modal header: keep title centered, trash floats without pushing it === */
+#test-game-modal .modal-content .modal-header {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+#test-game-modal .modal-content .modal-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #222;
+  text-align: center;
+  width: 100%;
+}
+
+#test-game-modal .modal-content .modal-header #delete-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+#test-game-modal .modal-content .modal-header #delete-icon:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+/* === Single-delete confirm (styled to match your Clear Stats popup) === */
+.confirm-modal {
+  display: flex;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 11000; /* above game modal */
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-box {
+  background: #a1a1a1;
+  border: 1px solid var(--clr-prim);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 4px 15px rgb(51, 113, 170);
+  font-family: Arial, sans-serif;
+}
+
+.confirm-box .statsHeading {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.confirm-box p {
+  margin-bottom: 20px;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.confirm-box .popupBtns {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.confirm-box .popupBtns button {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: 0.2s;
+}
+
+
+/* Cancel / Delete specific styles */
+.confirm-box .popupBtns #confirm-delete {
+  background: var(--clr-prim, #d9534f);
+  color: #fff;
+}
+
+.confirm-box .popupBtns #confirm-delete:hover {
+   background: #ff9292; 
+}
+
+.confirm-box .popupBtns #confirm-delete:active {
+   background: #ff5858; 
+}
+
+.confirm-box .popupBtns #confirm-cancel {
+  background: #555;
+  color: #fff;
+}
+
+.confirm-box .popupBtns #confirm-cancel:hover {
+   background: #ff9292; 
+}
+
+.confirm-box .popupBtns #confirm-cancel:active {
+   background: #ff5858; 
+}
+
+/* Dark mode */
+body.dark-mode .confirm-box {
+  background: #222;
+  color: #eee;
+  border: 1px solid #00ffc8;
+  box-shadow: 0 4px 15px #00ffc8;
+}
+
+body.dark-mode .confirm-box .statsHeading {
+   color: #eee; 
+}
+
+body.dark-mode .confirm-box .popupBtns #confirm-delete {
+   background: #00ffaed5; 
+}
+
+body.dark-mode .confirm-box .popupBtns #confirm-delete:hover,
+body.dark-mode .confirm-box .popupBtns #confirm-cancel:hover {
+   background: #ff9292; 
+}
+
+
+
+
