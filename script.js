@@ -81,31 +81,30 @@ function renderGames() {
         return false;
       });
 
-  filteredGames
-    .slice()
-    .sort((a, b) => new Date(b.date) - new Date(a.date)) // newest on top
-    .forEach((game) => {
-      const li = document.createElement("li");
+  // ❌ No date sorting
+  // ✅ Newest game on top
+  filteredGames.slice().reverse().forEach((game, index) => {
+    const li = document.createElement("li");
 
-      let cls = "";
-      if ((game.mode || "").toLowerCase() === "practice") cls = modeClasses["practice"];
-      else if (["2v2", "3v3", "4v4"].includes(game.leagueSize)) cls = modeClasses[game.leagueSize];
-      else cls = modeClasses["league"];
+    let cls = "";
+    if ((game.mode || "").toLowerCase() === "practice") cls = modeClasses["practice"];
+    else if (["2v2", "3v3", "4v4"].includes(game.leagueSize)) cls = modeClasses[game.leagueSize];
+    else cls = modeClasses["league"];
 
-      li.className = cls;
+    li.className = cls;
 
-      const originalIndex = games.indexOf(game);
-      li.dataset.index = originalIndex;
+    // Map index to the original games array
+    li.dataset.index = games.indexOf(game);
 
-      li.innerHTML = `
-        <span>${new Date(game.date).toLocaleDateString()}</span>
-        <span>${game.ball}</span>
-        <span>${game.lane}</span>
-        <span>${game.score}</span>
-        <span>${game.place}</span>
-      `;
-      list.appendChild(li);
-    });
+    li.innerHTML = `
+      <span>${new Date(game.date).toLocaleDateString()}</span>
+      <span>${game.ball}</span>
+      <span>${game.lane}</span>
+      <span>${game.score}</span>
+      <span>${game.place}</span>
+    `;
+    list.appendChild(li);
+  });
 
   document.querySelectorAll(".sort-btn").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.mode === currentFilter);
