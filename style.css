@@ -155,6 +155,7 @@ main.dashboard {
     color: var(--clr-prim);
 }
 
+
 /* Recent Games Section */
 .recent-games {
     background: var(--clr-bg-card);
@@ -162,7 +163,9 @@ main.dashboard {
     padding: 1.5rem;
     box-shadow: var(--shadow);
     grid-column: 1 / -1; /* full width */
-    margin-left: 4rem;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Recent Games Header */
@@ -172,17 +175,20 @@ main.dashboard {
 
 .game-subhead {
     display: flex;                 
-    justify-content: center;
+    justify-content: space-around;
+    align-items: center;
     text-align: center;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin: 0.5rem auto;
     font-size: 0.8rem;
     color: var(--card-bg);
-    font-weight: 600;            
-    gap: 4.5rem;
-    background-color: #c9d9f7;
+    font-weight: 600;
+    background-color: #c9d9f7;      
     border: 1px solid rgb(160, 160, 160);
-    border-radius: 10px 10px 10px;
+    border-radius: 10px;
+    padding: 0.25rem 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* Recent Games List */
@@ -238,17 +244,27 @@ main.dashboard {
     font-size: 1rem;
     font-weight: bold;
     color: #fff;
-    background: linear-gradient(90deg, #00c59a, #ff4b5c); 
+    background: linear-gradient(90deg, #5990f8, #f16c79); 
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 0 8px #00c59a, 0 0 15px #ff4b5c;
+    box-shadow: 0 0 8px #5990f8, 0 0 15px #f16c79;
     transition: all 0.25s ease;
     margin-left: 8rem;
 }
 
 #clearRecentGames:hover {
     transform: scale(1.05);
+    box-shadow: 0 0 12px #5990f8, 0 0 25px #f16c79;
+}
+
+/* Clear Button */
+body.dark-mode #clearRecentGames {
+    background: linear-gradient(90deg, #00c59a, #ff4b5c); 
+    box-shadow: 0 0 8px #00c59a, 0 0 15px #ff4b5c;
+}
+
+body.dark-mode #clearRecentGames:hover {
     box-shadow: 0 0 12px #00c59a, 0 0 25px #ff4b5c;
 }
 
@@ -297,6 +313,11 @@ footer {
     .summary {
         grid-column: span 2;
     }
+
+    .game-subhead {
+      padding-left: 2.2rem;
+      padding-right: 2.2rem;
+    }
 }
 
 @media (min-width: 920px) {
@@ -304,15 +325,20 @@ footer {
         grid-template-columns: 1fr; /* still single column layout */
     }
        .summary {
-        grid-column: span 3;
         display: flex;
         justify-content: space-around;
         align-items: center;
+        margin: 0 -4rem;
     }
 
     .summary ul {
         display: flex;
         gap: 2rem;
+    }
+
+    .game-subhead {
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
     }
 }
 
@@ -1476,15 +1502,15 @@ body.dark-mode #deletePopup .popupBtns button#noClear:active {
 }
 #test-game-modal[data-mode="3v3"] .modal-content {
   border-color: #e69500;
-  box-shadow: 0 0 8px rgba(230,149,0,0.4);
+  box-shadow: 0 0 8px #e6950066;
 }
 #test-game-modal[data-mode="4v4"] .modal-content {
   border-color: #b22222;
-  box-shadow: 0 0 8px rgba(178,34,34,0.4);
+  box-shadow: 0 0 8px #b2222266;
 }
 #test-game-modal[data-mode="practice"] .modal-content {
   border-color: #e0405b;
-  box-shadow: 0 0 8px rgba(224,64,91,0.4);
+  box-shadow: 0 0 8px #e0405b66;
 }
 
 /* Headings */
@@ -1496,17 +1522,29 @@ body.dark-mode #deletePopup .popupBtns button#noClear:active {
 }
 
 #test-game-modal .modal-content .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
   margin-bottom: 1rem;
 }
 
 #test-game-modal .modal-content .modal-header h2 {
-  margin: 0;
+  font-size: 1.75rem;
+  color: #222;
   text-align: center;
-  width: 100%;
+  flex: 1;
+  padding-right: 2rem;
 }
 
-#test-game-modal .modal-content .modal-header #delete-icon {
+#players-icon {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 20px;  
+  margin-left: 0.75rem;
+}
+
+#test-game-modal .modal-content .modal-header #delete-icon  {
   position: absolute;
   right: 0;
   top: 50%;
@@ -1672,12 +1710,11 @@ body.dark-mode #test-game-modal .modal-content h2 {
 
 body.dark-mode #test-game-modal .modal-row input {
   background: #333;
-  color: #eee;
-  border-color: #00ffc8;
+  color: #eee; 
 }
 
 body.dark-mode #test-game-modal .modal-row input:focus {
-  border-color: #00ffc8;
+  border-color: #4efad5 !important;
   box-shadow: 0 0 5px #00ffc8;
 }
 
@@ -1734,18 +1771,17 @@ body.dark-mode #close-test-modal:active {
   border-radius: 6px;
 }
 
-#test-game-modal .modal-content .modal-header #delete-icon:hover {
-  background: rgba(0,0,0,0.05);
-}
+
 
 /* === Single-delete confirm (styled to match your Clear Stats popup) === */
+
 .confirm-modal {
   display: flex;
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.7);
-  z-index: 11000; /* above game modal */
+  z-index: 11000; 
   justify-content: center;
   align-items: center;
 }
@@ -1759,7 +1795,7 @@ body.dark-mode #close-test-modal:active {
   width: 90%;
   text-align: center;
   color: #fff;
-  box-shadow: 0 4px 15px rgb(51, 113, 170);
+  box-shadow: 0 4px 15px #3371aa;
   font-family: Arial, sans-serif;
 }
 
@@ -1842,5 +1878,118 @@ body.dark-mode .confirm-box .popupBtns #confirm-cancel:hover {
 }
 
 
+/* ====== 2v2, 3v3, 4v4 Avg css is in the js ====== */
+
+/* === 2v2, 3v3, 4v4 Players === */
 
 
+#back-to-details {
+  display: inline-block;
+  font-size: 1.5rem; 
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#back-to-details:hover {
+  animation: wiggle 0.5s ease-in-out infinite;
+}
+
+/* Wiggle animation */
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+  75% { transform: rotate(-10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
+
+/* FFFFFFFFFF */
+
+/* --- Players Modal Inputs --- */
+.players-container input {
+  width: 90%;
+  padding: 0.7rem 0.9rem; 
+  font-size: 1rem;        
+  border-radius: 6px;
+  border: 2px solid #999;
+  outline: none;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.players-container input:focus {
+  border-color: #3d80ff; 
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+body.dark-mode .players-container input:focus {
+  border-color: #4efad5;
+  box-shadow: 0 0 5px #00ffc8 
+}
+
+/* --- Players Modal Buttons --- */
+.button-row button#save-players {
+  background-color: #2196f3; 
+  color: white;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button-row button#close-players {
+  background-color: #9e9e9e; 
+  color: white;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Hover effects */
+.button-row button#save-players:hover,
+.button-row button#close-players:hover {
+  background-color: #ff5858; 
+}
+
+.button-row button#save-players:active,
+.button-row button#close-players:active {
+  background-color: #ff6f6f; 
+}
+
+/* Dark mode (optional, matches your modal) */
+body.dark-mode .button-row button#save-players {
+  background-color: #00ffaed5;
+  color: #222;
+}
+
+body.dark-mode .button-row button#close-players {
+  background-color: #555;
+  color: #eee;
+}
+
+body.dark-mode .button-row button#save-players:hover,
+body.dark-mode .button-row button#close-players:hover {
+  background-color: #ff9292;
+}
+
+body.dark-mode .button-row button#save-players:active,
+body.dark-mode .button-row button#close-players:active {
+  background-color: #ff5858;
+}
+
+/* === Make Save and Close buttons bigger on mobile === */
+@media (max-width: 600px) {
+  #test-game-modal .button-row button#modal-save,
+  #test-game-modal .button-row button#close-test-modal {
+    font-size: 0.95rem;    
+    padding: 0.7rem 1.2rem; 
+  }
+}
