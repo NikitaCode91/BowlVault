@@ -26,7 +26,11 @@
     </nav>
   </header>
 
-  <div class="header-button-container">
+  <!-- Action Buttons Row: Notes left, Dark Mode right -->
+  <div class="header-action-row">
+    <button id="note-toggle" class="plain-btn" aria-label="Open notes">
+      <span class="emoji">📝</span>
+    </button>
     <button id="theme-toggle" class="neon-btn" aria-label="Toggle dark/light mode">
       <span class="emoji">🌙</span>
     </button>
@@ -49,7 +53,7 @@
       <h2>What's your bowling style?</h2>
       <div class="choice-group">
         <button class="choice-btn" data-style="1-handed">👆 One - Handed</button>
-        <button class="choice-btn" data-style="2-handed">✌️ Two - Handed</button>
+        <button class="choice-btn" data-style="2-handed">✌ Two - Handed</button>
       </div>
     </section>
 
@@ -61,7 +65,23 @@
       </div>
     </section>
 
+    <!-- Notes Popup -->
+    <div id="note-popup" class="note-hidden">
+      <div class="note-header">
+        <h3>📝 Practice Notes</h3>
+        <button id="close-note" aria-label="Close note">👋</button>
+      </div>
+
+      <div class="note-input">
+        <input type="text" id="note-text" placeholder="Add a new note..." />
+        <button id="add-note">🎯</button>
+      </div>
+
+      <ul id="note-list"></ul>
+    </div>
+
   </main>
 
 </body>
 </html>
+

@@ -649,6 +649,16 @@ body.dark-mode .corner-logo {
 
 
 
+
+
+
+
+
+
+
+
+
+
 /* === Profile Circle Button === */
 
 #profile-circle {
@@ -673,19 +683,6 @@ body.dark-mode .corner-logo {
   display: block;
 }
 
-/* Fix for small screens */
-@media (max-width: 600px) {
-  #profile-circle {
-    width: 70px;  /* slightly bigger for mobile visibility */
-    height: 70px;
-  }
-
-  #profile-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
 
 .hidden {
   display: none !important;
@@ -710,14 +707,14 @@ body.modal-open {
 
 .profile-modal {
   position: fixed;
-  top: 50%;
+  top: 0;
   left: 50%;
   width: 95%;
   max-width: 520px;
   max-height: 90vh;
   background: #fff;
   color: #222;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   border: 2px dashed var(--clr-prim);
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0,0,0,0.2);
@@ -726,9 +723,10 @@ body.modal-open {
   display: none;
   flex-direction: column;
   gap: 0.8rem;
-  z-index: 9999;
+  align-items: flex-start;
   max-height: 90vh;
   overflow-y: auto;
+  z-index: 9999;
 }
 
 .profile-modal.active {
@@ -874,6 +872,7 @@ body.modal-open {
   font-weight: bold;
 }
 
+
 /* Profile Pic */
 .profile-pic-preview {
   width: 120px;
@@ -1007,6 +1006,14 @@ input {
 }
 
 
+
+/* Phones (small screens) */
+@media (max-width: 599px) {
+  .profile-modal .profile-pic-preview {
+    margin-top: 1rem; 
+  }
+}
+
 @media (max-width: 600px) {
   #profile-circle {
     width: 60px;
@@ -1045,30 +1052,32 @@ input {
 
   /* Ball Row */
   .ball-row {
-    flex-direction: row;         /* weight + favorite ball side by side */
+    flex-direction: row;         
     justify-content: flex-start;
-    gap: 1.5rem;                /* spacing between weight and ball */
+    gap: 1rem;               
     margin-left: 0;
+    flex-wrap: wrap;
   }
 
   /* Ball weight group */
-  .ball-weight-group {
-    flex: 0 0 auto;             /* don’t stretch */
-  }
-
-  /* Favorite Ball group */
+  .ball-weight-group,
   .fav-ball-group {
+    flex: 0 0 auto;            
     display: flex;
     align-items: center;
-    gap: 0.5rem;               /* space between image and input */
+    gap: 0.5rem;               
   }
-
-
 
   /* Ball weight input */
   #ball-weight {
-    width: 60px;                /* smaller input to fit neatly */
-    flex: 0 0 auto;
+    width: 50-60px;               
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .fav-ball-pic {
+    width: 40-48px;
+    height: 40-48px;
   }
 
   /* Favorite ball image circular */
@@ -1098,6 +1107,29 @@ input {
     box-sizing: border-box;
   }
 }
+
+
+/* Tablets (medium screens) */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .profile-modal .profile-pic-preview {
+    margin-top: 3rem; /* adjust for tablets */
+  }
+}
+
+/* Laptops and larger screens */
+@media (min-width: 1024px) {
+  .profile-modal .profile-pic-preview {
+    margin-top: 3rem; /* adjust for laptops */
+  }
+}
+
+
+
+
+
+
+
+
 
 
 

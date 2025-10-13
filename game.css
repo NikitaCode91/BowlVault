@@ -387,56 +387,6 @@ button:hover {
 
 
 
-/* === DARK MODE toggle button === */
-
-body.dark-mode {
-  background: #121217;
-}
-
-/* Neon toggle button container */
-.header-button-container {
-  position: relative;
-  left: 85%;
-  margin: 10px;
-}
-
-/* Neon toggle button */
-.neon-btn {
-  background: #121217;
-  border: none;
-  border-radius: 50%;
-  padding: 0.25rem 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 1rem;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-}
-
-.neon-btn:hover {
-  background: var(--clr-sec);
-  color: #111;
-  box-shadow:
-    0 0 10px var(--clr-sec),
-    0 0 18px var(--clr-sec),
-    0 0 25px var(--clr-prim);
-}
-
-/* Emoji inside the neon toggle button */
-.neon-btn .emoji {
-  display: inline-block;
-  font-size: 1.6rem;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.neon-btn.toggled .emoji {
-  transform: rotate(360deg) scale(1.2);
-  opacity: 0.8;
-}
 
 
 
@@ -1082,4 +1032,301 @@ body.dark-mode .save-first-cancel:active {
 body.dark-mode .endgame-cancel,
 body.dark-mode .save-first-cancel {
   background: #555;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* === DARK MODE Toggle === */
+
+body.dark-mode {
+  background: #121217;
+}
+
+/* === Header Action Row === */
+.header-action-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  padding: 1rem 3rem;
+}
+
+/* Notes button (top-left, initially hidden) */
+#note-toggle {
+  position: absolute;
+  left: 3rem; 
+  top: 0.5rem;   
+  display: none; 
+  background: #fdd835;
+  border-radius: 8px;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 1.5rem; 
+  z-index: 1000;
+}
+
+/* === Dark mode toggle button (black circle background) === */
+.neon-btn {
+  background: #111; 
+  border: none;
+  border-radius: 50%;
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: all 0.2s ease;
+  margin-top: 0.3rem; 
+}
+
+.neon-btn:hover {
+  background: var(--clr-sec);
+  color: #111;
+  box-shadow:
+    0 0 10px var(--clr-sec),
+    0 0 18px var(--clr-sec),
+    0 0 25px var(--clr-prim);
+}
+
+.neon-btn .emoji {
+  display: inline-block;
+  font-size: 1.6rem;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.neon-btn.toggled .emoji {
+  transform: rotate(360deg) scale(1.2);
+  opacity: 0.8;
+}
+
+/* === PRACTICE NOTES POPUP === */
+#note-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 380px;
+  max-width: 90%;
+  padding: 20px;
+  background: #fffdf5;
+  border: 2px solid var(--clr-prim);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  font-family: "Segoe UI", sans-serif;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#note-popup.note-hidden {
+  display: none;
+}
+
+/* Notes header */
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-header h3 {
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+}
+
+#close-note {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Note input */
+.note-input {
+  display: flex;
+  gap: 8px;
+}
+
+#note-text {
+  flex: 1;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+#add-note {
+  background: #fdd835;
+  border: none;
+  border-radius: 6px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+/* Note list */
+#note-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#note-list li {
+  background: #fffef0;
+  border: 1px solid #ffcce0;
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+#note-list li.done span {
+  text-decoration: line-through wavy #f51747;
+  opacity: 0.7;
+}
+
+#note-list li button {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #b71c1c;
+}
+
+/* === DARK MODE FOR NOTES POPUP === */
+body.dark-mode #note-popup {
+  background: #1a1a1a;
+  color: #f5f5f5;
+  border: 2px solid #00ffc8;
+  box-shadow: 8px 20px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .note-header h3 {
+  color: #00dfae;
+}
+
+body.dark-mode #close-note {
+  color: #ff5858;
+}
+
+body.dark-mode #note-text {
+  background: #222;
+  color: #f5f5f5;
+  border: 1px solid #444;
+}
+
+body.dark-mode #add-note {
+  background: var(--clr-sec);
+  color: #111;
+}
+
+body.dark-mode #note-list li {
+  background: #2a2a2a;
+  color: #f5f5f5;
+  box-shadow: 0 2px 5px #0000004d;
+  border: 1px solid #00dfae;
+}
+
+body.dark-mode #note-list li.done span {
+  text-decoration-line: line-through;
+  text-decoration-color: #fad21f;
+  opacity: 0.7;
+}
+
+body.dark-mode #note-list li button {
+  color: #00dfae;
+}
+
+/* === MOBILE & SCREEN ADJUSTMENTS === */
+@media (min-width: 1024px) {
+  .header-action-row {
+    padding: 0.2rem 17rem; 
+  }
+  #note-toggle {
+    left: 3rem; 
+    top: 0.5rem;
+    padding: 6px 10px;
+    background: #fdd835; 
+    border-radius: 8px;
+    border: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-action-row {
+    padding: 0.2rem 2rem; 
+  }
+  #note-toggle {
+    left: 2rem; 
+    top: 0.5rem;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-action-row {
+    padding: 0.2rem 2rem; 
+  }
+  #note-toggle {
+    left: 2rem; 
+  }
+}
+
+@media (max-width: 480px) {
+  .header-action-row {
+    padding: 0.2rem 1rem; 
+  }
+  #note-toggle {
+    left: 1rem; 
+  }
+}
+
+/* For large screens (laptops/desktops) */
+@media (min-width: 1200px) {
+  #note-toggle {
+    left: 21%; 
+    padding: 6px 10px; 
+  }
 }

@@ -24,12 +24,16 @@
     </nav>
   </header>
 
-  <div class="header-button-container">
-    <button id="theme-toggle" class="neon-btn" aria-label="Toggle dark/light mode">
+  <!-- Header action row: note left, theme right (matches coach file layout) -->
+  <div class="header-action-row">
+    <button id="note-toggle" class="plain-btn" aria-label="Open notes" title="Practice Notes">
+      <span class="emoji">📝</span>
+    </button>
+    <button id="theme-toggle" class="neon-btn" aria-label="Toggle dark/light mode" title="Toggle theme">
       <span class="emoji">🌙</span>
     </button>
   </div>
-  
+
   <div class="bowling-score-container">
     <!-- Title and selectors -->
     <div class="score-header">
@@ -186,6 +190,26 @@
       <button id="saveFirstCancelBtn"  class="save-first-btn save-first-cancel">Go Back</button>
     </div>
   </div>
+</div>
+
+<!--
+  NOTES: Replaced the old center-note button/popup with the coach-style header note button
+  and popup below. The note button is hidden by default and shown only when Practice is selected.
+-->
+
+<!-- Notes Popup (coach style: same IDs as coach file) -->
+<div id="note-popup" class="note-hidden">
+  <div class="note-header">
+    <h3>📝 Practice Notes</h3>
+    <button id="close-note" aria-label="Close note">👋</button>
+  </div>
+
+  <div class="note-input">
+    <input type="text" id="note-text" placeholder="Add a new note..." />
+    <button id="add-note">🎯</button>
+  </div>
+
+  <ul id="note-list"></ul>
 </div>
 
 </body>

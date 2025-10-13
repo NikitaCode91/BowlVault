@@ -312,3 +312,80 @@ toggleBtn.addEventListener("click", () => {
 
   localStorage.setItem("theme", isDark ? "dark" : "light");
 });
+
+
+
+
+
+// === Notes === //
+
+document.addEventListener("DOMContentLoaded", () => {
+  const noteToggle = document.getElementById("note-toggle");
+  const notePopup = document.getElementById("note-popup");
+  const closeNote = document.getElementById("close-note");
+  const addNote = document.getElementById("add-note");
+  const noteText = document.getElementById("note-text");
+  const noteList = document.getElementById("note-list");
+
+  // === Load saved notes ===
+  const savedNotes = JSON.parse(localStorage.getItem("practiceNotes")) || [];
+  savedNotes.forEach(note => createNoteItem(note.text, note.done));
+
+  // === Show or hide notes popup ===
+  noteToggle.addEventListener("click", () => {
+    notePopup.classList.toggle("note-hidden");
+  });
+
+  closeNote.addEventListener("click", () => {
+    notePopup.classList.add("note-hidden");
+  });
+
+  // === Add a new note ===
+  addNote.addEventListener("click", () => {
+    const text = noteText.value.trim();
+    if (!text) return;
+    createNoteItem(text, false);
+    saveNotes();
+    noteText.value = "";
+  });
+
+  // === Helper: create a note item ===
+  function createNoteItem(text, done) {
+    const li = document.createElement("li");
+    const span = document.createElement("span");
+    span.textContent = text;
+
+    const del = document.createElement("button");
+    del.textContent = "🗑️";
+
+    li.appendChild(span);
+    li.appendChild(del);
+    if (done) li.classList.add("done");
+    noteList.appendChild(li);
+
+    // Toggle done
+    span.addEventListener("click", () => {
+      li.classList.toggle("done");
+      saveNotes();
+    });
+
+    // Delete note
+    del.addEventListener("click", (e) => {
+      e.stopPropagation();
+      li.remove();
+      saveNotes();
+    });
+  }
+
+  // === Save notes to localStorage ===
+  function saveNotes() {
+    const notes = [];
+    noteList.querySelectorAll("li").forEach(li => {
+      notes.push({
+        text: li.querySelector("span").textContent,
+        done: li.classList.contains("done")
+      });
+    });
+    localStorage.setItem("practiceNotes", JSON.stringify(notes));
+  }
+});

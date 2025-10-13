@@ -368,57 +368,7 @@ header h3.subtitle {
   }
 }
 
-/* === Dark mode Toggle button === */
 
-
-body.dark-mode {
-  background: #121217;
-}
-
-/* Neon toggle button container */
-.header-button-container {
-  position: relative;
-  left: 85%;
-  margin: 10px;
-}
-
-/* Neon toggle button */
-.neon-btn {
-  background: #121217;
-  border: none;
-  border-radius: 50%;
-  padding: 0.25rem 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 1rem;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-}
-
-.neon-btn:hover {
-  background: var(--clr-sec);
-  color: #111;
-  box-shadow:
-    0 0 10px var(--clr-sec),
-    0 0 18px var(--clr-sec),
-    0 0 25px var(--clr-prim);
-}
-
-/* Emoji inside the neon toggle button */
-.neon-btn .emoji {
-  display: inline-block;
-  font-size: 1.6rem;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.neon-btn.toggled .emoji {
-  transform: rotate(360deg) scale(1.2);
-  opacity: 0.8;
-}
 
 
 
@@ -572,3 +522,292 @@ body.dark-mode .pagination-controls button:disabled {
   background: #555;
   color: #999;
 }
+
+
+
+
+
+
+
+
+
+
+/* === Dark Mode Toggle Button (moon with dark circle) === */
+
+/* === Dark mode Toggle button (FIXED) === */
+body.dark-mode {
+  background: #121217;
+}
+
+/* Neon toggle button container */
+.header-button-container {
+  position: relative;
+  left: 85%;
+  margin: 10px;
+}
+
+/* Neon toggle button */
+body:not(.dark-mode) .neon-btn {
+  background: #121217;       
+  border: none;              
+  border-radius: 50%;
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+body:not(.dark-mode) .neon-btn:hover {
+  background: var(--clr-sec);
+  color: #111;
+  box-shadow:
+    0 0 10px var(--clr-sec),
+    0 0 18px var(--clr-sec),
+    0 0 25px var(--clr-prim);
+}
+
+/* Emoji inside the neon toggle button */
+.neon-btn .emoji {
+  display: inline-block;
+  font-size: 1.6rem;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.neon-btn.toggled .emoji {
+  transform: rotate(360deg) scale(1.2);
+  opacity: 0.8;
+}
+
+
+
+/* === Notes (UNCHANGED) === */
+
+/* Header action row: notes left, dark mode right */
+/* === Header Action Row: Notes Left, Dark Mode Right (Adjusted) === */
+.header-action-row {
+  position: relative;
+  display: flex;
+  justify-content: space-between; /* notes left, dark mode right */
+  width: 100%;
+  max-width: 1000px;
+  margin: 0.8rem auto 1.8rem auto; /* slightly moved up from before */
+  padding: 0 0.8rem;               /* slightly more left/right padding */
+  box-sizing: border-box;
+  z-index: 1500;
+}
+
+/* Buttons inside row: notes & dark mode */
+.header-action-row button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.6rem;
+  padding: 6px;                     /* tiny fraction adjustment */
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.header-action-row button:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+/* === Mobile adjustments === */
+@media (max-width: 768px) {
+  .header-action-row {
+    margin: 0.6rem auto 1.5rem auto; 
+    padding: 0 2rem;              
+  }
+  .header-action-row button {
+    padding: 5px;                
+  }
+}
+
+@media (max-width: 480px) {
+  .header-action-row {
+    margin: 0.5rem auto 1.2rem auto; 
+    padding: 0 0.7rem;              
+  }
+
+  .header-action-row button {
+    padding: 4px;                    
+  }
+}
+
+/* Notes popup */
+
+/* Notes button (top-left, initially hidden) */
+#note-toggle {
+  background: #fdd835;
+  border-radius: 8px;
+  border: none;
+  padding: 6px 10px;
+}
+
+#note-popup {
+  position: fixed;          
+  top: 50%;                
+  left: 50%;                
+  transform: translate(-50%, -50%); 
+  width: 360px;              
+  max-width: 90%;           
+  padding: 20px;            
+  background: #fffdf5;       
+  border: 2px solid var(--clr-prim); 
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  font-family: "Segoe UI", sans-serif;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#note-popup.note-hidden {
+  display: none;
+}
+
+/* Notes popup header */
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-header h3 {
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+}
+
+#close-note {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Input area */
+.note-input {
+  display: flex;
+  gap: 8px;
+}
+
+#note-text {
+  flex: 1;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+#add-note {
+  background: #fdd835;
+  border: none;
+  border-radius: 6px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+/* Note list */
+#note-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#note-list li {
+  background: #fffef0;
+  border: 1px solid #ffcce0; 
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s, border-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Optional: highlight border on hover */
+#note-list li:hover {
+  background: #fdecf3;
+  border-color: #ff99c2; 
+}
+
+#note-list li.done span {
+  text-decoration: line-through wavy #f51747;
+  opacity: 0.7;
+}
+
+#note-list li button {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #b71c1c;
+}
+
+
+/* Note Dark-mode */
+
+/* === Dark Mode for Notes Popup === */
+body.dark-mode #note-popup {
+  background: #1a1a1a;     
+  color: #f5f5f5;    
+  border: 2px solid #00ffc8;       
+  box-shadow:  8px 20px rgba(255, 255, 255, 0.05);
+}
+
+/* Header inside notes popup */
+body.dark-mode .note-header h3 {
+  color: var(--clr-prim);
+}
+
+/* Close button */
+body.dark-mode #close-note {
+  color: #ff5858;
+}
+
+/* Input area */
+body.dark-mode #note-text {
+  background: #222;          
+  color: #f5f5f5;            
+  border: 1px solid #444;     
+}
+
+body.dark-mode #add-note {
+  background: var(--clr-sec); 
+  color: #111;
+}
+
+/* Notes list items */
+body.dark-mode #note-list li {
+  background: #2a2a2a;
+  color: #f5f5f5;
+  box-shadow: 0 2px 5px #0000004d;
+  border: 1px solid #00dfae;
+}
+
+body.dark-mode #note-list li:hover {
+  background: #424242;
+  border: 1px solid #fd6188;
+}
+
+body.dark-mode #note-list li.done span {
+  text-decoration: line-through wavy #fad21f;
+  opacity: 0.7;
+}
+
+body.dark-mode #note-list li button {
+  color: #00dfae;            
+}
+

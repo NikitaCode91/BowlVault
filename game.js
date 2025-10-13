@@ -553,3 +553,169 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// === Notes for Practice games === //
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const practiceBtn = document.getElementById("practice-btn");
+  const leagueBtn = document.getElementById("league-btn");
+  const closeModalBtn = document.getElementById("close-modal");
+  const mainBtn = document.getElementById("main-btn");
+
+  const houseBallsBtn = document.getElementById("house-balls-btn");
+  const ballVaultBtn = document.getElementById("ball-vault-btn");
+  const closeBallModalBtn = document.getElementById("close-ball-modal");
+
+  const noteToggle = document.getElementById("note-toggle");
+  const notePopup = document.getElementById("note-popup");
+  const closeNote = document.getElementById("close-note");
+  const addNoteBtn = document.getElementById("add-note");
+  const noteTextInput = document.getElementById("note-text");
+  const noteList = document.getElementById("note-list");
+
+  if (noteToggle) noteToggle.style.display = "none";
+  if (notePopup) notePopup.classList.add("note-hidden");
+
+  // -----------------------
+  // Persist Practice Mode Across Pages
+  // -----------------------
+  let isPracticeMode = sessionStorage.getItem("isPracticeMode") === "true";
+
+  function setPracticeMode(value) {
+    isPracticeMode = value;
+    sessionStorage.setItem("isPracticeMode", value);
+  }
+
+  function loadNotes() {
+    const saved = JSON.parse(localStorage.getItem("practiceNotes") || "[]");
+    noteList.innerHTML = "";
+    saved.forEach((n) => createNoteItem(n.text, !!n.done));
+  }
+
+  function saveNotes() {
+    const notes = [];
+    noteList.querySelectorAll("li").forEach(li => {
+      const span = li.querySelector("span");
+      const done = li.classList.contains("done");
+      notes.push({ text: span ? span.textContent : "", done });
+    });
+    localStorage.setItem("practiceNotes", JSON.stringify(notes));
+  }
+
+  function createNoteItem(text, done = false) {
+    const li = document.createElement("li");
+    li.style.cursor = "pointer";
+
+    const span = document.createElement("span");
+    span.textContent = text;
+    li.appendChild(span);
+
+    const del = document.createElement("button");
+    del.type = "button";
+    del.textContent = "🗑️";
+    del.classList.add("note-del");
+    li.appendChild(del);
+
+    if (done) li.classList.add("done");
+
+    span.addEventListener("click", () => {
+      li.classList.toggle("done");
+      saveNotes();
+    });
+
+    del.addEventListener("click", (e) => {
+      e.stopPropagation();
+      li.remove();
+      saveNotes();
+    });
+
+    noteList.appendChild(li);
+  }
+
+  if (addNoteBtn) {
+    addNoteBtn.addEventListener("click", () => {
+      const text = (noteTextInput && noteTextInput.value) ? noteTextInput.value.trim() : "";
+      if (!text) return;
+      createNoteItem(text, false);
+      saveNotes();
+      if (noteTextInput) noteTextInput.value = "";
+    });
+  }
+
+  if (noteTextInput) {
+    noteTextInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") addNoteBtn.click();
+    });
+  }
+
+  if (noteToggle) {
+    noteToggle.addEventListener("click", () => {
+      if (!notePopup) return;
+      notePopup.classList.toggle("note-hidden");
+      if (!notePopup.classList.contains("note-hidden")) loadNotes();
+    });
+  }
+
+  if (closeNote) {
+    closeNote.addEventListener("click", () => {
+      if (notePopup) notePopup.classList.add("note-hidden");
+    });
+  }
+
+  function enablePracticeNotes() {
+    if (noteToggle) noteToggle.style.display = "block";
+    if (notePopup) notePopup.classList.add("note-hidden");
+    loadNotes();
+  }
+
+  function disablePracticeNotes() {
+    if (noteToggle) noteToggle.style.display = "none";
+    if (notePopup) notePopup.classList.add("note-hidden");
+  }
+
+  // -----------------------
+  // Buttons
+  // -----------------------
+  if (practiceBtn) practiceBtn.addEventListener("click", () => { setPracticeMode(true); disablePracticeNotes(); });
+  if (leagueBtn) leagueBtn.addEventListener("click", () => { setPracticeMode(false); disablePracticeNotes(); });
+  if (closeModalBtn) closeModalBtn.addEventListener("click", () => { setPracticeMode(false); disablePracticeNotes(); });
+  if (mainBtn) mainBtn.addEventListener("click", () => { setPracticeMode(false); disablePracticeNotes(); });
+
+  // -----------------------
+  // Practice ball clicks
+  // -----------------------
+  function handlePracticeBallClick() {
+    if (!isPracticeMode) return;
+    enablePracticeNotes();
+  }
+
+  if (houseBallsBtn) houseBallsBtn.addEventListener("click", handlePracticeBallClick);
+  if (ballVaultBtn) ballVaultBtn.addEventListener("click", handlePracticeBallClick);
+
+  // -----------------------
+  // Re-enable notes on page load if Practice mode was selected before
+  // -----------------------
+  if (isPracticeMode) {
+    enablePracticeNotes();
+  }
+
+  // -----------------------
+  // Initial load
+  // -----------------------
+  if (!isPracticeMode) disablePracticeNotes();
+
+});
