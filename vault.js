@@ -1,21 +1,55 @@
-// === Light & Dark Mode === //
+/** 
+ * BowlVault — Vault Manager Script
+ * --------------------------------
+ * This script manages the user's personal "Ball Vault" page.
+ * It handles theme switching, CRUD operations for bowling balls,
+ * image uploads, editing, and reordering via drag & drop.
+ * 
+ * 
+ * Comment Structure:
+ * 
+ * // ===== Comment ===== //      → Marks the start of a major section
+ * // -- Comment -- //            → Notes about linked files or references
+ * // == Comment == //            → Important or highlighted part
+ * // Comment                     → General explanation of code
+ * [Comment]                      → File overview or purpose (use brackets to avoid nesting)
+ *
+ * ===================================
+ *  Contents
+ * ===================================
+ * 1. Theme Toggle (Light / Dark)
+ * 2. Seed Data (sample balls)
+ * 3. DOM Ready Setup
+ * 4. Render Cards
+ * 5. Global Event Listeners
+ * 6. Button Events (Add / Continue)
+ * 7. Helper Functions
+ * 8. Ball Drawer (Details & Edit)
+ * 9. Image Upload & Resize
+ * 10. Add New Ball
+ * 11. Save Edited Ball
+ * 12. SortableJS (Drag & Drop)
+ * ===================================
+ */
 
+
+// ===== Light & Dark Mode ===== //
 const toggleBtn = document.getElementById("theme-toggle");
 const emojiSpan = toggleBtn.querySelector(".emoji");
 
-// Load saved theme on page load
+// Load saved theme
 const savedTheme = localStorage.getItem("theme");
-if (savedTheme === "dark") {
-  document.body.classList.add("dark-mode");
-  emojiSpan.textContent = "🌞";
-  toggleBtn.classList.add("toggled");
-} else {
-  document.body.classList.remove("dark-mode");
-  emojiSpan.textContent = "🌙";
-  toggleBtn.classList.remove("toggled");
-}
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+    emojiSpan.textContent = "🌞";
+    toggleBtn.classList.add("toggled");
+  } else {
+    document.body.classList.remove("dark-mode");
+    emojiSpan.textContent = "🌙";
+    toggleBtn.classList.remove("toggled");
+  }
 
-// Toggle theme on click and save preference
+// Toggle theme and save preference
 toggleBtn.addEventListener("click", () => {
   const isDark = document.body.classList.toggle("dark-mode");
   emojiSpan.textContent = isDark ? "🌞" : "🌙";
@@ -26,13 +60,9 @@ toggleBtn.addEventListener("click", () => {
 
 
 
-
-
-
-
 "use strict";
 
-// ---------- 1. Seed data ----------
+// ===== Sample balls is you starter data ===== //
 const sampleBalls = [
   {
     id: "jack1",
@@ -70,30 +100,31 @@ const sampleBalls = [
   }
 ];
 
-/* =====================================================
-   DOM READY
-===================================================== */
+// == DOM READY: Initialize Elements & State == //
+// Sets up DOM reference, loads ball data and configures
 window.addEventListener("DOMContentLoaded", () => {
-  const ballGrid       = document.getElementById("ballGrid");
-  const detailDrawer   = document.getElementById("ballDetails");
-  const addNewBallBtn  = document.getElementById("addNewBallBtn");
-  const deleteModal        = document.getElementById("deleteModal");
-  const confirmDeleteBtn   = document.getElementById("confirmDelete");
-  const cancelDeleteBtn    = document.getElementById("cancelDelete");
-  const continueBtn        = document.getElementById("continueBtn");
+  const ballGrid = document.getElementById("ballGrid");
+  const detailDrawer = document.getElementById("ballDetails");
+  const addNewBallBtn = document.getElementById("addNewBallBtn");
+  const deleteModal = document.getElementById("deleteModal");
+  const confirmDeleteBtn = document.getElementById("confirmDelete");
+  const cancelDeleteBtn = document.getElementById("cancelDelete");
+  const continueBtn = document.getElementById("continueBtn");
 
-  let ballData       = loadBalls();
+  let ballData = loadBalls();
   let deleteTargetId = null;
-  let pickedBalls    = [];
+  let pickedBalls = [];
 
+  // Buttons/UI based on normal or game pick mode
   let gamePickMode = localStorage.getItem("pickMode") === "true";
   if (gamePickMode) localStorage.removeItem("pickMode");
   addNewBallBtn.style.display = gamePickMode ? "none" : "inline-block";
   continueBtn.style.display = gamePickMode ? "inline-block" : "none";
 
-  /* =====================================================
-     RENDER CARDS
-===================================================== */
+
+  // == Render Ball Cards == //
+  // Creates and displays ball cards in the grid, showing image, name, rating,
+  // and appropriate action button depending on gamePickMode
   function renderBallCards() {
     ballGrid.innerHTML = "";
     ballData.forEach((ball, i) => {
@@ -103,7 +134,8 @@ window.addEventListener("DOMContentLoaded", () => {
       card.dataset.index = i;
 
       const buttonHTML = gamePickMode
-        ? `<button class="details-btn" data-id="${ball.id}">${pickedBalls.includes(ball.id) ? "Picked ✅" : "Pick Me!"}</button>`
+        ? `<button class="details-btn" data-id="${ball.id}">${pickedBalls.includes(ball.id) 
+        ? "Picked ✅" : "Pick Me!"}</button>`
         : `<button class="details-btn" data-id="${ball.id}">Details</button>`;
 
       card.innerHTML = `
@@ -117,7 +149,9 @@ window.addEventListener("DOMContentLoaded", () => {
         <div class="ball-rating">${getStars(ball.stars)}</div>
 
         <h3 class="ball-name">
-          ${ball.displayName === "real" ? (ball.realname || "(No real name)") : (ball.nickname || "(No nickname)")}
+          ${ball.displayName === "real" 
+          ? (ball.realname || "(No real name)") 
+          : (ball.nickname || "(No nickname)")}
         </h3>
 
         <hr class="card-divider" />
@@ -129,10 +163,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
   renderBallCards();
 
-  /* =====================================================
-     EVENT LISTENERS
-===================================================== */
+
+  // == Event listener == //
+  // Using event delegation for all click actions
   document.addEventListener("click", (e) => {
+
+    // Show ball details or toggle selection depending on gamePickMode
     if (e.target.classList.contains("details-btn")) {
       const id = e.target.dataset.id;
       if (gamePickMode) {
@@ -146,12 +182,14 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Open confirmation modal for deleting a ball
     if (e.target.classList.contains("delete-btn")) {
       deleteTargetId = e.target.dataset.id;
       deleteModal.classList.remove("hidden");
       return;
     }
 
+    // Remove ball from data and re-render cards
     if (e.target === confirmDeleteBtn) {
       if (deleteTargetId) {
         ballData = ballData.filter(b => b.id !== deleteTargetId);
@@ -168,10 +206,11 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Update ball rating based on clicked star position
     if (e.target.classList.contains("star")) {
-      const card   = e.target.closest(".ball-card");
-      const id     = card.querySelector(".details-btn").dataset.id;
-      const ball   = ballData.find(b => b.id === id);
+      const card = e.target.closest(".ball-card");
+      const id = card.querySelector(".details-btn").dataset.id;
+      const ball = ballData.find(b => b.id === id);
       const rating = Array.from(e.target.parentNode.children).indexOf(e.target) + 1;
       if (ball) {
         ball.stars = rating;
@@ -186,36 +225,57 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Save changes when editing a ball
     if (e.target.classList.contains("edit-btn") && detailDrawer.dataset.mode === "edit") {
       saveEditedBall(detailDrawer.dataset.id);
       return;
     }
 
-    if (e.target.id === "saveNewBallBtn") saveNewBall();
+    if (e.target.id === "saveNewBallBtn") {
+      saveNewBall();
+    }  
   });
 
+
+  // == Show from to add a new ball == //
   addNewBallBtn.addEventListener("click", () => showNewBallForm());
 
+  // Save picked balls and go to game page
   continueBtn.addEventListener("click", () => {
+
     localStorage.setItem("pickedBallsForGame", JSON.stringify(pickedBalls));
+
+    // Save last picked ball's image for display
     if (pickedBalls.length > 0) {
       const lastSelected = ballData.find(b => b.id === pickedBalls[pickedBalls.length - 1]);
       if (lastSelected) localStorage.setItem("selectedBall", lastSelected.image || "images/placeholder.jpg");
     }
+
+    // Clear picked balls and navigate to game page
     pickedBalls = [];
+    // -- Linked to Game.HTML -- //
     window.location.href = "game.html";
   });
 
-  /* =====================================================
-     HELPERS
-===================================================== */
+
+  // == Helpers == //
+  // Load ball data from localStorage or default sample list
   function loadBalls() {
-    try { return JSON.parse(localStorage.getItem("bowlVaultBalls")) || sampleBalls.slice(); }
-    catch { localStorage.removeItem("bowlVaultBalls"); return sampleBalls.slice(); }
+    try { 
+      return JSON.parse(localStorage.getItem("bowlVaultBalls")) || sampleBalls.slice();
+    }
+    catch { 
+      localStorage.removeItem("bowlVaultBalls");
+      return sampleBalls.slice(); 
+    }
   }
 
-  function saveBalls() { localStorage.setItem("bowlVaultBalls", JSON.stringify(ballData)); }
+  // Save current ball data to localStorage
+  function saveBalls() { 
+    localStorage.setItem("bowlVaultBalls", JSON.stringify(ballData)); 
+  }
 
+  // Add or remove selected ball (max 3 allowed)
   function togglePickSelection(id) {
     if (pickedBalls.includes(id)) pickedBalls = pickedBalls.filter(x => x !== id);
     else if (pickedBalls.length < 3) pickedBalls.push(id);
@@ -223,16 +283,22 @@ window.addEventListener("DOMContentLoaded", () => {
     renderBallCards();
   }
 
+  // Return star rating HTML (filled up to 'count')
   function getStars(count = 0) {
     let html = "";
-    for (let i = 1; i <= 5; i++) html += `<span class="star ${i <= count ? "filled" : ""}">${i <= count ? "★" : "☆"}</span>`;
+    for (let i = 1; i <= 5; i++) html += `<span class="star ${i <= count ? "filled" : ""}">
+    ${i <= count ? "★" : "☆"}</span>`;
     return html;
   }
 
-  /* ---------------- DRAWER ---------------- */
+
+  // == Drawer == //
+  // Show detailed info and editing options for a selected ball
   function showBallDetails(ball) {
     detailDrawer.dataset.mode = "edit";
     detailDrawer.dataset.id = ball.id;
+
+    // Build the detail drawer HTML dynamically
     detailDrawer.innerHTML = `
       <button class="close-details" aria-label="Close details">👋</button>
       <label class="image-upload-label">
@@ -240,19 +306,24 @@ window.addEventListener("DOMContentLoaded", () => {
         <input type="file" id="imageUpload" accept="image/*" hidden />
       </label>
       <button class="remove-img-btn" id="removeImageBtn">⚓ Remove image</button>
+
       <div class="name-row">
         <span class="name-label">Display Name:</span>
         <div class="name-switch">
-          <input type="radio" name="nameChoice" id="real${ball.id}" value="real" ${ball.displayName === "real" ? "checked" : ""} />
+          <input type="radio" name="nameChoice" id="real${ball.id}" value="real" 
+          ${ball.displayName === "real" ? "checked" : ""} />
           <label class="option-left" for="real${ball.id}">Real</label>
-          <input type="radio" name="nameChoice" id="nick${ball.id}" value="nick" ${ball.displayName !== "real" ? "checked" : ""}/>
+          <input type="radio" name="nameChoice" id="nick${ball.id}" value="nick" 
+          ${ball.displayName !== "real" ? "checked" : ""}/>
           <label class="option-right" for="nick${ball.id}">Nick</label>
         </div>
       </div>
+
       <div class="details-meta">
         <li><span>Real Name:</span><input id="editReal"  value="${ball.realname || ""}"></li>
         <li><span>Nick Name:</span><input id="editNick"  value="${ball.nickname || ""}"></li>
       </div>
+
       <ul class="details-meta">
         <li><span>Ball Material:</span><input id="editMaterial" value="${ball.material || ""}"></li>
         <li><span>Ball Weight:</span><input id="editWeight" value="${ball.weight || ""}"></li>
@@ -262,17 +333,26 @@ window.addEventListener("DOMContentLoaded", () => {
         <li><span>Start Using:</span><input id="editStartDate" value="${ball.startDate || ""}"></li>
         <li><span>Got Fixed / Cost:</span><input id="editFixed" value="${ball.fixed || ""}"></li>
       </ul>
+
       <textarea id="editNotes" placeholder="Extra notes...">${ball.notes || ""}</textarea>
       <button class="edit-btn">Save Changes</button>
     `;
+
+    // Reveal and animate drawer
     detailDrawer.hidden = false;
     setTimeout(() => detailDrawer.classList.add("open"), 10);
+
+    // Handle image upload and removal
     attachImageUpload(document.getElementById("detailPhoto"));
-    document.getElementById("removeImageBtn").addEventListener("click", () => clearImage(document.getElementById("detailPhoto")));
+    document.getElementById("removeImageBtn").addEventListener("click", () => 
+      clearImage(document.getElementById("detailPhoto")));
+
+    // Prevent background scrolling when drawer is open
     document.body.style.position = "fixed";
     document.body.style.width = "100%";
   }
 
+  // Close and reset the detail drawer
   function hideDrawer() {
     detailDrawer.classList.remove("open");
     detailDrawer.hidden = true;
@@ -281,29 +361,43 @@ window.addEventListener("DOMContentLoaded", () => {
     document.body.style.width = "";
   }
 
-  /* ---------------- IMAGE UPLOAD FIX ---------------- */
+
+  // == Image upload fix == //
+  // Attach image upload functionality to a given <img> element
   function attachImageUpload(imgEl) {
     const uploader = document.getElementById("imageUpload");
+
     uploader.addEventListener("change", async (evt) => {
       const file = evt.target.files?.[0];
+
+      // Only proceed if a valid image file is selected
       if (file && file.type.startsWith("image/")) {
-        // Resize image on mobile-friendly size
-        const resized = await resizeImage(file, 600); // max width 600px
+
+        // Resize the image to a max width of 600px (mobile-friendly)
+        const resized = await resizeImage(file, 600); 
+
+        // Update <img> source and source and store new image in dataset
         imgEl.src = resized;
         imgEl.dataset.newImage = resized;
       }
     });
   }
 
+  // Reset image to placeholder and remove uploaded data
   function clearImage(imgEl) {
     imgEl.src = "images/placeholder.jpg";
     delete imgEl.dataset.newImage;
   }
 
+  // Resize an uploaded image file to a max width and return as base64 JPEG
   async function resizeImage(file, maxWidth) {
     return new Promise((resolve) => {
+
+      // Create in-memory image element and a file reader
       const img = new Image();
       const reader = new FileReader();
+
+      // Canvas for resizing
       reader.onload = e => {
         img.onload = () => {
           const canvas = document.createElement("canvas");
@@ -312,15 +406,23 @@ window.addEventListener("DOMContentLoaded", () => {
           canvas.height = img.height * scale;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          // Return as base64 JPEG
           resolve(canvas.toDataURL("image/jpeg", 0.8));
         };
+
+        // Load file data into image
         img.src = e.target.result;
       };
+
+      // Start reading the file
       reader.readAsDataURL(file);
     });
   }
 
-  /* ---------------- NEW BALL & EDIT ---------------- */
+
+  // == New ball & Edit == //
+  // Show the form for adding a new ball
   function showNewBallForm() {
     detailDrawer.dataset.mode = "new";
     detailDrawer.innerHTML = `
@@ -360,13 +462,23 @@ window.addEventListener("DOMContentLoaded", () => {
     `;
     
     detailDrawer.hidden = false;
+
+    // Trigger slide-in animation
     setTimeout(() => detailDrawer.classList.add("open"), 10);
+
+    // Enable image uploading
     attachImageUpload(document.getElementById("detailPhoto"));
+
+    // Prevent background scrolling
     document.body.style.position = "fixed";
     document.body.style.width = "100%";
   }
 
+
+  // Save new ball from form inputs
   function saveNewBall() {
+
+    // Build ball object
     const newBall = {
       id: `ball${Date.now()}`,
       displayName: document.querySelector('input[name="nameChoice"]:checked')?.value || "nick",
@@ -385,17 +497,22 @@ window.addEventListener("DOMContentLoaded", () => {
       isHouseBall: false
     };
 
+    // Store it
     ballData.push(newBall);
     saveBalls();
+
+    // Close drawer and update UI
     hideDrawer();
     renderBallCards();
   }
 
+
+  // Save edited ball data
   function saveEditedBall(id) {
   const ball = ballData.find(b => b.id === id);
   if (!ball) return;
 
-  // Save text fields
+  // Update text fields
   ball.displayName = document.querySelector('input[name="nameChoice"]:checked')?.value || "nick";
   ball.realname    = document.getElementById("editReal").value.trim();
   ball.nickname    = document.getElementById("editNick").value.trim();
@@ -403,32 +520,38 @@ window.addEventListener("DOMContentLoaded", () => {
   ball.weight      = document.getElementById("editWeight").value.trim();
   ball.color       = document.getElementById("editColor").value.trim();
   ball.gotDate     = document.getElementById("editGotDate").value.trim();
-    ball.gotBy       = document.getElementById("editGotBy").value.trim();
-    ball.startDate   = document.getElementById("editStartDate").value.trim();
-    ball.fixed       = document.getElementById("editFixed").value.trim();
-    ball.notes       = document.getElementById("editNotes").value.trim();
+  ball.gotBy       = document.getElementById("editGotBy").value.trim();
+  ball.startDate   = document.getElementById("editStartDate").value.trim();
+  ball.fixed       = document.getElementById("editFixed").value.trim();
+  ball.notes       = document.getElementById("editNotes").value.trim();
 
-    // Save new image if uploaded
+    // Update image if a new one was uploaded
     const imgEl = document.getElementById("detailPhoto");
     if (imgEl && imgEl.dataset.newImage) {
       ball.image = imgEl.dataset.newImage;
     }
 
+    // Save and refresh
     saveBalls();
     hideDrawer();
     renderBallCards();
   }
 
-  /* ===== SORTABLEJS DRAG & DROP ===== */
+ 
+  /* ==  SortableJS drag & drop == */
   const vaultGrid = document.getElementById("ballGrid");
   if (vaultGrid) {
     Sortable.create(vaultGrid, {
       animation: 150,
       ghostClass: 'dragging',
       handle: '.ball-photo-wrap',
+
+      // Reorder ballData when dragging ends
       onEnd: function(evt) {
-        const movedItem = ballData.splice(evt.oldIndex, 1)[0];
+        const movedItem = ballData.splice(evt.oldIndex, 1) [0];
         ballData.splice(evt.newIndex, 0, movedItem);
+
+        // Save and refresh
         saveBalls();
         renderBallCards();
       }

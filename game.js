@@ -1,46 +1,84 @@
-// ====================
-// Bowling Scoring Logic (Everyday Mode)
-// ====================
 
-// --- THEME TOGGLE --- //
+/** 
+ * Bowling Scoring Logic (Everyday Mode)
+ * --------------------------------------
+ * This script manages the bowling game flow:
+ * theme toggling, frame scoring, league & practice modes,
+ * ball selection, modals, notes, and saving/restoring games.
+ * 
+ * Comment Structure:
+ * 
+ * // ===== Comment ===== //      → Marks the start of a major section
+ * // -- Comment -- //            → Notes about linked files or references
+ * // == Comment == //            → Important or highlighted part
+ * // Comment                     → General explanation of code
+ * [Comment]                      → File overview or purpose (use brackets to avoid nesting)
+ *
+ * ===================================
+ *  Contents
+ * ===================================
+ * 1. Theme Toggle (Light / Dark)
+ * 2. Game State & Variables
+ * 3. DOM Elements
+ * 4. Modals (Player Type, Ball Choice, League Size, Endgame, Save-First)
+ * 5. Utility Functions (rollValue, remainingPins, etc.)
+ * 6. Setup & Start New Game
+ * 7. Add Roll Logic
+ * 8. Scoring Functions (League / Practice)
+ * 9. Render Function
+ * 10. Button Event Listeners (pins, strike, miss, foul)
+ * 11. Endgame & Save Modals
+ * 12. Main Button Logic (Start, End, Save)
+ * 13. Save Game & Reset Logic
+ * 14. Reset Game Function
+ * 15. Modal Logic (Player Type, League Size, Ball Choice)
+ * 16. Undo Last Roll
+ * 17. Practice Notes System
+ * 18. Initialization on Page Load
+ * 19. Helper Functions (escapeHtml)
+ * ===================================
+ */
+
+
+// ===== Light & Dark Mode ===== //
 const toggleBtn = document.getElementById("theme-toggle");
-if (toggleBtn) {
-  const emojiSpan = toggleBtn.querySelector(".emoji");
-  const savedTheme = localStorage.getItem("theme");
+const emojiSpan = toggleBtn.querySelector(".emoji");
+
+// Load saved theme
+const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
     document.body.classList.add("dark-mode");
     emojiSpan.textContent = "🌞";
     toggleBtn.classList.add("toggled");
   } else {
+    document.body.classList.remove("dark-mode");
     emojiSpan.textContent = "🌙";
+    toggleBtn.classList.remove("toggled");
   }
-  toggleBtn.addEventListener("click", () => {
-    const isDark = document.body.classList.toggle("dark-mode");
-    emojiSpan.textContent = isDark ? "🌞" : "🌙";
-    toggleBtn.classList.toggle("toggled");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-  });
-}
+
+// Toggle theme and save preference
+toggleBtn.addEventListener("click", () => {
+  const isDark = document.body.classList.toggle("dark-mode");
+  emojiSpan.textContent = isDark ? "🌞" : "🌙";
+  toggleBtn.classList.toggle("toggled");
+
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+});
 
 
-
-
-
-
-
-
+// ===== Core game variables, DOM elements, inputs and modals ===== //
 "use strict";
 
-// --- GAME STATE --- //
+// == Game state variables == //
 let gameStarted = false;
 let currentFrame = 0;
 let rollInFrame = 0;
 let frames = Array.from({ length: 10 }, () => ({ rolls: [] }));
-let gameMode = ""; // "practice" or "league" (UI may set this but scoring is league-only)
-let leagueSize = ""; // "2v2" | "3v3" | "4v4"
+let gameMode = ""; 
+let leagueSize = ""; 
 let returningFromBallVault = false;
 
-// --- ELEMENTS --- //
+// == DOM Elements == //
 let frameEls = Array.from(document.querySelectorAll(".frame"));
 const pinBtns = Array.from(document.querySelectorAll(".pin"));
 const foulBtn = document.querySelector(".foul");
@@ -52,28 +90,30 @@ const totalElNormal = document.getElementById("total-score-normal");
 const totalElLeague = document.getElementById("total-score-league");
 const selectedBallDisplay = document.getElementById("selected-ball-display");
 
-// inputs
+// == Inputs (place & lane) == //
 const placeInput = document.getElementById("placeInput");
 const laneInput = document.getElementById("laneInput");
 
-// --- MODALS (custom IDs from your HTML) --- //
+// == Modals (player type selection modal) == //
 const playerTypeModal = document.getElementById("playerTypeModal");
 const practiceBtn = document.getElementById("practice-btn");
 const leagueBtn = document.getElementById("league-btn");
 const closeModalBtn = document.getElementById("close-modal");
 
+// == Ball selection modal == //
 const ballChoiceModal = document.getElementById("ballChoiceModal");
 const ballVaultBtn = document.getElementById("ball-vault-btn");
 const houseBallsBtn = document.getElementById("house-balls-btn");
 const closeBallModal = document.getElementById("close-ball-modal");
 
+// == League size modal == //
 const leagueSizeModal = document.getElementById("leagueSizeModal");
 const size2v2Btn = document.getElementById("size-2v2");
 const size3v3Btn = document.getElementById("size-3v3");
 const size4v4Btn = document.getElementById("size-4v4");
 const closeSizeModal = document.getElementById("close-size-modal");
 
-// --- Your new modals --- //
+// == Modal for confirmation (end & save) == //
 const endgameModal = document.getElementById("endgameModal");
 const endgameMessageEl = document.getElementById("endgameMessage");
 const endgamePrimaryBtn = document.getElementById("endgamePrimaryBtn");
@@ -84,16 +124,20 @@ const saveFirstMessageEl = document.getElementById("saveFirstMessage");
 const saveFirstPrimaryBtn = document.getElementById("saveFirstPrimaryBtn");
 const saveFirstCancelBtn = document.getElementById("saveFirstCancelBtn");
 
-// --- CONFIRMATION FLAG --- //
+
+// == Place & Lane == //
+// Check if the confirmation message was already shown this session
 let confirmShown = sessionStorage.getItem("confirmShown") === "true";
 let savedPlace = localStorage.getItem("savedPlace") || "";
 let savedLane = localStorage.getItem("savedLane") || "";
 
-// --- INITIALIZE INPUTS --- //
+// Fill input boxes with saved place/lane if available
 if (placeInput) placeInput.value = savedPlace;
 if (laneInput) laneInput.value = savedLane;
 
-// --- UTIL FUNCTIONS --- //
+
+// == Roll value helper == //
+// Converts a roll symbol (X, /, F, -, or number) into a numeric pin value
 function rollValue(r, previous = 0) {
     if (r === "X") return 10;
     if (r === "/") return 10 - previous;
@@ -101,6 +145,9 @@ function rollValue(r, previous = 0) {
     return typeof r === "number" ? r : Number(r) || 0;
 }
 
+
+// == Main button updater == //
+// Updates the button label and style
 function updateMainBtn(text) {
     if (!mainBtn) return;
     mainBtn.textContent = text;
@@ -110,15 +157,23 @@ function updateMainBtn(text) {
     else if (text === "Save Game") mainBtn.classList.add("save-game");
 }
 
-// --- LOAD SELECTED BALLS --- //
+
+// == Load selected balls into display == //
+// Shows small images of the balls chosen for the game
 function loadSelectedBallDisplay() {
+
+    // No display found just return
     if (!selectedBallDisplay) return;
+
+    // Clear old images
     selectedBallDisplay.innerHTML = "";
+
     const pickedJson = localStorage.getItem("pickedBallsForGame");
     if (pickedJson) {
         try {
             const pickedArr = JSON.parse(pickedJson);
             const vault = JSON.parse(localStorage.getItem("bowlVaultBalls") || "[]");
+
             pickedArr.forEach(id => {
                 const found = vault.find(b => b.id === id);
                 if (!found || !found.image) return;
@@ -130,119 +185,220 @@ function loadSelectedBallDisplay() {
                 img.style.margin = "0 4px";
                 selectedBallDisplay.appendChild(img);
             });
-        } catch (e) { console.error("Error loading ball images", e); }
+
+        } catch (e) { 
+        console.error("Error loading ball images", e); 
+        }
     }
 }
 
-// --- RETURN FROM BALL VAULT --- //
+
+// == Return from Ball Vault handler == //
+// Restores game mode, league size, and selected balls when coming back from the Vault
 function checkReturnFromBallVault() {
     const fromGames = localStorage.getItem("fromGames");
     const pickMode = localStorage.getItem("pickMode");
     const pickedJson = localStorage.getItem("pickedBallsForGame");
+
+    // Only continue if we actually returned from the game and picked balls
     if (fromGames === "true" && (pickMode === "true" || pickedJson)) {
         returningFromBallVault = true;
         localStorage.removeItem("fromGames");
         localStorage.removeItem("pickMode");
         loadSelectedBallDisplay();
-        // Restore temp mode & size saved before leaving
+
+        // Restore mode and league size saved before entering the Vault
         const tempMode = localStorage.getItem("tempGameMode");
         const tempSize = localStorage.getItem("tempLeagueSize");
-        if(tempMode) { gameMode = tempMode; localStorage.removeItem("tempGameMode"); }
-        if(tempSize) { leagueSize = tempSize; localStorage.removeItem("tempLeagueSize"); }
-        // Continue game without page reload
+        if (tempMode) { 
+            gameMode = tempMode;
+            localStorage.removeItem("tempGameMode"); 
+        }   
+        if (tempSize) { 
+            leagueSize = tempSize;
+            localStorage.removeItem("tempLeagueSize"); 
+        }
+
+        // Resume the game without reloading the page
         setupNewGame(gameMode || "league");
     }
 }
 
-// --- SETUP NEW GAME --- //
+
+// == Setup for starting a game == //
+// Resets all game state, clears frames, prepares scoreboard UI, and starts a new match
 function setupNewGame(mode) {
     gameMode = mode; 
     gameStarted = true;
     currentFrame = 0;
     rollInFrame = 0;
+
+    // Create 10 empty frames
     frames = Array.from({ length: 10 }, () => ({ rolls: [] }));
     frameEls = Array.from(document.querySelectorAll(".frame"));
+
+    // Reset each scoreboard frame and adds the extra roll in 10th frame
     frameEls.forEach((el, idx) => {
-        el.innerHTML = `<div class="marks"><span class="r1"></span><span class="r2"></span>${idx===9?'<span class="r3"></span>':''}</div><div class="cum"></div>`;
+        el.innerHTML = `
+        <div class="marks"><span class="r1"></span><span class="r2"></span>
+        ${idx === 9 ? '<span class="r3"></span>' : ''}
+        </div><div class="cum"></div> 
+        `; 
     });
+
     updateMainBtn("End Game");
     loadSelectedBallDisplay();
     render();
 }
 
-// --- REMAINING PINS --- //
+
+// == Remaining pins == //
+// Determines how many pins are still standing for the current roll, including all 10th-frame rules
 function remainingPins() {
     const f = frames[currentFrame];
     if (!f) return 0;
+
     const isTenth = currentFrame === 9;
-    if (!isTenth) return rollInFrame === 0 ? 10 : Math.max(0, 10 - rollValue(f.rolls[0]));
+
+    // Frames 1-9 use simple logic
+    if (!isTenth) return rollInFrame === 0 
+    ? 10 
+    : Math.max(0, 10 - rollValue(f.rolls[0])
+    );
+
+    // 10th frame rules (different reset logic)
     if (rollInFrame === 0) return 10;
-    if (rollInFrame === 1) return f.rolls[0] === "X" ? 10 : Math.max(0, 10 - rollValue(f.rolls[0]));
+
+    if (rollInFrame === 1) return f.rolls[0] === "X" 
+    ? 10 
+    : Math.max(0, 10 - rollValue(f.rolls[0])
+    );
+
     if (rollInFrame === 2) {
         const first = rollValue(f.rolls[0]);
         const second = rollValue(f.rolls[1], first);
-        if(f.rolls[0]==="X" && f.rolls[1]==="X") return 10;
-        if(f.rolls[0]==="X" && second < 10) return 10 - second;
-        if(first + second === 10) return 10;
+
+        if (f.rolls[0] === "X" && f.rolls[1] === "X") return 10;
+        if (f.rolls[0] === "X" && second < 10) return 10 - second;
+        if (first + second === 10) return 10;
         return 0;
     }
     return 0;
 }
 
-// --- ADD ROLL --- //
+
+// == Add roll == //
+// Handles adding a new roll, applying marks, and advancing frame/roll logic
 function addRoll(pins, mark = "") {
     if (!gameStarted || currentFrame > 9) return;
+
     const f = frames[currentFrame];
     const max = remainingPins();
     if (pins > max) pins = max;
+
     const isFoul = mark === "F";
     const isMiss = mark === "-";
 
+    // Frame 1-9 (simple rules)
     if (currentFrame < 9) {
+
+        // First roll
         if (rollInFrame === 0) {
-            f.rolls[0] = isFoul ? "F" : (pins === 10 ? "X" : (isMiss ? "-" : pins));
-            if(f.rolls[0]==="X"){currentFrame++; rollInFrame=0;} else rollInFrame=1;
+            f.rolls[0] = isFoul ? "F" 
+            : (pins === 10 ? "X" 
+            : (isMiss ? "-" : pins)
+        );
+
+        if (f.rolls[0] === "X") {
+            currentFrame++;
+            rollInFrame = 0;
+
+        } else rollInFrame = 1;
+
+        // Second roll (check for spare)
         } else {
             const firstVal = rollValue(f.rolls[0]);
-            f.rolls[1] = isFoul ? "F" : (isMiss ? "-" : (firstVal + pins === 10 ? "/" : pins));
-            currentFrame++; rollInFrame=0;
-        }
+            f.rolls[1] = isFoul ? "F" 
+            : (isMiss ? "-" 
+            : (firstVal + pins === 10 ? "/" : pins)
+        );
+        currentFrame++; 
+        rollInFrame = 0;
+    }
+
+    // 10th frame (complex rules)
     } else {
-        const first = f.rolls[0]?rollValue(f.rolls[0]):0;
-        const second = f.rolls[1]?rollValue(f.rolls[1], first):0;
+        const first = f.rolls[0] ? rollValue(f.rolls[0]) : 0;
+        const second = f.rolls[1] ? rollValue(f.rolls[1], first) : 0;
+
+        // First roll
         if (rollInFrame === 0) {
-            f.rolls[0] = isFoul ? "F" : (pins === 10 ? "X" : (isMiss ? "-" : pins));
-            rollInFrame = 1;
+            f.rolls[0] = isFoul ? "F" : (pins === 10 ? "X" : (isMiss ? "-" : pins)
+        );
+        rollInFrame = 1;
+
+        // Second roll
         } else if (rollInFrame === 1) {
-            if(f.rolls[0] !== "X") f.rolls[1] = isFoul ? "F" : (isMiss ? "-" : (first + pins === 10 ? "/" : pins));
-            else f.rolls[1] = isFoul ? "F" : (isMiss ? "-" : (pins === 10 ? "X" : pins));
-            if(f.rolls[0]==="X" || f.rolls[1]==="/" || f.rolls[1]==="X") rollInFrame=2;
-            else { currentFrame++; updateMainBtn("Save Game"); }
+            if (f.rolls[0] !== "X") 
+                f.rolls[1] = isFoul ? "F" 
+                : (isMiss ? "-" 
+                : (first + pins === 10 ? "/" : pins)
+            );
+
+            else f.rolls[1] = isFoul ? "F" 
+                : (isMiss ? "-" 
+                : (pins === 10 ? "X" : pins)
+            );
+
+            // If strike/spare allow 3rd roll
+            if (f.rolls[0] === "X" || f.rolls[1] === "/" || f.rolls[1] === "X")
+                rollInFrame = 2;
+            else { 
+                currentFrame++;
+                updateMainBtn("Save Game"); 
+            }
+
+        // Third roll
         } else if (rollInFrame === 2) {
             const firstMark = f.rolls[0], secondMark = f.rolls[1];
-            if(isFoul) f.rolls[2] = "F";
-            else if(isMiss) f.rolls[2] = "-";
+
+            if (isFoul) f.rolls[2] = "F";
+            else if (isMiss) f.rolls[2] = "-";
+
             else {
                 const firstV = rollValue(firstMark);
                 const secondV = rollValue(secondMark, firstV);
-                if(firstMark === "X" && secondMark === "X") f.rolls[2] = (pins === 10 ? "X" : pins);
-                else if(firstMark === "X" && secondV < 10) f.rolls[2] = (secondV + pins === 10 ? "/" : pins);
-                else if(firstV + secondV === 10) f.rolls[2] = (pins === 10 ? "X" : pins);
+
+                if (firstMark === "X" && secondMark === "X")
+                    f.rolls[2] = (pins === 10 ? "X" : pins);
+
+                else if (firstMark === "X" && secondV < 10)
+                    f.rolls[2] = (secondV + pins === 10 ? "/" : pins);
+
+                else if (firstV + secondV === 10)
+                    f.rolls[2] = (pins === 10 ? "X" : pins);
+
                 else f.rolls[2] = pins;
             }
-            currentFrame++;
-            updateMainBtn("Save Game");
+
+        currentFrame++;
+        updateMainBtn("Save Game");
         }
     }
     render();
 }
 
-// --- LEAGUE SCORE CALCULATION --- //
+
+// == League score == //
+// Collects numeric roll values from all frames
 function scoreLeagueGame() {
     let total = 0, cumul = Array(10).fill(""), rolls = [];
+
     frames.forEach((f) => {
         if(!f || !f.rolls) return;
-        for (let idx = 0; idx < f.rolls.length; idx++) {
+        for (let idx = 0; 
+            idx < f.rolls.length;
+            idx++) {
             const r = f.rolls[idx];
             const prevRaw = idx === 0 ? null : f.rolls[idx - 1];
             const prevVal = prevRaw ? rollValue(prevRaw) : 0;
@@ -251,20 +407,25 @@ function scoreLeagueGame() {
     });
 
     let rollIndex = 0;
+
+    // Calculate scores for the 10 frame
     for (let i = 0; i < 10; i++) {
         if (rollIndex >= rolls.length) break;
+
         const first = rolls[rollIndex] ?? 0;
         const second = rolls[rollIndex + 1] ?? 0;
         const third = rolls[rollIndex + 2] ?? 0;
         let frameScore = 0;
 
-        if (first === 10) { // strike
+        if (first === 10) { 
             frameScore = first + (rolls[rollIndex + 1] ?? 0) + (rolls[rollIndex + 2] ?? 0);
             rollIndex += 1;
-        } else if (first + second === 10) { // spare
+
+        } else if (first + second === 10) { 
             frameScore = 10 + (rolls[rollIndex + 2] ?? 0);
             rollIndex += 2;
-        } else { // open
+            
+        } else { 
             frameScore = first + second;
             rollIndex += 2;
         }
@@ -276,53 +437,76 @@ function scoreLeagueGame() {
     return { total, cumul };
 }
 
-function scoreGame() { return scoreLeagueGame(); }
 
-// --- RENDER --- //
-function render(){
+// == Render scored frames to the UI == //
+// Get game scores and updates frame rolls + totals
+function scoreGame() { 
+    return scoreLeagueGame();
+}
+
+// Scored data (rolls + cumul + total)
+function render() {
     const active = scoreGame();
+
     frames.forEach((f, i) => {
-        const el = frameEls[i]; if(!el) return;
-        const r1 = el.querySelector(".r1"), r2 = el.querySelector(".r2"), r3 = el.querySelector(".r3"), cum = el.querySelector(".cum");
-        if(r1) r1.textContent = f.rolls[0] ?? "";
-        if(r2) r2.textContent = f.rolls[1] ?? "";
-        if(i === 9 && r3) r3.textContent = f.rolls[2] ?? "";
-        if(cum) cum.textContent = active.cumul[i] ?? "";
+        const el = frameEls[i]; 
+        if (!el) return;
+        
+        const r1 = el.querySelector(".r1"),
+         r2 = el.querySelector(".r2"),
+         r3 = el.querySelector(".r3"),
+         cum = el.querySelector(".cum");
+
+        if (r1) r1.textContent = f.rolls[0] ?? "";
+        if (r2) r2.textContent = f.rolls[1] ?? "";
+        if (i === 9 && r3) r3.textContent = f.rolls[2] ?? "";
+        if (cum) cum.textContent = active.cumul[i] ?? "";
     });
 
-    if(totalElNormal) totalElNormal.textContent = "";
-    if(totalElLeague) totalElLeague.textContent = active.total ?? "";
+    if (totalElNormal) totalElNormal.textContent = "";
+    if (totalElLeague) totalElLeague.textContent = active.total ?? "";
 
     if (typeof updateDashboardGames === "function") updateDashboardGames();
 }
 
-// --- BUTTONS --- //
-pinBtns.forEach(btn => btn.addEventListener("click", () => addRoll(Number(btn.textContent))));
-if(strikeBtn) strikeBtn.addEventListener("click", () => addRoll(remainingPins()));
-if(missBtn) missBtn.addEventListener("click", () => addRoll(0, "-"));
-if(foulBtn) foulBtn.addEventListener("click", () => addRoll(0, "F"));
 
-// --- Endgame Pop-up modal --- //
+// == Add rolls from buttons == //
+// For every pin button, when clicked, take the number on the button and add it as a roll
+pinBtns.forEach(btn => btn.addEventListener("click", () => addRoll(Number(btn.textContent))));
+
+if (strikeBtn) 
+    strikeBtn.addEventListener("click", () => addRoll(remainingPins()));
+
+if (missBtn) 
+    missBtn.addEventListener("click", () => addRoll(0, "-"));  
+
+if (foulBtn) 
+    foulBtn.addEventListener("click", () => addRoll(0, "F"));
+
+
+// == Endgame pop-up modal == //
+// Show the confirm modal and return true/false based on user choice
 function showEndgameConfirm(message = "Are you sure you want to end the game?") {
     return new Promise((resolve) => {
-        // fallback to native confirm if modal not present
+
+        // Use browser confirm if modal elements are missing
         if (!endgameModal || !endgamePrimaryBtn || !endgameCancelBtn || !endgameMessageEl) {
-            const ok = window.confirm(message);
-            resolve(ok);
+            const yes = window.confirm(message);
+            resolve(yes);
             return;
         }
 
-        // build heading + message so it matches the new style
         endgameMessageEl.innerHTML = `
           <div class="endgame-heading">End Game</div>
           <div class="endgame-message">${escapeHtml(message)}</div>
         `;
-        endgamePrimaryBtn.textContent = "OK";
+        endgamePrimaryBtn.textContent = "Yes";
         endgameCancelBtn.textContent = "Cancel";
 
         endgameModal.style.display = "flex";
         endgameModal.setAttribute("aria-hidden", "false");
 
+        // Hide modal + remove listeners
         function cleanup() {
             endgamePrimaryBtn.removeEventListener("click", onPrimary);
             endgameCancelBtn.removeEventListener("click", onCancel);
@@ -330,26 +514,38 @@ function showEndgameConfirm(message = "Are you sure you want to end the game?") 
             endgameModal.setAttribute("aria-hidden", "true");
         }
 
-        function onPrimary(e) { e && e.preventDefault(); cleanup(); resolve(true); }
-        function onCancel(e)  { e && e.preventDefault(); cleanup(); resolve(false); }
+        // User clicked Yes
+        function onPrimary(e) { 
+            e && e.preventDefault();
+            cleanup(); 
+            resolve(true); 
+        }
+
+        // User clicked Cancel
+        function onCancel(e)  { 
+            e && e.preventDefault();
+            cleanup(); 
+            resolve(false); 
+        }
 
         endgamePrimaryBtn.addEventListener("click", onPrimary);
         endgameCancelBtn.addEventListener("click", onCancel);
     });
 }
 
-// --- Helper: show save-first custom modal --- //
-// now accepts the lane/place values and a short message; it builds heading, details and message
-function showSaveFirstConfirm(laneVal = "?", placeVal = "?", note = "Press Continue to proceed or Go Back to cancel.") {
+
+// == Save-first custom modal == //
+// Show the save-first modal and return true/false based on user choice
+function showSaveFirstConfirm(laneVal="?", placeVal="?", note="Press Continue to proceed or Go Back to cancel.") {
     return new Promise((resolve) => {
+
+        // Use browser confirm if modal elements are missing
         if (!saveFirstModal || !saveFirstPrimaryBtn || !saveFirstCancelBtn || !saveFirstMessageEl) {
-            // fallback to native confirm with a simple string
             const ok = window.confirm(`Double-check:\nLane: ${laneVal}\nPlace: ${placeVal}\n\nPress OK to Continue or Cancel to Go Back.`);
             resolve(ok);
             return;
         }
 
-        // Build the structured HTML inside the modal message container
         saveFirstMessageEl.innerHTML = `
           <div class="save-first-heading">Double-check</div>
           <div class="save-first-details">
@@ -365,6 +561,7 @@ function showSaveFirstConfirm(laneVal = "?", placeVal = "?", note = "Press Conti
         saveFirstModal.style.display = "flex";
         saveFirstModal.setAttribute("aria-hidden", "false");
 
+        // Hide modal + remove listeners
         function cleanup() {
             saveFirstPrimaryBtn.removeEventListener("click", onPrimary);
             saveFirstCancelBtn.removeEventListener("click", onCancel);
@@ -372,58 +569,92 @@ function showSaveFirstConfirm(laneVal = "?", placeVal = "?", note = "Press Conti
             saveFirstModal.setAttribute("aria-hidden", "true");
         }
 
-        function onPrimary(e) { e && e.preventDefault(); cleanup(); resolve(true); }
-        function onCancel(e)  { e && e.preventDefault(); cleanup(); resolve(false); }
+        // User clicked Continue
+        function onPrimary(e) {
+            e && e.preventDefault();
+            cleanup();
+            resolve(true); 
+        }
+
+        // User clicked Go Back
+        function onCancel(e)  {
+            e && e.preventDefault(); 
+            cleanup();
+            resolve(false); 
+        }
 
         saveFirstPrimaryBtn.addEventListener("click", onPrimary);
         saveFirstCancelBtn.addEventListener("click", onCancel);
     });
 }
 
-// --- MAIN BUTTON LOGIC --- //
-if(mainBtn){mainBtn.addEventListener("click", () => {
-    if(!gameStarted){
-        if(playerTypeModal) playerTypeModal.style.display = "block";
+
+// == Main button logic == //
+// Handle main button clicks depending on game state and button text
+if (mainBtn) {mainBtn.addEventListener("click", () => {
+
+    // Show player type modal if game has not started
+    if (!gameStarted) {
+        if (playerTypeModal) playerTypeModal.style.display = "block";
         return;
-    }
-    if(mainBtn.textContent === "End Game"){
+    } 
+
+    // End game confirmation
+    if (mainBtn.textContent === "End Game") {
         showEndgameConfirm("Are you sure you want to end the game?").then(proceed => {
             if (proceed) resetGame();
         });
         return;
-    }
-    if(mainBtn.textContent === "Save Game"){
-        saveGameAndReset();
-    }
-});}
+    } 
 
-// --- SAVE GAME --- //
-function saveGameAndReset(){
+    // Save game and reset immediately
+    if (mainBtn.textContent === "Save Game") {
+        saveGameAndReset();
+    } 
+  });
+}
+
+
+// == Save game and reset == //
+// Save current game to localStorage and reset game state
+function saveGameAndReset() {
+
+    // Load vault and picked balls
     const vault = JSON.parse(localStorage.getItem("bowlVaultBalls") || "[]");
     const pickedJson = localStorage.getItem("pickedBallsForGame");
     let ballNames = [];
-    if(pickedJson){
+
+    // Map picked balls to human-readable names
+    if (pickedJson) {
         try {
             const pickedArr = JSON.parse(pickedJson);
             ballNames = pickedArr.map(id => {
-                const b = vault.find(x => x.id === id);
-                if(!b) return "(Unknown Ball)";
+                const b = vault.find(ball => ball.id === id);
+                if (!b) return "(Unknown Ball)";
                 return b.displayName === "real" ? (b.realname || "(No real name)") : (b.nickname || "(No nickname)");
             });
-        } catch(e) { ballNames = []; }
+        } catch(e) { 
+            ballNames = []; 
+        }
     }
+
+    // Determine ball label to save
     const ballToSave = ballNames.length > 0 ? ballNames.join(", ") : (houseBallsBtn ? "House Ball" : "(No Ball)");
+
+    // Save lane and place values
     const laneVal = laneInput ? laneInput.value || "?" : "?";
     const placeVal = placeInput ? placeInput.value || "?" : "?";
     savedLane = laneVal;
     savedPlace = placeVal;
     localStorage.setItem("savedLane", savedLane);
     localStorage.setItem("savedPlace", savedPlace);
+
+    // Get final score and build game
     const finalScore = scoreGame().total ?? 0;
     const dateISO = (new Date()).toISOString();
     const newGame = { date: dateISO, ball: ballToSave, lane: laneVal, score: finalScore, place: placeVal, mode: gameMode, leagueSize: leagueSize };
 
-    // performSave encapsulates the actual saving & reset flow
+    // Actaul save and reset workflow
     function performSave() {
         confirmShown = true;
         sessionStorage.setItem("confirmShown", "true");
@@ -436,59 +667,83 @@ function saveGameAndReset(){
         localStorage.removeItem("pickedBallsForGame");
 
         resetGame();
-        if (typeof updateDashboardGames === "function") updateDashboardGames();
+        if (typeof updateDashboardGames === "function") 
+            updateDashboardGames();
     }
 
-    // if not shown before, use the save-first custom modal (with structured content)
-    if(!confirmShown){
+    // Show save-first confirmation modal if not shown yet
+    if (!confirmShown){
         showSaveFirstConfirm(laneVal, placeVal, "Press Continue to proceed or Go Back to cancel.").then(proceed => {
-            if(!proceed) return;
+            if (!proceed) return;
             performSave();
         });
-        return; // wait for modal result
+        return; 
     }
 
-    // else save immediately
+    // Save immediately if already confirmed
     performSave();
 }
 
-// --- RESET GAME --- //
-function resetGame(){
+
+// == Reset Game == //
+// Fully reset game state, UI and inputs
+function resetGame() {
+
     updateMainBtn("Start Game");
     gameStarted = false;
-    frames = Array.from({length:10},()=>({rolls:[]}));
-    frameEls.forEach((el,i)=>{
-        if(!el) return;
-        el.innerHTML = `<div class="marks"><span class="r1"></span><span class="r2"></span>${i===9?'<span class="r3"></span>':''}</div><div class="cum"></div>`;
+
+    // Create fresh empty frames
+    frames = Array.from({ length: 10 }, () => ({ rolls: [] }));
+
+    // Reset all scoreboard cells
+    frameEls.forEach((el, i) => {
+        if (!el) return;
+        el.innerHTML = `
+            <div class="marks">
+                <span class="r1"></span>
+                <span class="r2"></span>
+                ${i === 9 ? '<span class="r3"></span>' : ''}
+            </div>
+            <div class="cum"></div>
+        `;
     });
+
     render();
     loadSelectedBallDisplay();
+
     currentFrame = 0; 
     rollInFrame = 0;
-    if(selectedBallDisplay) selectedBallDisplay.innerHTML = "";
-    if(placeInput) placeInput.value = savedPlace;
-    if(laneInput) laneInput.value = savedLane;
+
+    if (selectedBallDisplay) selectedBallDisplay.innerHTML = "";
+    if (placeInput) placeInput.value = savedPlace;
+    if (laneInput) laneInput.value = savedLane;
 }
 
-// --- MODAL LOGIC --- //
-// Player Type
-if(practiceBtn) practiceBtn.addEventListener("click", ()=>{
+
+// == Modal logic of starting a game == //
+// Handle player selection and show the correct next modal
+if (practiceBtn) practiceBtn.addEventListener("click", () => {
     playerTypeModal.style.display = "none";
     ballChoiceModal.style.display = "block";
-    gameMode = "practice"; // UI only — scoring remains league-only
+    gameMode = "practice"; 
 });
-if(leagueBtn) leagueBtn.addEventListener("click", ()=>{
+
+if (leagueBtn) leagueBtn.addEventListener("click", () => {
     playerTypeModal.style.display = "none";
     leagueSizeModal.style.display = "block";
 });
-if(closeModalBtn) closeModalBtn.addEventListener("click", ()=>{
+
+if (closeModalBtn) closeModalBtn.addEventListener("click", () => {
     playerTypeModal.style.display = "none";
     resetGame();
 });
 
-// League Size
+
+// == League size selection == //
+// Handle league size choice and proceed to ball selection
 [size2v2Btn, size3v3Btn, size4v4Btn].forEach(btn => {
   if (!btn) return;
+
   btn.addEventListener("click", () => {
     leagueSize = btn.textContent.trim(); 
     leagueSizeModal.style.display = "none";
@@ -497,54 +752,68 @@ if(closeModalBtn) closeModalBtn.addEventListener("click", ()=>{
   });
 });
 
-if(closeSizeModal) closeSizeModal.addEventListener("click", ()=>{
+if (closeSizeModal) closeSizeModal.addEventListener("click", () => {
     leagueSizeModal.style.display = "none";
     resetGame();
 });
 
-// Ball Choice
-if(ballVaultBtn) ballVaultBtn.addEventListener("click", ()=>{
+
+// == Ball choice == //
+// Handle selection between house balls or personal balls
+if (ballVaultBtn) ballVaultBtn.addEventListener("click", () => {
     ballChoiceModal.style.display = "none";
-    localStorage.setItem("fromGames","true"); 
-    localStorage.setItem("pickMode","true"); 
+    localStorage.setItem("fromGames", "true"); 
+    localStorage.setItem("pickMode", "true"); 
     localStorage.setItem("tempGameMode", gameMode);
     localStorage.setItem("tempLeagueSize", leagueSize);
-    window.location.href="vault.html";
+    window.location.href = "vault.html";
 });
-if(houseBallsBtn) houseBallsBtn.addEventListener("click", ()=>{
+
+if (houseBallsBtn) houseBallsBtn.addEventListener("click", () => {
     ballChoiceModal.style.display = "none";
     setupNewGame(gameMode);
 });
-if(closeBallModal) closeBallModal.addEventListener("click", ()=>{
+
+if (closeBallModal) closeBallModal.addEventListener("click", () => {
     ballChoiceModal.style.display = "none";
     resetGame();
 });
 
-// --- UNDO --- //
-if(undoBtn){undoBtn.addEventListener("click", ()=>{
-    if(!gameStarted) return;
-    if(currentFrame > 9) currentFrame = 9;
+
+// == Undo button == //
+// Remove the last roll
+if (undoBtn) undoBtn.addEventListener("click", () => {
+    if (!gameStarted) return;
+    if (currentFrame > 9) currentFrame = 9;
+
     let f = frames[currentFrame];
-    if(f && f.rolls.length === 0 && currentFrame > 0){
+
+    // Move back one frame if current frame is empty
+    if (f && f.rolls.length === 0 && currentFrame > 0) {
         currentFrame--;
         f = frames[currentFrame];
     }
-    if(f && f.rolls.length > 0){
+
+    if (f && f.rolls.length > 0) {
         f.rolls.pop();
         rollInFrame = f.rolls.length;
         updateMainBtn("End Game");
         render();
     }
-});}
+});
 
-// --- INIT --- //
+
+// == Init == //
+// Set initial UI state and restore previous ball selections
 updateMainBtn("Start Game");
 loadSelectedBallDisplay();
 checkReturnFromBallVault();
-if (typeof updateDashboardGames === "function") updateDashboardGames();
+if (typeof updateDashboardGames === "function") 
+    updateDashboardGames();
 
-// --- Small helper: escape HTML to avoid injection when inserting values ---
-function escapeHtml(str) {
+// == Escape HTML == //
+// Prevent HTML injection when inserting values
+function escapeHtml (str) {
   if (typeof str !== "string") return str;
   return str
     .replace(/&/g, "&amp;")
@@ -554,21 +823,8 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-// === Notes for Practice games === //
-
-
+// == Notes for practice games == //
+// Set up notes system and grab all related buttons/elements
 document.addEventListener("DOMContentLoaded", () => {
 
   const practiceBtn = document.getElementById("practice-btn");
@@ -590,9 +846,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (noteToggle) noteToggle.style.display = "none";
   if (notePopup) notePopup.classList.add("note-hidden");
 
-  // -----------------------
-  // Persist Practice Mode Across Pages
-  // -----------------------
+  // Handle practice mode state and saving/loading notes
   let isPracticeMode = sessionStorage.getItem("isPracticeMode") === "true";
 
   function setPracticeMode(value) {
@@ -613,9 +867,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const done = li.classList.contains("done");
       notes.push({ text: span ? span.textContent : "", done });
     });
+
     localStorage.setItem("practiceNotes", JSON.stringify(notes));
   }
 
+  // Create a note item with text, a delete button, and done-toggle behavior
   function createNoteItem(text, done = false) {
     const li = document.createElement("li");
     li.style.cursor = "pointer";
@@ -646,6 +902,7 @@ document.addEventListener("DOMContentLoaded", () => {
     noteList.appendChild(li);
   }
 
+  // Handle adding notes, opening/closing the notes popup and enabling/disabling practice notes
   if (addNoteBtn) {
     addNoteBtn.addEventListener("click", () => {
       const text = (noteTextInput && noteTextInput.value) ? noteTextInput.value.trim() : "";
@@ -687,35 +944,39 @@ document.addEventListener("DOMContentLoaded", () => {
     if (notePopup) notePopup.classList.add("note-hidden");
   }
 
-  // -----------------------
-  // Buttons
-  // -----------------------
-  if (practiceBtn) practiceBtn.addEventListener("click", () => { setPracticeMode(true); disablePracticeNotes(); });
-  if (leagueBtn) leagueBtn.addEventListener("click", () => { setPracticeMode(false); disablePracticeNotes(); });
-  if (closeModalBtn) closeModalBtn.addEventListener("click", () => { setPracticeMode(false); disablePracticeNotes(); });
-  if (mainBtn) mainBtn.addEventListener("click", () => { setPracticeMode(false); disablePracticeNotes(); });
+    // Buttons of notes
+    if (practiceBtn) practiceBtn.addEventListener("click", () => { 
+        setPracticeMode(true); 
+        disablePracticeNotes(); 
+    });
 
-  // -----------------------
-  // Practice ball clicks
-  // -----------------------
-  function handlePracticeBallClick() {
-    if (!isPracticeMode) return;
-    enablePracticeNotes();
-  }
+    if (leagueBtn) leagueBtn.addEventListener("click", () => { 
+        setPracticeMode(false); 
+        disablePracticeNotes(); 
+    });
 
-  if (houseBallsBtn) houseBallsBtn.addEventListener("click", handlePracticeBallClick);
-  if (ballVaultBtn) ballVaultBtn.addEventListener("click", handlePracticeBallClick);
+    if (closeModalBtn) closeModalBtn.addEventListener("click", () => { 
+        setPracticeMode(false); 
+        disablePracticeNotes(); 
+    });
 
-  // -----------------------
-  // Re-enable notes on page load if Practice mode was selected before
-  // -----------------------
-  if (isPracticeMode) {
-    enablePracticeNotes();
-  }
+    // Start button (mainBtn)
+    if (mainBtn) mainBtn.addEventListener("click", () => { 
+        setPracticeMode(false); 
+        disablePracticeNotes(); 
+    });
 
-  // -----------------------
-  // Initial load
-  // -----------------------
-  if (!isPracticeMode) disablePracticeNotes();
+    // When you select a ball to roll with in Practice Mode
+    function handlePracticeBallClick() {
+    if (isPracticeMode) {
+        enablePracticeNotes();
+        }
+    }
 
+    [houseBallsBtn, ballVaultBtn].forEach(btn => {
+        if (btn) btn.addEventListener("click", handlePracticeBallClick);
+    });
+
+    // Make sure notes are shown or hidden correctly when the page loads
+    isPracticeMode ? enablePracticeNotes() : disablePracticeNotes();
 });

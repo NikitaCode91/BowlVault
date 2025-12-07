@@ -1,14 +1,3 @@
-/* Add Game */
-
-:root {
-  --clr-prim: #3d80ff;
-  --clr-sec: #ff5858;
-  --clr-bg-card: #fff;
-  --clr-bg-page: #fafafa;
-  --clr-text-muted: #6b6b6b;
-  --radius: 0.75rem;
-  --shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
 
 html, body {
   width: 100%;
@@ -18,7 +7,6 @@ html, body {
   box-sizing: border-box;
 }
 
-/* body */
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -26,7 +14,23 @@ body {
   color: #121212;
 }
 
-/* === Header === */
+:root {
+  --clr-prim: #3d80ff;
+  --clr-sec: #ff5858;
+  --clr-bg-card: #fff;
+  --clr-bg-page: #fafafa;
+  --clr-text-muted: #6b6b6b;
+  --radius: 0.75rem;
+  --shadow: 0 4px 12px #00000014;
+}
+
+/* ===== Dark Mode Styling ===== */
+body.dark-mode {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+
+/* == Header == */
 header {
   background: var(--clr-prim);
   color: #fff;
@@ -35,29 +39,11 @@ header {
   box-shadow: var(--shadow);
   border-bottom: 2px solid var(--clr-sec);
 }
-
-.sub-title {
-  font-size: 1rem;
-  color: #fff;
-  margin-bottom: 20px;
-  font-weight: 600;
-}
-
-.corner-logo {
-  position: absolute;
-  top: 1.8rem;
-  left: 0.7rem;
-  height: 55px;
-  width: auto;
-  object-fit: contain;
-  z-index: 10;
-  background-image: none;
-}
-
-.logo {
-  height: 60px;
-  width: auto;
-  object-fit: contain;
+body.dark-mode header {
+  background: #222;
+  color: #00ffc8;
+  box-shadow: 0 0 12px #00ffc880;
+  border-bottom: 2px solid #00ffc8;
 }
 
 header h1 {
@@ -69,20 +55,37 @@ header h1 {
 #title {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
+body.dark-mode #title {
+  color: #00ffc8;
+  text-shadow:
+    0 0 6px #00ffc8,
+    0 0 15px #ff4b5c,
+    0 0 20px #ff4b5c;
+}
 
-/* Nav */
+.sub-title {
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+body.dark-mode .sub-title {
+  color: var(--clr-sec);
+}
+
+/* == Nav == */
 nav ul {
   list-style: none;
   display: flex;
-  flex-wrap: wrap; /* allow multiple rows on small screens */
-  gap: 1.5rem; /* spacing between items */
+  flex-wrap: wrap; 
+  gap: 1.5rem; 
   justify-content: center;
   padding: 0;
   margin-top: 1rem;
 }
 
 nav li {
-  flex-shrink: 0; /* prevent shrinking text */
+  flex-shrink: 0; 
 }
 
 nav a {
@@ -93,6 +96,9 @@ nav a {
   padding: 0.25rem 0.5rem;
   transition: opacity 0.2s ease;
   white-space: nowrap;
+}
+body.dark-mode nav a {
+  color: #f5f5f5;
 }
 
 nav a::after {
@@ -107,31 +113,41 @@ nav a::after {
   transform: translateY(4px);
   transition: all 0.2s ease;
 }
+body.dark-mode nav a::after {
+  background-color: #00ffc8;
+}
 
 nav a:hover {
   opacity: 0.9;
 }
-
 nav a:hover::after,
 nav a[aria-current="page"]::after {
   opacity: 1;
   transform: translateY(0);
 }
+body.dark-mode nav a:hover,
+body.dark-mode nav a[aria-current="page"] {
+  color: #ff4b5c;
+  text-shadow:
+    0 0 6px #ff4b5c,
+    0 0 10px #ff4b5c;
+}
 
-/* -------- Your original page structure and layout starts here -------- */
-
-/* Score Section */
+/* == Score section == */
 .bowling-score-container {
   max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
   background: var(--clr-bg-card);
   border-radius: 20px;
-  box-shadow: 0 0 10px rgba(61, 128, 255, 0.5);
+  box-shadow: 0 0 10px #3d80ff80;
   text-align: center;
 }
+body.dark-mode .bowling-score-container {
+  background: #1a1a1a;
+  box-shadow: 0 0 10px #00ffc880;
+}
 
-/* Frames grid */
 .score-frames {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -152,6 +168,11 @@ nav a[aria-current="page"]::after {
   text-align: center;
   box-sizing: border-box;
 }
+body.dark-mode .frame {
+  background: #292929;
+  border: 2px solid #00ffc8;
+  color: #fff;
+}
 
 .frame span {
   display: block;
@@ -162,6 +183,9 @@ nav a[aria-current="page"]::after {
   width: 60%;
   margin-left: auto;
   margin-right: auto; 
+}
+body.dark-mode .frame span {
+  color: #fff;
 }
 
 .frame .marks {
@@ -192,7 +216,7 @@ span:last-child {
   border-bottom: none;
 }
 
-/* Pins Layout */
+/* == Pins layout == */
 .pin-layout {
   margin-bottom: 2rem;
 }
@@ -216,10 +240,16 @@ span:last-child {
   justify-content: center;
   font-weight: bold;
   font-size: 1.2rem;
-  box-shadow: 0 0 5px rgba(61, 128, 255, 0.5);
+  box-shadow: 0 0 5px #3d80ff80;
+}
+body.dark-mode .pin {
+  background-color: #282828;
+  color: #fff;
+  border: 2px solid #00ffc8;
+  box-shadow: 0 0 5px #00ffc888;
 }
 
-/* Buttons */
+/* == Buttons of the scoring == */
 .controls {
   display: flex;
   justify-content: center;
@@ -238,11 +268,16 @@ button {
   transition: all 0.3s ease;
 }
 
-/* Undo/Foul/Miss/Strike btn */
+/* == Undo/Foul/Miss/Strike btn == */
 #undo-btn {
   background-color: #cccccc; 
   color: #121212; 
   border: 1px solid #b3b3b3;
+}
+body.dark-mode #undo-btn {
+  background-color: #a1a1a1;
+  border: 1px solid #8c8c8c; 
+  box-shadow: 0 0 8px #cfcfcf; 
 }
 
 .foul {
@@ -250,11 +285,21 @@ button {
   color: #121212;
   border: 1px solid #e57376;
 }
+body.dark-mode .foul {
+  background-color: #ff9f9f;
+  border: 1px solid #e68a8a; 
+  box-shadow: 0 0 8px #ffb5b5;
+}
 
 .miss {
   background-color: #f9e29c; 
   color: #121212;
   border: 1px solid #f2d36b;
+}
+body.dark-mode .miss {
+  background-color: #f3ff89;
+  border: 1px solid #d9e67a;
+  box-shadow: 0 0 8px #f9ffb0; 
 }
 
 .strike {
@@ -262,18 +307,29 @@ button {
   color: #121212;
   border: 1px solid #7ea9e1;
 }
+body.dark-mode .strike {
+  background-color: #81d0fd;
+  border: 1px solid #66b0e0; 
+  box-shadow: 0 0 8px #a6e0ff; 
+}
 
 button:hover {
   opacity: 0.85; 
 }
 
-/* Start/End/Save btn */
+/* == Start/End/Save btn == */
 .start-game { 
   background-color: #03b821; 
   color: #ffffff;
   border: 1px solid #029e19;
   font-size: 1.2rem;
   padding: 0.9rem 2rem; 
+}
+body.dark-mode .start-game {
+  background-color: #36ff58;
+  color: #1a1a1a;
+  border: 1px solid #2ecc46; 
+  box-shadow: 0 0 6px #7fff8a; 
 }
 
 .end-game {
@@ -283,6 +339,12 @@ button:hover {
   font-size: 1.2rem;
   padding: 0.9rem 2rem;
 }
+body.dark-mode .end-game {
+  background-color: #d2ff57;
+  color: #1a1a1a;
+  border: 1px solid #b5e04a; 
+  box-shadow: 0 0 6px #e5ff8a; 
+}
 
 .save-game {
   background-color: #e47ac7; 
@@ -291,20 +353,48 @@ button:hover {
   font-size: 1.2rem;
   padding: 0.9rem 2rem;
 }
+body.dark-mode .save-game {
+  background-color: #fc90f6;
+  color: #1a1a1a;
+  border: 1px solid #e06adf; 
+  box-shadow: 0 0 6px #fcb0f9; 
+}
 
-
-
-
-
-
-
-/* === Place and Lane === */
+/* == Selector (Place and Lane) == */
+.score-header {
+  position: relative;
+  margin-bottom: 15px;
+  text-align: center; 
+}
 
 .selector-container {
-    top: 0;
-    bottom: 0;
-    margin-bottom: 3.5rem;
-  }
+  position: absolute;
+  top: -40px;
+  right: -10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.place-select {
+  font-size: 0.95rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.lane-select {
+  font-size: 0.95rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
 
 .place-select, .lane-select {
   font-size: 0.80rem;    
@@ -320,16 +410,21 @@ button:hover {
   min-width: 100px;       
   min-height: 36px;
 }
+body.dark-mode .place-select,
+body.dark-mode .lane-select {
+  background: #1a1a1a;
+  color: #fff;
+}
 
-
-/* Responsive */
+/* ===== Responsive Layout ===== */
+/* Compact phones */
 @media (max-width: 600px) {
   .score-frames {
     grid-template-columns: repeat(5, 1fr);
   }
 
   nav ul {
-    flex-wrap: wrap; /* allow multiple rows when too small */
+    flex-wrap: wrap; 
     justify-content: center;
     gap: 1rem;
   }
@@ -349,399 +444,16 @@ button:hover {
 
   .header-button-container {
     left: auto;
-    right: 1rem;  /* position it safely inside viewport */
+    right: 1rem; 
   }
-
-  .selector-container {
-    top: 0;
-    bottom: 0;
-  }
-
 
   .ball-display {
-    flex-wrap: wrap;   /* wrap balls to new line if too many */
+    flex-wrap: wrap;   
     justify-content: center;
-    width: 100%;       /* fit inside viewport */
+    width: 100%;       
     margin: 20px auto;
   }
-}
 
-
-@media (max-width: 400px) {
-  .score-frames {
-    grid-template-columns: repeat(5, 1fr); /* you already have this, good */
-    gap: 0.3rem;
-  }
-
-  .frame {
-    width: auto;  /* let it shrink inside grid */
-    min-width: 40px;
-    height: 70px;
-  }
-}
-
-
-  
-
-
-
-
-
-
-
-
-/* === Dark Mode Styling === */
-
-body.dark-mode {
-  background-color: #121212;
-  color: #f5f5f5;
-}
-
-/* Header */
-body.dark-mode header {
-  background: #222;
-  color: #00ffc8;
-  box-shadow: 0 0 12px #00ffc880;
-  border-bottom: 2px solid #00ffc8;
-}
-
-body.dark-mode #title {
-  color: #00ffc8;
-  text-shadow:
-    0 0 6px #00ffc8,
-    0 0 15px #ff4b5c,
-    0 0 20px #ff4b5c;
-}
-
-/* Nav */
-body.dark-mode nav ul {
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-body.dark-mode nav a {
-  color: #f5f5f5;
-  font-weight: 500;
-  font-size: 0.95rem;
-  position: relative;
-  padding: 0.4rem 0.6rem;
-  transition: color 0.3s ease;
-  text-decoration: none;
-}
-
-body.dark-mode nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -3px;
-  height: 2px;
-  width: 100%;
-  background-color: #00ffc8;
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-  transform-origin: right;
-}
-
-body.dark-mode nav a:hover,
-body.dark-mode nav a[aria-current="page"] {
-  color: #ff4b5c;
-  text-shadow:
-    0 0 6px #ff4b5c,
-    0 0 10px #ff4b5c;
-}
-
-body.dark-mode nav a:hover::after,
-body.dark-mode nav a[aria-current="page"]::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* Container Box */
-body.dark-mode .bowling-score-container {
-  background: #1a1a1a;
-  box-shadow: 0 0 10px #00ffc880;
-}
-
-/* Frames */
-body.dark-mode .frame {
-  background: #292929;
-  border: 2px solid #00ffc8;
-  color: #fff;
-}
-
-body.dark-mode .frame span {
-  color: #fff;
-}
-
-/* Pins */
-body.dark-mode .pin {
-  background-color: #282828;
-  color: #fff;
-  border: 2px solid #00ffc8;
-  box-shadow: 0 0 5px #00ffc888;
-}
-
-/* Buttons */
-
-body.dark-mode #undo-btn {
-  background-color: #a1a1a1;
-  border: 1px solid #8c8c8c; 
-  box-shadow: 0 0 8px #cfcfcf; 
-}
-
-body.dark-mode .foul {
-  background-color: #ff9f9f;
-  border: 1px solid #e68a8a; 
-  box-shadow: 0 0 8px #ffb5b5;
-}
-
-body.dark-mode .miss {
-  background-color: #f3ff89;
-  border: 1px solid #d9e67a;
-  box-shadow: 0 0 8px #f9ffb0; 
-}
-
-body.dark-mode .strike {
-  background-color: #81d0fd;
-  border: 1px solid #66b0e0; 
-  box-shadow: 0 0 8px #a6e0ff; 
-}
-
-/* Start/End/Save btn */
-
-body.dark-mode .start-game {
-  background-color: #36ff58;
-  color: #1a1a1a;
-  border: 1px solid #2ecc46; 
-  box-shadow: 0 0 6px #7fff8a; 
-}
-
-body.dark-mode .end-game {
-  background-color: #d2ff57;
-  color: #1a1a1a;
-  border: 1px solid #b5e04a; 
-  box-shadow: 0 0 6px #e5ff8a; 
-}
-
-body.dark-mode .save-game {
-  background-color: #fc90f6;
-  color: #1a1a1a;
-  border: 1px solid #e06adf; 
-  box-shadow: 0 0 6px #fcb0f9; 
-}
-
-
-
-/* === Pop up Normal/League === */
-
-.modal {
-    display: none; /* hidden by default */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* truly center the modal */
-    z-index: 1000;
-    background: rgba(0,0,0,0.7);
-    width: 100%;
-    height: 100%;
-}
-
-.modal-content {
-    position: absolute; /* relative to modal */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #a1a1a1;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid var(--clr-prim);
-    text-align: center;
-    max-width: 300px;
-    width: 90%;
-    color: #fff;
-    display: flex;
-    flex-direction: column;  /* stack content vertically */
-    align-items: center;     /* center content horizontally */
-    box-shadow: 0 4px 15px rgb(51, 113, 170);
-}
-
-body.dark-mode .modal-content {
-  background: #222;
-  box-shadow: 0 4px 15px #4b4a4a80;
-  border: 1px solid #00ffc8;
-  box-shadow: 0 4px 15px #00ffc8;
-}
-
-.modal-content h2 {
-    margin-bottom: 15px;
-}
-
-.modal-btn {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-    background: var(--clr-sec);
-    color: white;
-}
-
-.color-btn {
-  background: var(--clr-prim);
-}
-
-.color-btn:hover {
-  background: var(--clr-sec);
-}
-
-body.dark-mode .color-btn {
-  background: #00ffc8b6;
-}
-
-body.dark-mode .color-btn:hover {
-  background: var(--clr-text-muted);
-}
-
-.modal-btn:hover {
-    background: var(--clr-text-muted);
-    opacity: 0.9;
-    box-shadow: 0 0 15px #ffffff;
-}
-
-.close-btn {
-    padding: 8px 16px;   /* small cancel button */
-    margin-top: 10px;
-    background: gray;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: center;
-    width: auto;         /* do not stretch */
-}
-
-/* === Responsive === */
-@media (max-width: 400px) {
-    .modal-content {
-        width: 95%;
-        padding: 15px;
-    }
-
-    .modal-btn {
-        font-size: 14px;
-        padding: 10px;
-    }
-
-    .close-btn {
-        font-size: 14px;
-        padding: 8px 14px;
-    }
-}
-
-
-/* === Ball Display === */
-
-.controls {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* spacing between buttons */
-    position: relative;
-}
-
-.ball-display {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px; /* spacing between balls */
-    position: relative;
-    width: max-content;
-    margin: 20px auto;
-}
-
-.ball-display img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-
-    /* Circular background */
-    border-radius: 50%;       
-    background-color: white;  /* or light blue: #cceeff */
-    padding: 4px;             /* smaller padding for a tighter circle */
-
-    /* Hover zoom effect */
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.ball-display img:hover {
-    transform: scale(1.2); /* zoom in slightly on hover in light mode */
-    /* No glow in light mode */
-}
-
-
-
-
-/* === Dark Mode === */
-
-body.dark-mode .sub-title {
-  color: var(--clr-sec);
-}
-
-body.dark-mode .ball-display img {
-    background-color: #222; /* dark background for balls */
-    box-shadow: 0 0 6px rgba(0, 255, 200, 0.5); /* subtle neon glow */
-}
-
-body.dark-mode .ball-display img:hover {
-    transform: scale(1.2); /* grow a little more in dark mode */
-    box-shadow: 0 0 14px #00ffc8, 0 0 22px #00ffc8; /* glowing green on hover */
-}
-
-
-/* === Place === */
-
-/* === Score header styling === */
-.score-header {
-  position: relative;
-  margin-bottom: 15px;
-  text-align: center; /* keep the headline centered */
-}
-
-/* === Selector container === */
-.selector-container {
-  position: absolute;
-  top: -40px;
-  right: -10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* === Place Selector === */
-.place-select {
-  font-size: 0.95rem;
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
-  background: #fff;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-/* === Lane Selector === */
-.lane-select {
-  font-size: 0.95rem;
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
-  background: #fff;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-@media (max-width: 600px) {
   .place-select, .lane-select {
     font-size: 0.80rem;
   }
@@ -751,28 +463,176 @@ body.dark-mode .ball-display img:hover {
   }
 }
 
+/* Extra-small phones */
+@media (max-width: 400px) {
+  .score-frames {
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 0.3rem;
+  }
 
-
-/* === Dark Mode Lane & Place === */
-
-body.dark-mode .bowling-score-container {
-  background: #1a1a1a;
-  color: #fff;
+  .frame {
+    width: auto;  
+    min-width: 40px;
+    height: 70px;
+  }
 }
 
-body.dark-mode .place-select,
-body.dark-mode .lane-select {
-  background: #1a1a1a;
+
+/* ===== Pop up Practice/League ===== */
+.modal {
+  display: none; 
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  z-index: 1000;
+  background: #000000b3;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-content {
+  position: absolute; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #a1a1a1;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--clr-prim);
+  text-align: center;
+  max-width: 300px;
+  width: 90%;
   color: #fff;
+  display: flex;
+  flex-direction: column;  
+  align-items: center;     
+  box-shadow: 0 4px 15px #3371aa;
+}
+body.dark-mode .modal-content {
+  background: #222;
+  box-shadow: 0 4px 15px #4b4a4a80;
+  border: 1px solid #00ffc8;
+  box-shadow: 0 4px 15px #00ffc8;
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+}
+
+.modal-btn {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  background: var(--clr-sec);
+  color: white;
+}
+
+.color-btn {
+  background: var(--clr-prim);
+}
+body.dark-mode .color-btn {
+  background: #00ffc8b6;
+}
+
+.color-btn:hover {
+  background: var(--clr-sec);
+}
+body.dark-mode .color-btn:hover {
+  background: var(--clr-text-muted);
+}
+
+.modal-btn:hover {
+  background: var(--clr-text-muted);
+  opacity: 0.9;
+  box-shadow: 0 0 15px #ffffff;
+}
+
+.close-btn {
+  padding: 8px 16px;  
+  margin-top: 10px;
+  background: gray;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  width: auto;         
+}
+
+/* ===== Responsive Layout  ===== */
+/* Extra-small phones */
+@media (max-width: 400px) {
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .modal-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .close-btn {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
 }
 
 
+/* ===== Ball display ===== */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+  position: relative;
+}
 
-/* === Select Match Type === */
+.ball-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; 
+  position: relative;
+  width: max-content;
+  margin: 20px auto;
+}
 
-/* 🌞 Light Mode (calmer but a bit darker) */
+.ball-display img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 50%;       
+  background-color: white;  
+  padding: 4px;      
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+body.dark-mode .ball-display img {
+  background-color: #222; 
+  box-shadow: 0 0 6px #00ffc880; 
+}
+
+.ball-display img:hover {
+  transform: scale(1.2); 
+}
+body.dark-mode .ball-display img:hover {
+  transform: scale(1.2); 
+  box-shadow: 0 0 14px #00ffc8, 0 0 22px #00ffc8;
+}
+
+
+/* ===== Select match type ===== */
 #size-2v2 {
   background-color: #4caf50; 
+  color: white;
+}
+body.dark-mode #size-2v2 {
+  background-color: #008000;
   color: white;
 }
 
@@ -780,42 +640,22 @@ body.dark-mode .lane-select {
   background-color: #ff9800; 
   color: white;
 }
-
-#size-4v4 {
-  background-color: #f44336; 
-  color: white;
-}
-
-/* 🌙 Dark Mode (your bold colors) */
-body.dark-mode #size-2v2 {
-  background-color: #008000;
-  color: white;
-}
-
 body.dark-mode #size-3v3 {
   background-color: #ffa500;
   color: white;
 }
 
+#size-4v4 {
+  background-color: #f44336; 
+  color: white;
+}
 body.dark-mode #size-4v4 {
   background-color: #ff0000;
   color: white;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-/* === Endgame Modal === */
-
+/* ===== Endgame modal (dark mode is at first save part) ===== */
 .endgame {
   display: none;
   position: fixed;
@@ -838,7 +678,7 @@ body.dark-mode #size-4v4 {
   width: 90%;
   text-align: center;
   color: #fff; 
-  box-shadow: 0 4px 15px rgb(51, 113, 170);
+  box-shadow: 0 4px 15px #3371aa;
 }
 
 .endgame-heading,
@@ -893,10 +733,7 @@ body.dark-mode #size-4v4 {
   background: #ff5858; 
 }
 
-
-
-/* === Save First Modal === */
-
+/* == Save first modal (This only pops up 1s a game) == */
 .save-first {
   display: none;
   position: fixed;
@@ -904,7 +741,7 @@ body.dark-mode #size-4v4 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.7);
+  background: #000000b3;
   z-index: 1000;
   justify-content: center;
   align-items: center;
@@ -919,10 +756,16 @@ body.dark-mode #size-4v4 {
   width: 90%;
   text-align: left;
   color: #fff; 
-  box-shadow: 0 4px 15px rgb(51, 113, 170);
+  box-shadow: 0 4px 15px #3371aa;
+}
+body.dark-mode .endgame-content,
+body.dark-mode .save-first-content {
+  background: #222;
+  color: #eee;
+  border: 1px solid #00ffc8;
+  box-shadow: 0 4px 15px #00ffc8;
 }
 
-/* Save First text */
 .save-first-heading {
   font-size: 1.3rem;
   font-weight: 700;
@@ -951,7 +794,6 @@ body.dark-mode #size-4v4 {
   text-align: center;
 }
 
-/* === FIXED Save First Buttons === */
 .save-first-actions {
   display: flex;
   justify-content: center;
@@ -963,26 +805,40 @@ body.dark-mode #size-4v4 {
   padding: 10px 16px;
   font-size: 0.95rem;
   border: none;
-  border-radius: 8px; /* ensures rectangular, same as endgame */
+  border-radius: 8px; 
   cursor: pointer;
   transition: 0.2s;
   box-sizing: border-box;
   text-align: center;
-  min-width: 80px; /* optional: ensures consistent width */
+  min-width: 80px; 
 }
 
 .save-first-primary {
   background: var(--clr-prim);
   color: #fff;
 }
+body.dark-mode .endgame-primary,
+body.dark-mode .save-first-primary {
+  background: #00ffaed5;
+}
 
 .save-first-cancel {
   background: #555;
   color: #fff;
 }
+body.dark-mode .endgame-cancel,
+body.dark-mode .save-first-cancel {
+  background: #555;
+}
 
 .save-first-primary:hover,
 .save-first-cancel:hover {
+  background: #ff9292;
+}
+body.dark-mode .endgame-primary:hover,
+body.dark-mode .endgame-cancel:hover,
+body.dark-mode .save-first-primary:hover, 
+body.dark-mode .save-first-cancel:hover {
   background: #ff9292;
 }
 
@@ -990,8 +846,15 @@ body.dark-mode #size-4v4 {
 .save-first-cancel:active {
   background: #ff5858;
 }
+body.dark-mode .endgame-primary:active,
+body.dark-mode .endgame-cancel:active,
+body.dark-mode .save-first-primary:active, 
+body.dark-mode .save-first-cancel:active {
+  background: #ff5858;
+}
 
-/* Pop Up little smaller for mobile */
+/* ===== Responsive Layout  ===== */
+/* Very small phones */
 @media (max-width: 480px) {
   .endgame-content,
   .save-first-content {
@@ -1000,77 +863,8 @@ body.dark-mode #size-4v4 {
   }
 }
 
-/* === Dark Mode Overrides === */
 
-body.dark-mode .endgame-content,
-body.dark-mode .save-first-content {
-  background: #222;
-  color: #eee;
-  border: 1px solid #00ffc8;
-  box-shadow: 0 4px 15px #00ffc8;
-}
-
-body.dark-mode .endgame-primary,
-body.dark-mode .save-first-primary {
-  background: #00ffaed5;
-}
-
-body.dark-mode .endgame-primary:hover,
-body.dark-mode .endgame-cancel:hover,
-body.dark-mode .save-first-primary:hover, 
-body.dark-mode .save-first-cancel:hover {
-  background: #ff9292;
-}
-
-body.dark-mode .endgame-primary:active,
-body.dark-mode .endgame-cancel:active,
-body.dark-mode .save-first-primary:active, 
-body.dark-mode .save-first-cancel:active {
-  background: #ff5858;
-}
-
-body.dark-mode .endgame-cancel,
-body.dark-mode .save-first-cancel {
-  background: #555;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* === DARK MODE Toggle === */
-
-body.dark-mode {
-  background: #121217;
-}
-
-/* === Header Action Row === */
+/* ===== Note (pop up in practice games) ===== */
 .header-action-row {
   display: flex;
   justify-content: flex-end;
@@ -1080,7 +874,6 @@ body.dark-mode {
   padding: 1rem 3rem;
 }
 
-/* Notes button (top-left, initially hidden) */
 #note-toggle {
   position: absolute;
   left: 3rem; 
@@ -1095,7 +888,6 @@ body.dark-mode {
   z-index: 1000;
 }
 
-/* === Dark mode toggle button (black circle background) === */
 .neon-btn {
   background: #111; 
   border: none;
@@ -1134,7 +926,6 @@ body.dark-mode {
   opacity: 0.8;
 }
 
-/* === PRACTICE NOTES POPUP === */
 #note-popup {
   position: fixed;
   top: 50%;
@@ -1146,19 +937,24 @@ body.dark-mode {
   background: #fffdf5;
   border: 2px solid var(--clr-prim);
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 30px #00000033;
   font-family: "Segoe UI", sans-serif;
   z-index: 2000;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
+body.dark-mode #note-popup {
+  background: #1a1a1a;
+  color: #f5f5f5;
+  border: 2px solid #00ffc8;
+  box-shadow: 8px 20px #ffffff0d;
+}
 
 #note-popup.note-hidden {
   display: none;
 }
 
-/* Notes header */
 .note-header {
   display: flex;
   justify-content: space-between;
@@ -1171,6 +967,9 @@ body.dark-mode {
   font-weight: 600;
   color: #333;
 }
+body.dark-mode .note-header h3 {
+  color: #00dfae;
+}
 
 #close-note {
   background: none;
@@ -1178,8 +977,10 @@ body.dark-mode {
   font-size: 1.5rem;
   cursor: pointer;
 }
+body.dark-mode #close-note {
+  color: #ff5858;
+}
 
-/* Note input */
 .note-input {
   display: flex;
   gap: 8px;
@@ -1192,6 +993,11 @@ body.dark-mode {
   border: 1px solid #ddd;
   font-size: 1rem;
 }
+body.dark-mode #note-text {
+  background: #222;
+  color: #f5f5f5;
+  border: 1px solid #444;
+}
 
 #add-note {
   background: #fdd835;
@@ -1201,8 +1007,11 @@ body.dark-mode {
   cursor: pointer;
   font-size: 1.1rem;
 }
+body.dark-mode #add-note {
+  background: var(--clr-sec);
+  color: #111;
+}
 
-/* Note list */
 #note-list {
   list-style: none;
   margin: 0;
@@ -1219,11 +1028,22 @@ body.dark-mode {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px #0000000d;
+}
+body.dark-mode #note-list li {
+  background: #2a2a2a;
+  color: #f5f5f5;
+  box-shadow: 0 2px 5px #0000004d;
+  border: 1px solid #00dfae;
 }
 
 #note-list li.done span {
   text-decoration: line-through wavy #f51747;
+  opacity: 0.7;
+}
+body.dark-mode #note-list li.done span {
+  text-decoration-line: line-through;
+  text-decoration-color: #fad21f;
   opacity: 0.7;
 }
 
@@ -1234,52 +1054,34 @@ body.dark-mode {
   cursor: pointer;
   color: #b71c1c;
 }
-
-/* === DARK MODE FOR NOTES POPUP === */
-body.dark-mode #note-popup {
-  background: #1a1a1a;
-  color: #f5f5f5;
-  border: 2px solid #00ffc8;
-  box-shadow: 8px 20px rgba(255, 255, 255, 0.05);
-}
-
-body.dark-mode .note-header h3 {
-  color: #00dfae;
-}
-
-body.dark-mode #close-note {
-  color: #ff5858;
-}
-
-body.dark-mode #note-text {
-  background: #222;
-  color: #f5f5f5;
-  border: 1px solid #444;
-}
-
-body.dark-mode #add-note {
-  background: var(--clr-sec);
-  color: #111;
-}
-
-body.dark-mode #note-list li {
-  background: #2a2a2a;
-  color: #f5f5f5;
-  box-shadow: 0 2px 5px #0000004d;
-  border: 1px solid #00dfae;
-}
-
-body.dark-mode #note-list li.done span {
-  text-decoration-line: line-through;
-  text-decoration-color: #fad21f;
-  opacity: 0.7;
-}
-
 body.dark-mode #note-list li button {
   color: #00dfae;
 }
 
-/* === MOBILE & SCREEN ADJUSTMENTS === */
+/* ===== Responsive Layout  ===== */
+/* Very small phones */
+@media (max-width: 480px) {
+  .header-action-row {
+    padding: 0.2rem 1rem; 
+  }
+
+  #note-toggle {
+    left: 1rem; 
+  }
+}
+
+/* Tablets + large phones */
+@media (max-width: 768px) {
+  .header-action-row {
+    padding: 0.2rem 2rem; 
+  }
+
+  #note-toggle {
+    left: 2rem; 
+  }
+}
+
+/* Laptops / small desktops */
 @media (min-width: 1024px) {
   .header-action-row {
     padding: 0.2rem 17rem; 
@@ -1294,10 +1096,12 @@ body.dark-mode #note-list li button {
   }
 }
 
+/* Tablets & smaller laptops */
 @media (max-width: 1024px) {
   .header-action-row {
     padding: 0.2rem 2rem; 
   }
+
   #note-toggle {
     left: 2rem; 
     top: 0.5rem;
@@ -1305,25 +1109,7 @@ body.dark-mode #note-list li button {
   }
 }
 
-@media (max-width: 768px) {
-  .header-action-row {
-    padding: 0.2rem 2rem; 
-  }
-  #note-toggle {
-    left: 2rem; 
-  }
-}
-
-@media (max-width: 480px) {
-  .header-action-row {
-    padding: 0.2rem 1rem; 
-  }
-  #note-toggle {
-    left: 1rem; 
-  }
-}
-
-/* For large screens (laptops/desktops) */
+/* Large desktops */
 @media (min-width: 1200px) {
   #note-toggle {
     left: 21%; 

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,20 +25,23 @@
     </nav>
   </header>
 
-  <!-- Header action row: note left, theme right (matches coach file layout) -->
+  <!-- === Notes btn === -->
   <div class="header-action-row">
     <button id="note-toggle" class="plain-btn" aria-label="Open notes" title="Practice Notes">
       <span class="emoji">📝</span>
     </button>
+
+    <!-- === Dark/Light mode btn === -->
     <button id="theme-toggle" class="neon-btn" aria-label="Toggle dark/light mode" title="Toggle theme">
       <span class="emoji">🌙</span>
     </button>
   </div>
 
+  <!-- === Place/Lane selectors === -->
   <div class="bowling-score-container">
-    <!-- Title and selectors -->
     <div class="score-header">
       <h2>Add Your Scores!</h2>
+
       <div class="selector-container">
         <!-- Place Selector -->
         <select id="placeInput" class="place-select">
@@ -50,6 +54,7 @@
         <!-- Lane Selector -->
         <select id="laneInput" class="lane-select">
           <option value="">Lane???</option>
+
           <!-- Single lanes -->
           <option value="1">Lane 1</option>
           <option value="2">Lane 2</option>
@@ -67,6 +72,15 @@
           <option value="14">Lane 14</option>
           <option value="15">Lane 15</option>
           <option value="16">Lane 16</option>
+          <option value="17">Lane 17</option>
+          <option value="18">Lane 18</option>
+          <option value="19">Lane 19</option>
+          <option value="20">Lane 20</option>
+          <option value="21">Lane 21</option>
+          <option value="22">Lane 22</option>
+          <option value="23">Lane 23</option>
+          <option value="24">Lane 24</option>
+
           <!-- Contiguous pairs -->
           <option value="1-2">Lane 1-2</option>
           <option value="3-4">Lane 3-4</option>
@@ -76,10 +90,15 @@
           <option value="11-12">Lane 11-12</option>
           <option value="13-14">Lane 13-14</option>
           <option value="15-16">Lane 15-16</option>
+          <option value="17-18">Lane 17-18</option>
+          <option value="19-20">Lane 19-20</option>
+          <option value="21-22">Lane 21-22</option>
+          <option value="23-24">Lane 23-24</option>
         </select>
       </div>
     </div>
 
+    <!-- === Score Frames === -->
     <div class="score-frames">
       <div class="frame"><br><span></span></div>
       <div class="frame"><br><span></span></div>
@@ -93,6 +112,7 @@
       <div class="frame"><br><span></span></div>
     </div>
 
+    <!-- === Pin btns for score === -->
     <div class="pin-layout">
       <div class="pin-row">
         <div class="pin">7</div>
@@ -114,6 +134,7 @@
       </div>
     </div>
 
+    <!-- Score btns -->
     <div class="controls">
       <button id="undo-btn">Undo</button>
       <button class="foul">Foul</button>
@@ -121,27 +142,26 @@
       <button class="strike">Strike</button>
     </div>
 
+    <!-- === View 3 balls playing === -->
     <div id="selected-ball-display" class="ball-display">
       <img src="ball1.png" alt="Ball 1">
       <img src="ball2.png" alt="Ball 2">
       <img src="ball3.png" alt="Ball 3">
     </div>
 
+    <!-- === Start game modal === -->
     <button id="main-btn" class="save-game start">Start Game</button>
-
-    <!-- Start Game Modal -->
 
     <div id="playerTypeModal" class="modal">
       <div class="modal-content">
         <h2>Select Game Mode</h2>
-        <button id="practice-btn" class="modal-btn">Practice</button> <!-- Renamed -->
+        <button id="practice-btn" class="modal-btn">Practice</button>
         <button id="league-btn" class="modal-btn color-btn">League</button>
         <button id="close-modal" class="close-btn">Cancel</button>
       </div>
     </div>
 
-    <!-- Ball Choices Modal -->
-
+    <!-- Ball choices modal -->
     <div id="ballChoiceModal" class="modal">
       <div class="modal-content">
         <h2>Select Ball Type</h2>
@@ -151,8 +171,7 @@
       </div>
     </div>
 
-    <!-- Select Match Type -->
-
+    <!-- Select match type -->
     <div id="leagueSizeModal" class="modal">
       <div class="modal-content">
         <h2>Select Match Type</h2>
@@ -163,54 +182,45 @@
       </div>
     </div>
  
-
-<!-- End Game confirmation -->
-     
-<div id="endgameModal" class="endgame" role="dialog" aria-modal="true" aria-labelledby="endgameTitle" aria-hidden="true">
-  <div id="endgameContent" class="endgame-content">
-    <!-- Title can be added if you want -->
-    <p id="endgameMessage" class="endgame-message"></p>
-
-    <div id="endgameActions" class="endgame-actions">
-      <button id="endgamePrimaryBtn" class="endgame-btn endgame-primary">OK</button>
-      <button id="endgameCancelBtn"  class="endgame-btn endgame-cancel">Cancel</button>
+    <!-- End game confirmation -->
+    <div id="endgameModal" class="endgame" role="dialog" aria-modal="true" aria-labelledby="endgameTitle" aria-hidden="true">
+      <div id="endgameContent" class="endgame-content">
+        <p id="endgameMessage" class="endgame-message"></p>
+      
+        <div id="endgameActions" class="endgame-actions">
+          <button id="endgamePrimaryBtn" class="endgame-btn endgame-primary">Yes</button>
+          <button id="endgameCancelBtn"  class="endgame-btn endgame-cancel">Cancel</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-
-<!-- Save Game (first-time) -->
-
-<div id="saveFirstModal" class="save-first" role="dialog" aria-modal="true" aria-labelledby="saveFirstTitle" aria-hidden="true">
-  <div id="saveFirstContent" class="save-first-content">
-    <p id="saveFirstMessage" class="save-first-message"></p>
-
-    <div id="saveFirstActions" class="save-first-actions">
-      <button id="saveFirstPrimaryBtn" class="save-first-btn save-first-primary">Continue</button>
-      <button id="saveFirstCancelBtn"  class="save-first-btn save-first-cancel">Go Back</button>
+    <!-- Save game -->
+    <div id="saveFirstModal" class="save-first" role="dialog" aria-modal="true" aria-labelledby="saveFirstTitle" aria-hidden="true">
+      <div id="saveFirstContent" class="save-first-content">
+        <p id="saveFirstMessage" class="save-first-message"></p>
+      
+        <!-- Confirm on first game for place/lanes -->
+        <div id="saveFirstActions" class="save-first-actions">
+          <button id="saveFirstPrimaryBtn" class="save-first-btn save-first-primary">Continue</button>
+          <button id="saveFirstCancelBtn"  class="save-first-btn save-first-cancel">Go Back</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!--
-  NOTES: Replaced the old center-note button/popup with the coach-style header note button
-  and popup below. The note button is hidden by default and shown only when Practice is selected.
--->
+    <!-- === Notes popup (coach style: same IDs as coach file) === -->
+    <div id="note-popup" class="note-hidden">
+      <div class="note-header">
+        <h3>📝 Practice Notes</h3>
+        <button id="close-note" aria-label="Close note">👋</button>
+      </div>
 
-<!-- Notes Popup (coach style: same IDs as coach file) -->
-<div id="note-popup" class="note-hidden">
-  <div class="note-header">
-    <h3>📝 Practice Notes</h3>
-    <button id="close-note" aria-label="Close note">👋</button>
-  </div>
+      <div class="note-input">
+        <input type="text" id="note-text" placeholder="Add a new note..." />
+        <button id="add-note">🎯</button>
+      </div>
 
-  <div class="note-input">
-    <input type="text" id="note-text" placeholder="Add a new note..." />
-    <button id="add-note">🎯</button>
-  </div>
-
-  <ul id="note-list"></ul>
-</div>
+      <ul id="note-list"></ul>
+    </div>
 
 </body>
 </html>
