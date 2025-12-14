@@ -1,12 +1,13 @@
+
 /** 
  * BowlVault — main frontend script
  * 
  * Comment Structure:
- * // ===== Comment ===== //      → Marks the start of a major section
- * // -- Comment -- //            → Notes about linked files or references
- * // == Comment == //            → Important or highlighted part
+ * 
+ * // ===== Section ===== //      → Marks the start of a major section
+ * // -- Comment -- //            → Comment about linked files or references
+ * // == Comment == //            → Highlights an importent step or feature within a section
  * // Comment                     → General explanation of code
- * [Comment]                      → File overview or purpose (use brackets to avoid nesting)
  *
  * Purpose:
  * - Controls theme (light/dark).
@@ -82,7 +83,8 @@ toggleBtn.addEventListener("click", () => {
 
 'use strict';
 
-// ===== Games - load, display, filter and manage game stats ===== //
+// ===== Games ===== //
+// Load, display, filter and manage game stats
 const gamesKey = 'bowlvault_games';
 
 // -- Load games from localStorage -- //
@@ -101,7 +103,6 @@ const modeClasses = {
   'league': 'text-league'
 };
 
-
 // == All about Quick Stats == //
 function updateStats() {
   document.getElementById('gamesPlayed').textContent = games.length;
@@ -117,13 +118,6 @@ function updateStats() {
     b[1] - a[1])[0]?.[0] || "None";
   document.getElementById('favoriteBall').textContent = favoriteBall;
 }
-
-// * Step 1: Get the list element and stop if not found
-// * Step 2: Clear previous list items
-// * Step 3: Filter games based on currentFilter
-// * Step 4: Sort newest first
-// * Step 5: Render each game
-// * Step 6: Update filter buttons
 
 // == Displaying the list of games == //
 function renderGames() {
@@ -690,7 +684,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
 // ===== Click Game for Details pop up ===== //
 document.addEventListener('DOMContentLoaded', () => {
   const gameList = document.getElementById('gameList');
@@ -725,8 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return (total / leagueGames.length).toFixed(1);
   }
 
-
-  // ===== When a game in the list is clicked ===== //
+  // == When a game in the list is clicked == //
   gameList.addEventListener('click', (e) => {
     const li = e.target.closest('li');
     if (!li) return;
@@ -889,7 +881,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-
     // == Build players modal == //
     function buildPlayersView() {
 
@@ -1006,3 +997,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+// ===== Yearly update ===== //
+const footerYear = document.getElementById('footer-year');
+if (footerYear) {
+  const currentYear = new Date().getFullYear();
+  footerYear.textContent = `© ${currentYear} Your Bowling Journey`;
+}

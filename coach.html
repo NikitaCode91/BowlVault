@@ -10,8 +10,6 @@
 </head>
 
 <body>
-
-  <!-- Header with Navigation -->
   <header>
     <h1 id="title">Tips & Mentorship</h1>
     <h3 class="sub-title">Guiding your perfect strike, one tip at a time...📈</h3>
@@ -20,52 +18,53 @@
         <li><a href="index.html">Dashboard</a></li>
         <li><a href="vault.html">Ball Vault</a></li>       
         <li><a href="game.html">Add Game</a></li>
-        <li><a href="coach.html" class="active" aria-current="page">Coach & Tips</a></li>
+        <li><a href="coach.html" class="active" aria-current="page">Quick Tips</a></li>
         <li><a href="koko.html" class="koko">Koko's Shop</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- Action Buttons Row: Notes left, Dark Mode right -->
+  <!-- === Notes & Dark mode === -->
   <div class="header-action-row">
     <button id="note-toggle" class="plain-btn" aria-label="Open notes">
       <span class="emoji">📝</span>
     </button>
+
     <button id="theme-toggle" class="neon-btn" aria-label="Toggle dark/light mode">
       <span class="emoji">🌙</span>
     </button>
   </div>
 
-  <!-- Main Coaching Section -->
+  <!-- === Coaching section === -->
   <main id="coach-container">
 
-    <!-- Step 1: Select Bowling Hand -->
+    <!-- Step 1: Select bowling hand -->
     <section id="step-1" class="step">
       <h2>What's your bowling hand?</h2>
       <div class="choice-group">
-        <button class="choice-btn" data-hand="left">🤚 Lefty</button>
-        <button class="choice-btn" data-hand="right">✋ Righty</button>
+        <button class="choice-btn" data-hand="left">👈 Lefty</button>
+        <button class="choice-btn" data-hand="right">👉 Righty</button>
       </div>
     </section>
 
-    <!-- Step 2: Select Bowling Style -->
+    <!-- Step 2: Select bowling style -->
     <section id="step-2" class="step hidden">
       <h2>What's your bowling style?</h2>
       <div class="choice-group">
-        <button class="choice-btn" data-style="1-handed">👆 One - Handed</button>
+        <button class="choice-btn" data-style="1-handed">☝️ One - Handed</button>
         <button class="choice-btn" data-style="2-handed">✌ Two - Handed</button>
       </div>
     </section>
 
-    <!-- Coaching Tips Section -->
+    <!-- === Coaching tips section === -->
     <section id="tips-section" class="hidden">
-      <h2>🏆 Your Coaching Tips</h2>
+      <h2 id="tips-title">🏆 Your Tips</h2>
       <div id="categories-container">
         <!-- Category cards inserted here by JS -->
       </div>
     </section>
 
-    <!-- Notes Popup -->
+    <!-- === Notes === -->
     <div id="note-popup" class="note-hidden">
       <div class="note-header">
         <h3>📝 Practice Notes</h3>

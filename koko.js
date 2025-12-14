@@ -1,5 +1,40 @@
-// === Light & Dark Mode === //
 
+/**
+ * UI Interaction Logic
+ * --------------------
+ * This script handles global UI interactions used across the site,
+ * including theme toggling (light/dark mode) and interactive
+ * heart/like buttons with persistent state.
+ *
+ * Features:
+ * - Light & Dark mode toggle with saved preference
+ * - Animated heart/like buttons
+ * - Persistent like state and count via localStorage
+ *
+ * Comment Structure:
+ * 
+ * // ===== Section ===== //      → Marks the start of a major section
+ * // -- Comment -- //            → Comment about linked files or references
+ * // == Comment == //            → Highlights an importent step or feature within a section
+ * // Comment                     → General explanation of code
+ *
+ * ===================================
+ *  Contents
+ * ===================================
+ * 1. Light & Dark Mode
+ *    - Load saved theme on page load
+ *    - Toggle theme on button click
+ *    - Update emoji + visual state
+ *
+ * 2. Heart / Like System
+ *    - Load saved like state per item
+ *    - Load and persist like counts
+ *    - Toggle liked state on click
+ *    - Play heart pop animation
+ * ===================================
+ */
+
+// ===== Light & Dark Mode ===== //
 const toggleBtn = document.getElementById("theme-toggle");
 const emojiSpan = toggleBtn.querySelector(".emoji");
 
@@ -25,8 +60,7 @@ toggleBtn.addEventListener("click", () => {
 });
 
 
-// === Heart === //
-
+// ===== Heart ===== //
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".like-btn").forEach(btn => {
     const id = btn.dataset.id;
@@ -58,10 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem(`like-${id}`, "true");
         count++;
         
-        // retrigger animation
+        // Retrigger animation
         const icon = btn.querySelector("i");
         icon.classList.remove("pop");
-        void icon.offsetWidth;
+        void icon.offsetWidth;  // Void (force browser refresh for animation)
         icon.classList.add("pop");
       }
 

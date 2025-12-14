@@ -1,10 +1,73 @@
+
+/** 
+ * Practice Tips Page Logic
+ * -------------------------
+ * This script manages the flow for the “Practice Tips” page:
+ * theme toggling, user hand/style selection, category display,
+ * tips pagination, expanding/collapsing sections, and notes system.
+ *
+ * Comment Structure:
+ * 
+ * // ===== Section ===== //      → Marks the start of a major section
+ * // -- Comment -- //            → Comment about linked files or references
+ * // == Comment == //            → Highlights an importent step or feature within a section
+ * // Comment                     → General explanation of code
+ *
+ * ===================================
+ *  Contents
+ * ===================================
+ * 1. Theme Toggle (Light / Dark)
+ * 2. Page Elements & Initial State
+ * 3. Tips Data (All Hand + Style + Category Variations)
+ * 4. Load Saved Selection on Startup
+ * 5. Step 1: Select Hand (Left / Right)
+ * 6. Step 2: Select Style (1-Handed / 2-Handed)
+ * 7. Show Categories Grid
+ * 8. Render Tips for a Category
+ * 9. Pagination Logic
+ * 10. Change Selection Button
+ * 11. Notes System (Add, Delete, Mark Done)
+ * 12. Save Notes to localStorage
+ * 13. Restore Notes on Page Load
+ * ===================================
+ */
+
+
+// ===== Light & Dark Mode ===== //
+const toggleBtn = document.getElementById("theme-toggle");
+const emojiSpan = toggleBtn.querySelector(".emoji");
+
+// Load saved theme on page load
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.body.classList.add("dark-mode");
+  emojiSpan.textContent = "🌞";
+  toggleBtn.classList.add("toggled");
+} else {
+  document.body.classList.remove("dark-mode");
+  emojiSpan.textContent = "🌙";
+  toggleBtn.classList.remove("toggled");
+}
+
+// Toggle theme on click and save preference
+toggleBtn.addEventListener("click", () => {
+  const isDark = document.body.classList.toggle("dark-mode");
+  emojiSpan.textContent = isDark ? "🌞" : "🌙";
+  toggleBtn.classList.toggle("toggled");
+
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+});
+
+
+// ===== Setup & Tips system ===== //
+// Handles loading user choices and preparing the UI for the tips interface
 document.addEventListener('DOMContentLoaded', () => {
   const step1 = document.getElementById('step-1');
   const step2 = document.getElementById('step-2');
   const tipsSection = document.getElementById('tips-section');
   const categoriesContainer = document.getElementById('categories-container');
 
-  // Initialize from localStorage for persistence
+  // Load previous selection if it exists
   let userHand = localStorage.getItem('userHand') || null;
   let userStyle = localStorage.getItem('userStyle') || null;
 
@@ -18,10 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
     "Mental Game"
   ];
 
-  // ===== INSERT YOUR TIPS DATA OBJECT HERE ===== //
-
+  // ===== Tips data for all bowler types ===== //
+  // Keys follow the pattern "<hand>-<style>-<category>" and each value is a list of tips shown in the UI
   const tipsData = {
-  // === 1-Handed lefties ===
+
+  // == 1-Handed Lefties == //
     "left-1-handed-Footwork": [
     "Keep your steps smooth and consistent.",
     "Focus on balance during your approach.",
@@ -31,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   "left-1-handed-Lane Reading": [
     "Pay attention to how the oil pattern breaks down over time.",
     "Target boards on the lane rather than the pins for better precision.",
-    "Adjust your starting position if the ball hooks too early or late.",
+    "Adjust your starting position if the ball hooks too early or too late.",
     "Watch how other left-handed bowlers' shots react on the lane."
   ],
   "left-1-handed-Release Technique": [
@@ -47,12 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
     "Stay patient when adjusting to changing lane conditions."
   ],
 
-  // === 1-Handed Righties ===
+  // == 1-Handed Righties == //
     "right-1-handed-Footwork": [
     "Maintain a smooth and steady pace throughout your approach.",
     "Keep your shoulders square toward your target.",
     "Finish with a strong, balanced slide on your left foot.",
-    "Avoid overstepping — consistency in step length is key."
+    "Avoid drifting during your approach - keep your line straight."
   ],
   "right-1-handed-Lane Reading": [
     "Focus on the arrows or boards, not the pins, for aiming.",
@@ -64,21 +128,21 @@ document.addEventListener('DOMContentLoaded', () => {
     "Keep a firm wrist through release for better control.",
     "Allow a natural hand rotation — don't over-turn.",
     "Follow through toward your target to improve accuracy.",
-    "Experiment with lofting slightly to delay hook on heavy oil."
+    "Adjust your speed or rotation control hook in heavier oil."
   ],
     "right-1-handed-Mental Game": [
     "Clear your mind before every shot with a consistent routine.",
-    "Don’t dwell on mistakes — focus on the next delivery.",
+    "Don't dwell on mistakes — focus on the next delivery.",
     "Visualize your ideal ball path during setup.",
     "Stay calm under pressure and trust your adjustments."
   ],
 
-  // === 2-Handed Lefties ===
+  // == 2-Handed Lefties == //
     "left-2-handed-Footwork": [
     "Use a strong, athletic stance to start your approach.",
     "Keep your steps compact and powerful for better balance.",
     "Engage your legs to generate momentum without rushing.",
-    "Finish with a stable slide to maintain shot accuracy."
+    "Finish with a stable slide or plant to maintain shot accuracy."
   ],
     "left-2-handed-Lane Reading": [
     "Watch for early friction on the left side as it breaks down faster.",
@@ -87,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     "Track your ball's motion off the breakpoint for consistency."
   ],
     "left-2-handed-Release Technique": [
-    "Maintain both hands on the ball until just before release.",
+    "Maintain both hands on the ball until the downswing release point.",
     "Use your body rotation to help generate revs instead of forcing with the arms.",
     "Keep your swing smooth and avoid muscling the ball.",
     "Work on a consistent release point to improve control."
@@ -99,15 +163,15 @@ document.addEventListener('DOMContentLoaded', () => {
     "Visualize the entire shot path before stepping on the approach."
   ],
 
-  // === 2-Handed Righties ===
+  // == 2-Handed Righties == //
     "right-2-handed-Footwork": [
     "Keep your steps controlled and balanced to maintain accuracy.",
     "Use your legs to power the approach without rushing.",
-    "Finish strong with a stable slide on your left foot.",
+    "Finish strong with a stable slide or plant on your left foot.",
     "Practice consistency in your timing and step length."
   ],
     "right-2-handed-Lane Reading": [
-    "Notice how the right side breaks down differently—adjust accordingly.",
+    "Notice how the right side transitions faster—adjust your angles accordingly.",
     "Focus on the ball's reaction in the mid-lane for better reads.",
     "Make strategic lane adjustments as the oil pattern changes.",
     "Observe other right-handed two-handers for cues on lane transition."
@@ -126,9 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
   ]
 };
 
+  // ===== Selection loading & UI state ===== //
+  // Checks if the user already chose hand/style and shows the correct part of the interface
   let changeSelectionBtn = null;
 
-  // Show saved selection on load or show steps
   if (userHand && userStyle) {
     step1.classList.add('hidden');
     step2.classList.add('hidden');
@@ -143,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', () => {
       userHand = button.dataset.hand;
       if (userHand) {
-        localStorage.setItem('userHand', userHand);  // Save selection
+        localStorage.setItem('userHand', userHand);  
         step1.classList.add('hidden');
         step2.classList.remove('hidden');
       }
@@ -153,18 +218,21 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#step-2 .choice-btn').forEach(button => {
     button.addEventListener('click', () => {
       userStyle = button.dataset.style;
+
       if (userStyle) {
-        localStorage.setItem('userStyle', userStyle);  // Save selection
+        localStorage.setItem('userStyle', userStyle);  
         step2.classList.add('hidden');
         showCategories(userHand, userStyle);
       }
     });
   });
 
+  // == Creates the category cards and prepares tips for the selected hand/style == //
   function showCategories(hand, style) {
     tipsSection.classList.remove('hidden');
     categoriesContainer.innerHTML = '';
 
+    // Categories open
     categories.forEach(category => {
       const card = document.createElement('div');
       card.classList.add('category-card');
@@ -185,12 +253,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const key = `${hand}-${style}-${category}`;
       const tips = tipsData[key] || ["No tips available for this category."];
 
+      // Track pagination and tips for this category
       expandedState[category] = {
         page: 1,
         totalPages: Math.ceil(tips.length / TIPS_PER_PAGE),
         tips: tips
       };
 
+      // == Create pagination controls if multiple pages exist == //
       let pagination = null;
       if (expandedState[category].totalPages > 1) {
         pagination = document.createElement('div');
@@ -235,6 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
       categoriesContainer.appendChild(card);
     });
 
+    // == Creates and handles the "Change Selection" button that resets the interface == //
     if (!changeSelectionBtn) {
       changeSelectionBtn = document.createElement('button');
       changeSelectionBtn.textContent = "Change Selection";
@@ -249,8 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
         categoriesContainer.innerHTML = '';
         userHand = null;
         userStyle = null;
-        localStorage.removeItem('userHand');  // Clear saved
-        localStorage.removeItem('userStyle'); // Clear saved
+        localStorage.removeItem('userHand');  
+        localStorage.removeItem('userStyle'); 
         step1.classList.remove('hidden');
         step2.classList.add('hidden');
         for (const cat in expandedState) {
@@ -264,6 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // == Updates visible tips and enables/disables pagination buttons == //
   function updateTipsContent(container, tips, page) {
     container.innerHTML = '';
 
@@ -286,39 +358,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-// === Light & Dark Mode === //
-
-const toggleBtn = document.getElementById("theme-toggle");
-const emojiSpan = toggleBtn.querySelector(".emoji");
-
-// Load saved theme on page load
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme === "dark") {
-  document.body.classList.add("dark-mode");
-  emojiSpan.textContent = "🌞";
-  toggleBtn.classList.add("toggled");
-} else {
-  document.body.classList.remove("dark-mode");
-  emojiSpan.textContent = "🌙";
-  toggleBtn.classList.remove("toggled");
-}
-
-// Toggle theme on click and save preference
-toggleBtn.addEventListener("click", () => {
-  const isDark = document.body.classList.toggle("dark-mode");
-  emojiSpan.textContent = isDark ? "🌞" : "🌙";
-  toggleBtn.classList.toggle("toggled");
-
-  localStorage.setItem("theme", isDark ? "dark" : "light");
-});
-
-
-
-
-
-// === Notes === //
-
+// ===== Notes ===== //
+// Handles notes popup UI: loading saved notes, showing/hiding popup
 document.addEventListener("DOMContentLoaded", () => {
   const noteToggle = document.getElementById("note-toggle");
   const notePopup = document.getElementById("note-popup");
@@ -327,11 +368,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const noteText = document.getElementById("note-text");
   const noteList = document.getElementById("note-list");
 
-  // === Load saved notes ===
   const savedNotes = JSON.parse(localStorage.getItem("practiceNotes")) || [];
   savedNotes.forEach(note => createNoteItem(note.text, note.done));
 
-  // === Show or hide notes popup ===
   noteToggle.addEventListener("click", () => {
     notePopup.classList.toggle("note-hidden");
   });
@@ -340,7 +379,6 @@ document.addEventListener("DOMContentLoaded", () => {
     notePopup.classList.add("note-hidden");
   });
 
-  // === Add a new note ===
   addNote.addEventListener("click", () => {
     const text = noteText.value.trim();
     if (!text) return;
@@ -349,7 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
     noteText.value = "";
   });
 
-  // === Helper: create a note item ===
+  // == Creates a note element with toggle done and delete functionality == //
   function createNoteItem(text, done) {
     const li = document.createElement("li");
     const span = document.createElement("span");
@@ -369,7 +407,6 @@ document.addEventListener("DOMContentLoaded", () => {
       saveNotes();
     });
 
-    // Delete note
     del.addEventListener("click", (e) => {
       e.stopPropagation();
       li.remove();
@@ -377,7 +414,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // === Save notes to localStorage ===
+  // Saves all notes and their done status to localStorage
   function saveNotes() {
     const notes = [];
     noteList.querySelectorAll("li").forEach(li => {

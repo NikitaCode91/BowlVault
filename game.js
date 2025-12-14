@@ -8,11 +8,10 @@
  * 
  * Comment Structure:
  * 
- * // ===== Comment ===== //      → Marks the start of a major section
- * // -- Comment -- //            → Notes about linked files or references
- * // == Comment == //            → Important or highlighted part
+ * // ===== Section ===== //      → Marks the start of a major section
+ * // -- Comment -- //            → Comment about linked files or references
+ * // == Comment == //            → Highlights an importent step or feature within a section
  * // Comment                     → General explanation of code
- * [Comment]                      → File overview or purpose (use brackets to avoid nesting)
  *
  * ===================================
  *  Contents
@@ -66,9 +65,9 @@ toggleBtn.addEventListener("click", () => {
 });
 
 
-// ===== Core game variables, DOM elements, inputs and modals ===== //
 "use strict";
 
+// ===== Game State ===== //
 // == Game state variables == //
 let gameStarted = false;
 let currentFrame = 0;
@@ -135,7 +134,6 @@ let savedLane = localStorage.getItem("savedLane") || "";
 if (placeInput) placeInput.value = savedPlace;
 if (laneInput) laneInput.value = savedLane;
 
-
 // == Roll value helper == //
 // Converts a roll symbol (X, /, F, -, or number) into a numeric pin value
 function rollValue(r, previous = 0) {
@@ -144,7 +142,6 @@ function rollValue(r, previous = 0) {
     if (r === "F" || r === "-") return 0;
     return typeof r === "number" ? r : Number(r) || 0;
 }
-
 
 // == Main button updater == //
 // Updates the button label and style
@@ -156,7 +153,6 @@ function updateMainBtn(text) {
     else if (text === "End Game") mainBtn.classList.add("end-game");
     else if (text === "Save Game") mainBtn.classList.add("save-game");
 }
-
 
 // == Load selected balls into display == //
 // Shows small images of the balls chosen for the game
@@ -192,7 +188,6 @@ function loadSelectedBallDisplay() {
     }
 }
 
-
 // == Return from Ball Vault handler == //
 // Restores game mode, league size, and selected balls when coming back from the Vault
 function checkReturnFromBallVault() {
@@ -224,7 +219,6 @@ function checkReturnFromBallVault() {
     }
 }
 
-
 // == Setup for starting a game == //
 // Resets all game state, clears frames, prepares scoreboard UI, and starts a new match
 function setupNewGame(mode) {
@@ -250,7 +244,6 @@ function setupNewGame(mode) {
     loadSelectedBallDisplay();
     render();
 }
-
 
 // == Remaining pins == //
 // Determines how many pins are still standing for the current roll, including all 10th-frame rules
@@ -285,7 +278,6 @@ function remainingPins() {
     }
     return 0;
 }
-
 
 // == Add roll == //
 // Handles adding a new roll, applying marks, and advancing frame/roll logic
@@ -388,7 +380,6 @@ function addRoll(pins, mark = "") {
     render();
 }
 
-
 // == League score == //
 // Collects numeric roll values from all frames
 function scoreLeagueGame() {
@@ -437,7 +428,6 @@ function scoreLeagueGame() {
     return { total, cumul };
 }
 
-
 // == Render scored frames to the UI == //
 // Get game scores and updates frame rolls + totals
 function scoreGame() { 
@@ -469,7 +459,6 @@ function render() {
     if (typeof updateDashboardGames === "function") updateDashboardGames();
 }
 
-
 // == Add rolls from buttons == //
 // For every pin button, when clicked, take the number on the button and add it as a roll
 pinBtns.forEach(btn => btn.addEventListener("click", () => addRoll(Number(btn.textContent))));
@@ -482,7 +471,6 @@ if (missBtn)
 
 if (foulBtn) 
     foulBtn.addEventListener("click", () => addRoll(0, "F"));
-
 
 // == Endgame pop-up modal == //
 // Show the confirm modal and return true/false based on user choice
@@ -532,7 +520,6 @@ function showEndgameConfirm(message = "Are you sure you want to end the game?") 
         endgameCancelBtn.addEventListener("click", onCancel);
     });
 }
-
 
 // == Save-first custom modal == //
 // Show the save-first modal and return true/false based on user choice
@@ -588,7 +575,6 @@ function showSaveFirstConfirm(laneVal="?", placeVal="?", note="Press Continue to
     });
 }
 
-
 // == Main button logic == //
 // Handle main button clicks depending on game state and button text
 if (mainBtn) {mainBtn.addEventListener("click", () => {
@@ -613,7 +599,6 @@ if (mainBtn) {mainBtn.addEventListener("click", () => {
     } 
   });
 }
-
 
 // == Save game and reset == //
 // Save current game to localStorage and reset game state
@@ -684,7 +669,6 @@ function saveGameAndReset() {
     performSave();
 }
 
-
 // == Reset Game == //
 // Fully reset game state, UI and inputs
 function resetGame() {
@@ -719,7 +703,6 @@ function resetGame() {
     if (laneInput) laneInput.value = savedLane;
 }
 
-
 // == Modal logic of starting a game == //
 // Handle player selection and show the correct next modal
 if (practiceBtn) practiceBtn.addEventListener("click", () => {
@@ -738,7 +721,6 @@ if (closeModalBtn) closeModalBtn.addEventListener("click", () => {
     resetGame();
 });
 
-
 // == League size selection == //
 // Handle league size choice and proceed to ball selection
 [size2v2Btn, size3v3Btn, size4v4Btn].forEach(btn => {
@@ -756,7 +738,6 @@ if (closeSizeModal) closeSizeModal.addEventListener("click", () => {
     leagueSizeModal.style.display = "none";
     resetGame();
 });
-
 
 // == Ball choice == //
 // Handle selection between house balls or personal balls
@@ -778,7 +759,6 @@ if (closeBallModal) closeBallModal.addEventListener("click", () => {
     ballChoiceModal.style.display = "none";
     resetGame();
 });
-
 
 // == Undo button == //
 // Remove the last roll
@@ -802,7 +782,6 @@ if (undoBtn) undoBtn.addEventListener("click", () => {
     }
 });
 
-
 // == Init == //
 // Set initial UI state and restore previous ball selections
 updateMainBtn("Start Game");
@@ -823,7 +802,8 @@ function escapeHtml (str) {
     .replace(/'/g, "&#039;");
 }
 
-// == Notes for practice games == //
+
+// ===== Notes for practice games ===== //
 // Set up notes system and grab all related buttons/elements
 document.addEventListener("DOMContentLoaded", () => {
 

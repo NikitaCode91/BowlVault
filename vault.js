@@ -8,11 +8,10 @@
  * 
  * Comment Structure:
  * 
- * // ===== Comment ===== //      → Marks the start of a major section
- * // -- Comment -- //            → Notes about linked files or references
- * // == Comment == //            → Important or highlighted part
+ * // ===== Section ===== //      → Marks the start of a major section
+ * // -- Comment -- //            → Comment about linked files or references
+ * // == Comment == //            → Highlights an importent step or feature within a section
  * // Comment                     → General explanation of code
- * [Comment]                      → File overview or purpose (use brackets to avoid nesting)
  *
  * ===================================
  *  Contents
@@ -59,10 +58,10 @@ toggleBtn.addEventListener("click", () => {
 });
 
 
-
 "use strict";
 
-// ===== Sample balls is you starter data ===== //
+// ===== Sample balls ===== //
+// This is you starter data ball for first users
 const sampleBalls = [
   {
     id: "jack1",
@@ -100,7 +99,7 @@ const sampleBalls = [
   }
 ];
 
-// == DOM READY: Initialize Elements & State == //
+// ===== Initialize Elements & State ===== //
 // Sets up DOM reference, loads ball data and configures
 window.addEventListener("DOMContentLoaded", () => {
   const ballGrid = document.getElementById("ballGrid");
@@ -120,7 +119,6 @@ window.addEventListener("DOMContentLoaded", () => {
   if (gamePickMode) localStorage.removeItem("pickMode");
   addNewBallBtn.style.display = gamePickMode ? "none" : "inline-block";
   continueBtn.style.display = gamePickMode ? "inline-block" : "none";
-
 
   // == Render Ball Cards == //
   // Creates and displays ball cards in the grid, showing image, name, rating,
@@ -162,7 +160,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   renderBallCards();
-
 
   // == Event listener == //
   // Using event delegation for all click actions
@@ -236,7 +233,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }  
   });
 
-
   // == Show from to add a new ball == //
   addNewBallBtn.addEventListener("click", () => showNewBallForm());
 
@@ -256,7 +252,6 @@ window.addEventListener("DOMContentLoaded", () => {
     // -- Linked to Game.HTML -- //
     window.location.href = "game.html";
   });
-
 
   // == Helpers == //
   // Load ball data from localStorage or default sample list
@@ -290,7 +285,6 @@ window.addEventListener("DOMContentLoaded", () => {
     ${i <= count ? "★" : "☆"}</span>`;
     return html;
   }
-
 
   // == Drawer == //
   // Show detailed info and editing options for a selected ball
@@ -361,7 +355,6 @@ window.addEventListener("DOMContentLoaded", () => {
     document.body.style.width = "";
   }
 
-
   // == Image upload fix == //
   // Attach image upload functionality to a given <img> element
   function attachImageUpload(imgEl) {
@@ -420,7 +413,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-
   // == New ball & Edit == //
   // Show the form for adding a new ball
   function showNewBallForm() {
@@ -474,8 +466,7 @@ window.addEventListener("DOMContentLoaded", () => {
     document.body.style.width = "100%";
   }
 
-
-  // Save new ball from form inputs
+  // == Save new ball from form inputs == //
   function saveNewBall() {
 
     // Build ball object
@@ -506,8 +497,7 @@ window.addEventListener("DOMContentLoaded", () => {
     renderBallCards();
   }
 
-
-  // Save edited ball data
+  // == Save edited ball data == //
   function saveEditedBall(id) {
   const ball = ballData.find(b => b.id === id);
   if (!ball) return;
@@ -537,7 +527,6 @@ window.addEventListener("DOMContentLoaded", () => {
     renderBallCards();
   }
 
- 
   /* ==  SortableJS drag & drop == */
   const vaultGrid = document.getElementById("ballGrid");
   if (vaultGrid) {
