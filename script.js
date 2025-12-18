@@ -107,17 +107,54 @@ const modeClasses = {
 function updateStats() {
   document.getElementById('gamesPlayed').textContent = games.length;
 
+  const totalScore = games.reduce((sum, g) => sum + (g.score || 0), 0);
+  document.getElementById('gamesScore').textContent = totalScore;
+
   const highScore = games.reduce((max, g) => Math.max(max, g.score), 0);
   document.getElementById('highScore').textContent = highScore;
 
-  const ballCounts = games.reduce((acc, g) => {
-    acc[g.ball] = (acc[g.ball] || 0) + 1;
+  const lowScore = games.length ? games.reduce((min, g) => 
+    Math.min(min, g.score || Infinity), Infinity) : 0;
+  document.getElementById('lowScore').textContent = lowScore;
+
+  const ballCounts = games.reduce((acc, g, index) => {
+    if (!g.ball) return acc;
+
+    // Split multiple balls into individual names
+    const balls = g.ball
+      .split(/,|\/|&/g) 
+      .map(b => b.trim())
+      .filter(Boolean);
+
+    balls.forEach(ball => {
+      if (!acc[ball]) {
+        acc[ball] = { count: 0, bestScore: 0, lastUsedIndex: -1 };
+      }
+
+      acc[ball].count += 1;
+      acc[ball].bestScore = Math.max(
+        acc[ball].bestScore,
+        g.score || 0
+      );
+
+      // Track most recently used game index
+      acc[ball].lastUsedIndex = index;
+    });
+    
     return acc;
   }, {});
-  const favoriteBall = Object.entries(ballCounts).sort((a, b) =>
-    b[1] - a[1])[0]?.[0] || "None";
+
+  const favoriteBall =
+    Object.entries(ballCounts)
+      .sort((a, b) =>
+        b[1].count - a[1].count ||
+        b[1].bestScore - a[1].bestScore ||
+        b[1].lastUsedIndex - a[1].lastUsedIndex
+      )[0]?.[0] || "None";
+
   document.getElementById('favoriteBall').textContent = favoriteBall;
 }
+
 
 // == Displaying the list of games == //
 function renderGames() {
@@ -220,11 +257,21 @@ if (clearBtn) {
 
     // Close the popup once the clearing action is done and saves (YES)  
     document.getElementById('yesClear').addEventListener('click', () => {
-      games = [];
-      localStorage.setItem(gamesKey, JSON.stringify([]));
-      updateStats();
-      renderGames();
-      document.body.removeChild(overlay);
+
+    // Clear all games
+    games = [];
+    localStorage.setItem(gamesKey, JSON.stringify([]));
+
+    // 🔴 ALSO clear all frames
+    localStorage.removeItem("leagueFrames");
+
+    // Update UI
+    updateStats();
+    renderGames();
+    updateCircles();   // 🔴 reset circles
+
+    // Close popup
+    document.body.removeChild(overlay);
     });
 
     // Close the popup without clearing anything (NO)
@@ -233,6 +280,7 @@ if (clearBtn) {
     });
   });
 }
+
 
 // -- Expose for Games.js -- //
 // Makes the function global so another script can use it
@@ -511,7 +559,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
 // ===== Daily Boost ===== //
 document.addEventListener('DOMContentLoaded', () => {
   const quotes = [
@@ -749,7 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
           ${showPlayersIcon ? '<span id="players-icon" title="Players">👥</span>' 
             : '<span style="width:22px;"></span>'}
           <h2>Game Details</h2>
-          <span id="delete-icon">🗑️</span>
+          <span id="delete-icon">🗑</span>
         </div>
 
         <div class="modal-row"><span>Date:</span> <input type="date" id="modal-date"></div>
@@ -978,14 +1025,24 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmModal.querySelector('#confirm-cancel').addEventListener('click', () => confirmModal.remove());
     confirmModal.querySelector('#confirm-delete').addEventListener('click', () => {
 
-      // Go to position selectedGameIndex and remove 1 item from there
-      games.splice(selectedGameIndex, 1);
-      localStorage.setItem(gamesKey, JSON.stringify(games));
-      updateStats();
-      renderGames();
-      confirmModal.remove();
-      modal.classList.add('hidden');
-      modal.style.display = 'none';
+    // Remove the game
+    games.splice(selectedGameIndex, 1);
+    localStorage.setItem(gamesKey, JSON.stringify(games));
+
+    // Remove that game's frames (10 frames per game)
+    const frames = JSON.parse(localStorage.getItem("leagueFrames") || "[]");
+    frames.splice(selectedGameIndex * 10, 10);
+    localStorage.setItem("leagueFrames", JSON.stringify(frames));
+
+    // Update UI
+    updateStats();
+    renderGames();
+    updateCircles();
+
+    // 🔴 CLOSE BOTH POPUPS (THIS WAS MISSING)
+    confirmModal.remove();              // close delete popup
+    modal.classList.add('hidden');      // close game details modal
+    modal.style.display = 'none';
     });
   }
 
@@ -1004,3 +1061,325 @@ if (footerYear) {
   const currentYear = new Date().getFullYear();
   footerYear.textContent = `© ${currentYear} Your Bowling Journey`;
 }
+
+
+
+
+
+
+
+
+
+// ====== FRAME STATS CIRCLES ======
+
+// Load league data from localStorage
+function loadLeagueData() {
+  const storedFrames = localStorage.getItem('leagueFrames');
+  return storedFrames ? JSON.parse(storedFrames) : [];
+}
+
+// ====== Calculate percentages ======
+function calculateStats(frames) {
+  let totalShots = 0;
+  let strikeShots = 0;
+  let spareShots = 0;
+  let openShots = 0;
+
+  frames.forEach(frame => {
+    const { roll1, roll2, roll3 } = frame;
+
+    const isStrikeFrame = roll1 === "X" || roll1 === 10;
+    const isSpareFrame  = roll2 === "/";
+
+    // Roll 1
+    if (roll1 != null) {
+      totalShots++;
+      if (roll1 === "X" || roll1 === 10) {
+        strikeShots++;
+      } else if (!isStrikeFrame && !isSpareFrame) {
+        openShots++;
+      }
+    }
+
+    // Roll 2
+    if (roll2 != null) {
+      totalShots++;
+      if (roll2 === "/") {
+        spareShots++;
+      } else if (!isStrikeFrame && !isSpareFrame) {
+        openShots++;
+      }
+    }
+
+    // Roll 3 (bonus roll only)
+    if (roll3 != null) {
+      totalShots++;
+      if (roll3 === "X" || roll3 === 10) {
+        strikeShots++;
+      } else if (roll3 === "/") {
+        spareShots++;
+      }
+      // bonus rolls are never open
+    }
+  });
+
+  // 🔴 HARD NaN / divide-by-zero guard
+  if (totalShots === 0) {
+    return {
+      strikePct: 0,
+      sparePct: 0,
+      openPct: 0
+    };
+  }
+
+  return {
+    strikePct: Math.round((strikeShots / totalShots) * 100),
+    sparePct:  Math.round((spareShots  / totalShots) * 100),
+    openPct:   Math.round((openShots   / totalShots) * 100),
+  };
+}
+
+// ====== HELPER: Convert roll to number ======
+function rollValue(roll) {
+  if (roll === "X") return 10;
+  if (roll === "/") return null; // handled separately
+  return Number(roll) || 0;
+}
+
+// ====== Get stats for circle percentages ======
+// ====== FRAME STATS CIRCLES ======
+
+// Load league data from localStorage
+function loadLeagueData() {
+  const storedFrames = localStorage.getItem('leagueFrames');
+  return storedFrames ? JSON.parse(storedFrames) : [];
+}
+
+// ====== Calculate percentages ======
+function calculateStats(frames) {
+  let totalShots = 0;
+  let strikeShots = 0;
+  let spareShots = 0;
+  let openShots = 0;
+
+  frames.forEach(frame => {
+    const { roll1, roll2, roll3 } = frame;
+
+    const isStrikeFrame = roll1 === "X" || roll1 === 10;
+    const isSpareFrame  = roll2 === "/";
+
+    // Roll 1
+    if (roll1 != null) {
+      totalShots++;
+      if (roll1 === "X" || roll1 === 10) {
+        strikeShots++;
+      } else if (!isStrikeFrame && !isSpareFrame) {
+        openShots++;
+      }
+    }
+
+    // Roll 2
+    if (roll2 != null) {
+      totalShots++;
+      if (roll2 === "/") {
+        spareShots++;
+      } else if (!isStrikeFrame && !isSpareFrame) {
+        openShots++;
+      }
+    }
+
+    // Roll 3 (bonus roll only)
+    if (roll3 != null) {
+      totalShots++;
+      if (roll3 === "X" || roll3 === 10) {
+        strikeShots++;
+      } else if (roll3 === "/") {
+        spareShots++;
+      }
+      // bonus rolls are never open
+    }
+  });
+
+  // 🔴 HARD NaN / divide-by-zero guard
+  if (totalShots === 0) {
+    return {
+      strikePct: 0,
+      sparePct: 0,
+      openPct: 0
+    };
+  }
+
+  return {
+    strikePct: Math.round((strikeShots / totalShots) * 100),
+    sparePct:  Math.round((spareShots  / totalShots) * 100),
+    openPct:   Math.round((openShots   / totalShots) * 100),
+  };
+}
+
+// ====== HELPER: Convert roll to number ======
+function rollValue(roll) {
+  if (roll === "X") return 10;
+  if (roll === "/") return null; // handled separately
+  return Number(roll) || 0;
+}
+
+// ====== Get stats for circle percentages ======
+function getStats() {
+  const frames = JSON.parse(localStorage.getItem('leagueFrames') || "[]");
+  let strikes = 0, spares = 0, opens = 0;
+
+  frames.forEach((frame, index) => {
+    const r1 = frame.roll1;
+    const r2 = frame.roll2;
+    const r3 = frame.roll3;
+
+    // Frames 1-9
+    if (index < 9) {
+      if (r1 === "X" || r1 === 10) strikes++;
+      else if (r2 === "/" || (rollValue(r1) + rollValue(r2) === 10)) spares++;
+      else opens++;
+    } 
+    // 10th frame
+    else {
+      if (r1 === "X" || r1 === 10) strikes++;
+      else if (r2 === "/" || (rollValue(r1) + rollValue(r2) === 10)) spares++;
+      else opens++;
+    }
+  });
+
+  const totalFrames = frames.length || 1; // avoid divide by zero
+  return {
+    strikePerc: Math.round((strikes / totalFrames) * 100),
+    sparePerc:  Math.round((spares  / totalFrames) * 100),
+    openPerc:   Math.round((opens   / totalFrames) * 100),
+  };
+}
+
+// ====== Update circle UI ======
+function setCircle(id, percent) {
+  const container = document.getElementById(id);
+  if (!container) return;
+
+  const progress = container.querySelector('circle.progress');
+  if (!progress) return;
+
+  const radius = progress.r.baseVal.value;
+  const circumference = 2 * Math.PI * radius;
+
+  progress.style.strokeDasharray = `${circumference} ${circumference}`;
+  progress.style.strokeDashoffset =
+    circumference - (percent / 100) * circumference;
+
+  progress.style.transition = 'stroke-dashoffset 0.6s ease';
+}
+
+// ====== Update all circles ======
+function updateCircles() {
+  const stats = getStats();
+
+  document.getElementById("strikePercent").textContent = `${stats.strikePerc}%`;
+  document.getElementById("sparePercent").textContent  = `${stats.sparePerc}%`;
+  document.getElementById("openPercent").textContent   = `${stats.openPerc}%`;
+
+  setCircle("strikeCircle", stats.strikePerc);
+  setCircle("spareCircle", stats.sparePerc);
+  setCircle("openCircle", stats.openPerc);
+}
+
+// ====== Reset circles ======
+function resetCircles() {
+  document.getElementById("strikePercent").textContent = "0%";
+  document.getElementById("sparePercent").textContent  = "0%";
+  document.getElementById("openPercent").textContent   = "0%";
+
+  setCircle("strikeCircle", 0);
+  setCircle("spareCircle", 0);
+  setCircle("openCircle", 0);
+}
+
+// ====== Initialize on DOM ready ======
+document.addEventListener('DOMContentLoaded', () => {
+  updateCircles();
+});
+
+game.js 
+
+// ====== GAME DATA TRACKER ======
+let leagueFrames = [];
+
+// Load existing league data if any
+const storedFrames = localStorage.getItem('leagueFrames');
+if (storedFrames) {
+  leagueFrames = JSON.parse(storedFrames);
+}
+
+// Record a frame
+function recordFrame(roll1, roll2, roll3 = null) {
+  leagueFrames.push({ roll1, roll2, roll3 });
+
+  // Save updated data to localStorage
+  localStorage.setItem('leagueFrames', JSON.stringify(leagueFrames));
+}
+
+// Delete a single frame/game
+function deleteFrame(index) {
+  if (index >= 0 && index < leagueFrames.length) {
+    leagueFrames.splice(index, 1);
+    localStorage.setItem('leagueFrames', JSON.stringify(leagueFrames));
+  }
+}
+
+// Helper function
+function rollValue(roll) {
+  if (roll === "X") return 10;
+  if (roll === "/") return null; // handled separately
+  return Number(roll) || 0;
+}
+
+// ====== Update circle UI ======
+function setCircle(id, percent) {
+  const container = document.getElementById(id);
+  if (!container) return;
+
+  const progress = container.querySelector('circle.progress');
+  if (!progress) return;
+
+  const radius = progress.r.baseVal.value;
+  const circumference = 2 * Math.PI * radius;
+
+  progress.style.strokeDasharray = `${circumference} ${circumference}`;
+  progress.style.strokeDashoffset =
+    circumference - (percent / 100) * circumference;
+
+  progress.style.transition = 'stroke-dashoffset 0.6s ease';
+}
+
+// ====== Update all circles ======
+function updateCircles() {
+  const stats = getStats();
+
+  document.getElementById("strikePercent").textContent = `${stats.strikePerc}%`;
+  document.getElementById("sparePercent").textContent  = `${stats.sparePerc}%`;
+  document.getElementById("openPercent").textContent   = `${stats.openPerc}%`;
+
+  setCircle("strikeCircle", stats.strikePerc);
+  setCircle("spareCircle", stats.sparePerc);
+  setCircle("openCircle", stats.openPerc);
+}
+
+// ====== Reset circles ======
+function resetCircles() {
+  document.getElementById("strikePercent").textContent = "0%";
+  document.getElementById("sparePercent").textContent  = "0%";
+  document.getElementById("openPercent").textContent   = "0%";
+
+  setCircle("strikeCircle", 0);
+  setCircle("spareCircle", 0);
+  setCircle("openCircle", 0);
+}
+
+// ====== Initialize on DOM ready ======
+document.addEventListener('DOMContentLoaded', () => {
+  updateCircles();
+});
+

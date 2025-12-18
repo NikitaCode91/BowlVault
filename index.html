@@ -40,9 +40,11 @@
     <section class="summary">
       <h2>🏆 Quick Stats</h2>
       <ul>
-        <li>Games Played: <span id="gamesPlayed">0</span></li>
-        <li>High Score: <span id="highScore">0</span></li>
-        <li>Favorite Ball: <span id="favoriteBall">None</span></li>
+        <li>Total Games: <span id="gamesPlayed">0</span></li>
+        <li>Total Score: <span id="gamesScore">0</span></li>
+        <li>Highest Score: <span id="highScore">0</span></li>
+        <li>Lowest Score: <span id="lowScore">0</span></li>
+        <li>Most Used Ball: <span id="favoriteBall">None</span></li>
       </ul>
     </section>
 
@@ -76,15 +78,57 @@
             <ul id="gameList">
               <!-- JS will add games here -->
             </ul>
-        </div>   
+        </div> 
+        
+        <!-- === Clear all btn === -->
+        <div class="clear-btn-container">
+          <button id="clearRecentGames" class="main-btn">Clear Stats & Games</button>
+        </div>
 
     </section>        
   </main>
 
-  <!-- === Clear all btn === -->
-  <div class="clear-btn-container">
-    <button id="clearRecentGames" class="main-btn">Clear Stats & Recent Games</button>
-  </div>
+
+  <!-- === Frame Stats === -->
+  <section class="frame-stats">
+
+    <div class="circles">
+      <div class="circle" data-percent="0" id="strikeCircle">
+        <svg>
+          <circle class="bg" cx="50" cy="50" r="45"></circle>
+          <circle class="progress" cx="50" cy="50" r="45"></circle>
+        </svg>
+        <div class="label">
+          <strong id="strikePercent">0%</strong>
+          <span>Strikes</span>
+        </div>
+      </div>
+
+      <div class="circle" data-percent="0" id="spareCircle">
+        <svg>
+          <circle class="bg" cx="50" cy="50" r="45"></circle>
+          <circle class="progress" cx="50" cy="50" r="45"></circle>
+        </svg>
+        <div class="label">
+          <strong id="sparePercent">0%</strong>
+          <span>Spares</span>
+        </div>
+      </div>
+
+      <div class="circle" data-percent="0" id="openCircle">
+        <svg>
+          <circle class="bg" cx="50" cy="50" r="45"></circle>
+          <circle class="progress" cx="50" cy="50" r="45"></circle>
+        </svg>
+        <div class="label">
+          <strong id="openPercent">0%</strong>
+          <span>Opens</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
 
   <!-- === Daily boost === -->
   <section class="motivational-quote">

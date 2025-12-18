@@ -381,7 +381,7 @@ function addRoll(pins, mark = "") {
 }
 
 // == League score == //
-// Collects numeric roll values from all frames
+// Collects numeric roll values from all frames        
 function scoreLeagueGame() {
     let total = 0, cumul = Array(10).fill(""), rolls = [];
 
@@ -637,24 +637,42 @@ function saveGameAndReset() {
     // Get final score and build game
     const finalScore = scoreGame().total ?? 0;
     const dateISO = (new Date()).toISOString();
-    const newGame = { date: dateISO, ball: ballToSave, lane: laneVal, score: finalScore, place: placeVal, mode: gameMode, leagueSize: leagueSize };
+    const newGame = { 
+        id: crypto.randomUUID,
+        date: dateISO,
+        ball: ballToSave, 
+        lane: laneVal, 
+        score: finalScore, 
+        place: placeVal, 
+        mode: gameMode, 
+        leagueSize: leagueSize 
+        };
 
     // Actaul save and reset workflow
     function performSave() {
-        confirmShown = true;
-        sessionStorage.setItem("confirmShown", "true");
+    confirmShown = true;
+    sessionStorage.setItem("confirmShown", "true");
 
-        const gamesKey = "bowlvault_games";
-        const existing = JSON.parse(localStorage.getItem(gamesKey) || "[]");
-        existing.push(newGame);
-        localStorage.setItem(gamesKey, JSON.stringify(existing));
-        localStorage.setItem("lastGameData", JSON.stringify(newGame));
-        localStorage.removeItem("pickedBallsForGame");
+    const gamesKey = "bowlvault_games";
+    const existing = JSON.parse(localStorage.getItem(gamesKey) || "[]");
+    existing.push(newGame);
+    localStorage.setItem(gamesKey, JSON.stringify(existing));
+    localStorage.setItem("lastGameData", JSON.stringify(newGame));
+    localStorage.removeItem("pickedBallsForGame");
 
-        resetGame();
-        if (typeof updateDashboardGames === "function") 
-            updateDashboardGames();
-    }
+    // ===== RECORD FRAMES FOR CIRCLES ===== //
+    frames.forEach(f => {
+        const roll1 = f.rolls[0] ?? 0;
+        const roll2 = f.rolls[1] ?? 0;
+        const roll3 = f.rolls[2] ?? null;
+        recordFrame(roll1, roll2, roll3);
+    });
+
+    resetGame();
+
+    if (typeof updateDashboardGames === "function") 
+        updateDashboardGames();
+}
 
     // Show save-first confirmation modal if not shown yet
     if (!confirmShown){
@@ -862,7 +880,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const del = document.createElement("button");
     del.type = "button";
-    del.textContent = "🗑️";
+    del.textContent = "🗑";
     del.classList.add("note-del");
     li.appendChild(del);
 
@@ -960,3 +978,39 @@ document.addEventListener("DOMContentLoaded", () => {
     // Make sure notes are shown or hidden correctly when the page loads
     isPracticeMode ? enablePracticeNotes() : disablePracticeNotes();
 });
+
+
+
+
+
+
+
+
+
+
+
+
+// ====== GAME DATA TRACKER ======
+let leagueFrames = [];
+
+// Load existing league data if any
+const storedFrames = localStorage.getItem('leagueFrames');
+if (storedFrames) {
+  leagueFrames = JSON.parse(storedFrames);
+}
+
+// Record a frame
+function recordFrame(roll1, roll2, roll3 = null) {
+  leagueFrames.push({ roll1, roll2, roll3 });
+
+  // Save updated data to localStorage
+  localStorage.setItem('leagueFrames', JSON.stringify(leagueFrames));
+}
+
+// Delete a single frame/game
+function deleteFrame(index) {
+  if (index >= 0 && index < leagueFrames.length) {
+    leagueFrames.splice(index, 1);
+    localStorage.setItem('leagueFrames', JSON.stringify(leagueFrames));
+  }
+}
