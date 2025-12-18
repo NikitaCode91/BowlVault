@@ -1,4 +1,3 @@
-
 /** 
  * BowlVault — main frontend script
  * 
@@ -156,6 +155,18 @@ function updateStats() {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 // == Displaying the list of games == //
 function renderGames() {
   const list = document.getElementById('gameList');
@@ -280,6 +291,18 @@ if (clearBtn) {
     });
   });
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // -- Expose for Games.js -- //
@@ -557,6 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.classList.toggle('selected')
     ));
 });
+
 
 
 // ===== Daily Boost ===== //
@@ -1070,6 +1094,10 @@ if (footerYear) {
 
 
 
+
+
+
+
 // ====== FRAME STATS CIRCLES ======
 
 // Load league data from localStorage
@@ -1078,184 +1106,44 @@ function loadLeagueData() {
   return storedFrames ? JSON.parse(storedFrames) : [];
 }
 
-// ====== Calculate percentages ======
+// Calculate percentages
+// Calculate percentages
 function calculateStats(frames) {
-  let totalShots = 0;
-  let strikeShots = 0;
-  let spareShots = 0;
-  let openShots = 0;
-
-  frames.forEach(frame => {
-    const { roll1, roll2, roll3 } = frame;
-
-    const isStrikeFrame = roll1 === "X" || roll1 === 10;
-    const isSpareFrame  = roll2 === "/";
-
-    // Roll 1
-    if (roll1 != null) {
-      totalShots++;
-      if (roll1 === "X" || roll1 === 10) {
-        strikeShots++;
-      } else if (!isStrikeFrame && !isSpareFrame) {
-        openShots++;
-      }
-    }
-
-    // Roll 2
-    if (roll2 != null) {
-      totalShots++;
-      if (roll2 === "/") {
-        spareShots++;
-      } else if (!isStrikeFrame && !isSpareFrame) {
-        openShots++;
-      }
-    }
-
-    // Roll 3 (bonus roll only)
-    if (roll3 != null) {
-      totalShots++;
-      if (roll3 === "X" || roll3 === 10) {
-        strikeShots++;
-      } else if (roll3 === "/") {
-        spareShots++;
-      }
-      // bonus rolls are never open
-    }
-  });
-
-  // 🔴 HARD NaN / divide-by-zero guard
-  if (totalShots === 0) {
-    return {
-      strikePct: 0,
-      sparePct: 0,
-      openPct: 0
-    };
-  }
-
-  return {
-    strikePct: Math.round((strikeShots / totalShots) * 100),
-    sparePct:  Math.round((spareShots  / totalShots) * 100),
-    openPct:   Math.round((openShots   / totalShots) * 100),
-  };
-}
-
-// ====== HELPER: Convert roll to number ======
-function rollValue(roll) {
-  if (roll === "X") return 10;
-  if (roll === "/") return null; // handled separately
-  return Number(roll) || 0;
-}
-
-// ====== Get stats for circle percentages ======
-// ====== FRAME STATS CIRCLES ======
-
-// Load league data from localStorage
-function loadLeagueData() {
-  const storedFrames = localStorage.getItem('leagueFrames');
-  return storedFrames ? JSON.parse(storedFrames) : [];
-}
-
-// ====== Calculate percentages ======
-function calculateStats(frames) {
-  let totalShots = 0;
-  let strikeShots = 0;
-  let spareShots = 0;
-  let openShots = 0;
-
-  frames.forEach(frame => {
-    const { roll1, roll2, roll3 } = frame;
-
-    const isStrikeFrame = roll1 === "X" || roll1 === 10;
-    const isSpareFrame  = roll2 === "/";
-
-    // Roll 1
-    if (roll1 != null) {
-      totalShots++;
-      if (roll1 === "X" || roll1 === 10) {
-        strikeShots++;
-      } else if (!isStrikeFrame && !isSpareFrame) {
-        openShots++;
-      }
-    }
-
-    // Roll 2
-    if (roll2 != null) {
-      totalShots++;
-      if (roll2 === "/") {
-        spareShots++;
-      } else if (!isStrikeFrame && !isSpareFrame) {
-        openShots++;
-      }
-    }
-
-    // Roll 3 (bonus roll only)
-    if (roll3 != null) {
-      totalShots++;
-      if (roll3 === "X" || roll3 === 10) {
-        strikeShots++;
-      } else if (roll3 === "/") {
-        spareShots++;
-      }
-      // bonus rolls are never open
-    }
-  });
-
-  // 🔴 HARD NaN / divide-by-zero guard
-  if (totalShots === 0) {
-    return {
-      strikePct: 0,
-      sparePct: 0,
-      openPct: 0
-    };
-  }
-
-  return {
-    strikePct: Math.round((strikeShots / totalShots) * 100),
-    sparePct:  Math.round((spareShots  / totalShots) * 100),
-    openPct:   Math.round((openShots   / totalShots) * 100),
-  };
-}
-
-// ====== HELPER: Convert roll to number ======
-function rollValue(roll) {
-  if (roll === "X") return 10;
-  if (roll === "/") return null; // handled separately
-  return Number(roll) || 0;
-}
-
-// ====== Get stats for circle percentages ======
-function getStats() {
-  const frames = JSON.parse(localStorage.getItem('leagueFrames') || "[]");
+  const totalFrames = frames.length;
   let strikes = 0, spares = 0, opens = 0;
 
-  frames.forEach((frame, index) => {
-    const r1 = frame.roll1;
-    const r2 = frame.roll2;
-    const r3 = frame.roll3;
+  frames.forEach(frame => {
+    const r1 = typeof frame.roll1 === "number" ? frame.roll1 : (frame.roll1 === "X" ? 10 : 0);
+    const r2 = typeof frame.roll2 === "number" ? frame.roll2 : (frame.roll2 === "/" ? 10 - r1 : 0);
 
-    // Frames 1-9
-    if (index < 9) {
-      if (r1 === "X" || r1 === 10) strikes++;
-      else if (r2 === "/" || (rollValue(r1) + rollValue(r2) === 10)) spares++;
-      else opens++;
-    } 
-    // 10th frame
-    else {
-      if (r1 === "X" || r1 === 10) strikes++;
-      else if (r2 === "/" || (rollValue(r1) + rollValue(r2) === 10)) spares++;
-      else opens++;
-    }
+    if (r1 === 10) strikes++;
+    else if (r1 + r2 === 10) spares++;
+    else opens++;
   });
 
-  const totalFrames = frames.length || 1; // avoid divide by zero
-  return {
-    strikePerc: Math.round((strikes / totalFrames) * 100),
-    sparePerc:  Math.round((spares  / totalFrames) * 100),
-    openPerc:   Math.round((opens   / totalFrames) * 100),
-  };
+  const strikePct = totalFrames ? Math.round((strikes / totalFrames) * 100) : 0;
+  const sparePct  = totalFrames ? Math.round((spares / totalFrames) * 100) : 0;
+  const openPct   = totalFrames ? Math.round((opens / totalFrames) * 100) : 0;
+
+  return { strikePct, sparePct, openPct };
 }
 
-// ====== Update circle UI ======
+// Update circle UI
+function updateCircles() {
+  const frames = loadLeagueData();
+  const { strikePct, sparePct, openPct } = calculateStats(frames);
+
+  document.getElementById("strikePercent").textContent = strikePct + "%";
+  document.getElementById("sparePercent").textContent  = sparePct + "%";
+  document.getElementById("openPercent").textContent   = openPct + "%";
+
+  setCircle("strikeCircle", strikePct);
+  setCircle("spareCircle", sparePct);
+  setCircle("openCircle", openPct);
+}
+
+// Set circle stroke offset
+// ====== Circle Update Helper ======
 function setCircle(id, percent) {
   const container = document.getElementById(id);
   if (!container) return;
@@ -1267,119 +1155,50 @@ function setCircle(id, percent) {
   const circumference = 2 * Math.PI * radius;
 
   progress.style.strokeDasharray = `${circumference} ${circumference}`;
-  progress.style.strokeDashoffset =
-    circumference - (percent / 100) * circumference;
+  const offset = circumference - (percent / 100) * circumference;
+  progress.style.strokeDashoffset = offset;
 
+  // Optional: smooth animation
   progress.style.transition = 'stroke-dashoffset 0.6s ease';
 }
 
-// ====== Update all circles ======
+// ====== Stats Update ======
 function updateCircles() {
-  const stats = getStats();
+  const frames = loadLeagueData(); // Make sure this returns your frames array
+  const { strikePct, sparePct, openPct } = calculateStats(frames);
 
-  document.getElementById("strikePercent").textContent = `${stats.strikePerc}%`;
-  document.getElementById("sparePercent").textContent  = `${stats.sparePerc}%`;
-  document.getElementById("openPercent").textContent   = `${stats.openPerc}%`;
+  document.getElementById("strikePercent").textContent = strikePct + "%";
+  document.getElementById("sparePercent").textContent  = sparePct + "%";
+  document.getElementById("openPercent").textContent   = openPct + "%";
 
-  setCircle("strikeCircle", stats.strikePerc);
-  setCircle("spareCircle", stats.sparePerc);
-  setCircle("openCircle", stats.openPerc);
+  setCircle("strikeCircle", strikePct);
+  setCircle("spareCircle", sparePct);
+  setCircle("openCircle", openPct);
 }
 
-// ====== Reset circles ======
-function resetCircles() {
-  document.getElementById("strikePercent").textContent = "0%";
-  document.getElementById("sparePercent").textContent  = "0%";
-  document.getElementById("openPercent").textContent   = "0%";
-
-  setCircle("strikeCircle", 0);
-  setCircle("spareCircle", 0);
-  setCircle("openCircle", 0);
-}
-
-// ====== Initialize on DOM ready ======
+// ====== Initialize on DOM Ready ======
 document.addEventListener('DOMContentLoaded', () => {
   updateCircles();
 });
 
-game.js 
+// ===== Delete single game =====
+function deleteGame(index) {
+  const gamesKey = "bowlvault_games";
+  const storedGames = JSON.parse(localStorage.getItem(gamesKey) || "[]");
+  if (index >= 0 && index < storedGames.length) storedGames.splice(index, 1);
+  localStorage.setItem(gamesKey, JSON.stringify(storedGames));
 
-// ====== GAME DATA TRACKER ======
-let leagueFrames = [];
+  const frames = JSON.parse(localStorage.getItem("leagueFrames") || "[]");
+  if (index >= 0 && index < frames.length) frames.splice(index, 1);
+  localStorage.setItem("leagueFrames", JSON.stringify(frames));
 
-// Load existing league data if any
-const storedFrames = localStorage.getItem('leagueFrames');
-if (storedFrames) {
-  leagueFrames = JSON.parse(storedFrames);
+  renderGames();   // refresh list
+  updateCircles(); // refresh circles
 }
 
-// Record a frame
-function recordFrame(roll1, roll2, roll3 = null) {
-  leagueFrames.push({ roll1, roll2, roll3 });
 
-  // Save updated data to localStorage
-  localStorage.setItem('leagueFrames', JSON.stringify(leagueFrames));
-}
-
-// Delete a single frame/game
-function deleteFrame(index) {
-  if (index >= 0 && index < leagueFrames.length) {
-    leagueFrames.splice(index, 1);
-    localStorage.setItem('leagueFrames', JSON.stringify(leagueFrames));
-  }
-}
-
-// Helper function
-function rollValue(roll) {
-  if (roll === "X") return 10;
-  if (roll === "/") return null; // handled separately
-  return Number(roll) || 0;
-}
-
-// ====== Update circle UI ======
-function setCircle(id, percent) {
-  const container = document.getElementById(id);
-  if (!container) return;
-
-  const progress = container.querySelector('circle.progress');
-  if (!progress) return;
-
-  const radius = progress.r.baseVal.value;
-  const circumference = 2 * Math.PI * radius;
-
-  progress.style.strokeDasharray = `${circumference} ${circumference}`;
-  progress.style.strokeDashoffset =
-    circumference - (percent / 100) * circumference;
-
-  progress.style.transition = 'stroke-dashoffset 0.6s ease';
-}
-
-// ====== Update all circles ======
-function updateCircles() {
-  const stats = getStats();
-
-  document.getElementById("strikePercent").textContent = `${stats.strikePerc}%`;
-  document.getElementById("sparePercent").textContent  = `${stats.sparePerc}%`;
-  document.getElementById("openPercent").textContent   = `${stats.openPerc}%`;
-
-  setCircle("strikeCircle", stats.strikePerc);
-  setCircle("spareCircle", stats.sparePerc);
-  setCircle("openCircle", stats.openPerc);
-}
-
-// ====== Reset circles ======
-function resetCircles() {
-  document.getElementById("strikePercent").textContent = "0%";
-  document.getElementById("sparePercent").textContent  = "0%";
-  document.getElementById("openPercent").textContent   = "0%";
-
-  setCircle("strikeCircle", 0);
-  setCircle("spareCircle", 0);
-  setCircle("openCircle", 0);
-}
-
-// ====== Initialize on DOM ready ======
+// ===== Run on page load =====
 document.addEventListener('DOMContentLoaded', () => {
+  renderGames();
   updateCircles();
 });
-
