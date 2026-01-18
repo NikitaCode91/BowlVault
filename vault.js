@@ -238,20 +238,22 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Save picked balls and go to game page
   continueBtn.addEventListener("click", () => {
+  const pickSource = localStorage.getItem("pickSource");
 
+  if (pickSource === "mini") {
+    localStorage.setItem("pickedBallsForMiniGame", JSON.stringify(pickedBalls));
+    localStorage.removeItem("pickSource");
+    window.location.href = "mini.html";
+  } else {
+    // default = game
     localStorage.setItem("pickedBallsForGame", JSON.stringify(pickedBalls));
-
-    // Save last picked ball's image for display
-    if (pickedBalls.length > 0) {
-      const lastSelected = ballData.find(b => b.id === pickedBalls[pickedBalls.length - 1]);
-      if (lastSelected) localStorage.setItem("selectedBall", lastSelected.image || "images/placeholder.jpg");
-    }
-
-    // Clear picked balls and navigate to game page
-    pickedBalls = [];
-    // -- Linked to Game.HTML -- //
+    localStorage.removeItem("pickSource");
     window.location.href = "game.html";
-  });
+  }
+
+  pickedBalls = [];
+});
+
 
   // == Helpers == //
   // Load ball data from localStorage or default sample list
@@ -272,12 +274,23 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Add or remove selected ball (max 3 allowed)
   function togglePickSelection(id) {
-    if (pickedBalls.includes(id)) pickedBalls = pickedBalls.filter(x => x !== id);
-    else if (pickedBalls.length < 3) pickedBalls.push(id);
-    else return alert("You can only pick up to 3 balls!");
+    const pickSource = localStorage.getItem("pickSource"); // get source page
+
+    if (pickedBalls.includes(id)) {
+        pickedBalls = pickedBalls.filter(x => x !== id);
+    } else {
+      if (pickSource === "mini") {
+        pickedBalls.push(id); // no limit in mini-games
+      } else {
+        // game.html limit
+      if (pickedBalls.length < 3) pickedBalls.push(id);
+        else return alert("You can only pick up to 3 balls!");
+      }
+    }
+
     renderBallCards();
   }
-
+  
   // Return star rating HTML (filled up to 'count')
   function getStars(count = 0) {
     let html = "";

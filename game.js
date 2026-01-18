@@ -979,17 +979,6 @@ document.addEventListener("DOMContentLoaded", () => {
     isPracticeMode ? enablePracticeNotes() : disablePracticeNotes();
 });
 
-
-
-
-
-
-
-
-
-
-
-
 // ====== GAME DATA TRACKER ======
 let leagueFrames = [];
 

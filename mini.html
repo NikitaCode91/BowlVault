@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Koko's Shop</title>
+  <link rel="stylesheet" href="mini.css">
+  <script src="mini.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+</head>
+<body>
+
+  <header class="koko-header">
+    <div class="header-title">
+      <h1>Mini Games</h1>
+      <p class="sub-title">Simple games built for fun...🧸...</p>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="vault.html">Ball Vault</a></li>       
+        <li><a href="game.html">Add Game</a></li>
+        <li><a href="coach.html">Quick Tips</a></li>
+        <li><a href="mini.html" class="mini" aria-current="page">Mini Games</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- === Dark-mode btn === -->
+  <div class="header-button-container">
+    <button id="theme-toggle" class="neon-btn" aria-label="Toggle dark/light mode">
+      <span class="emoji">🌙</span>
+    </button>
+  </div>
+
+  <main class="mini-container">
+    <div class="mini-card">
+      <h2>🎳 Ball Picker</h2>
+      <p>Can't decide which ball to use?</p>
+      <button id="selectBallsBtn" class="mini-btn">Select your Balls</button>
+    </div>
+  </main>
+
+      <!-- === Ball Picker Modal === -->
+      <div id="ball-picker-modal" class="modal hidden">
+        <div class="modal-content">
+
+          <h3>Ball Picker</h3>
+
+          <!-- Spinner Image -->
+          <div class="spinner-circle">
+            <img id="ball-image">
+          </div>
+
+          <!-- Result Text -->
+          <p id="result-text">Spinning...</p>
+
+          <!-- Hint -->
+          <p class="hint">📸 Take a screenshot so you don't forget</p>
+
+          <!-- Modal Actions -->
+          <div class="modal-actions">
+            <button id="retry" class="mini-btn">Retry</button>
+            <button id="done" class="mini-btn secondary">Done</button> 
+          </div>
+        </div>
+      </div>
+
+</body>
+</html>
