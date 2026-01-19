@@ -38,12 +38,23 @@
   </div>
 
   <main class="mini-container">
+
     <div class="mini-card">
       <h2>🎳 Ball Picker</h2>
       <p>Can't decide which ball to use?</p>
       <button id="selectBallsBtn" class="mini-btn">Select your Balls</button>
     </div>
+
+
+    <div class="mini-card">
+      <h2>🎯 Target Score</h2>
+      <p>Can you hit this exact score?</p>
+      <button id="startTargetBtn" class="mini-btn">Start Challenge</button>
+      <button id="targetWallBtn" class="mini-btn secondary">Saved Target</button>
+    </div>
+
   </main>
+
 
       <!-- === Ball Picker Modal === -->
       <div id="ball-picker-modal" class="modal hidden">
@@ -70,5 +81,85 @@
         </div>
       </div>
 
+
+      <!-- === Score Target Modal === -->
+      <div id="target-modal" class="modal hidden">
+        <div class="modal-content">
+
+          <!-- Close and Dashboard Pen -->
+          <button id="closeTargetModal" class="modal-close">👋</button>
+
+          <h3>Choose Difficulty</h3>
+
+          <div class="difficulty-options">
+            <div class="diff-row">
+              <div class="diff-option">
+                <button class="mini-btn diff-btn" data-mode="low">Low</button>
+                <span class="range-label">60 - 110</span>
+              </div>
+              <div class="diff-option">
+                <button class="mini-btn diff-btn" data-mode="medium">Medium</button>
+                <span class="range-label">111 - 180</span>
+              </div>
+            </div>
+
+            <div class="diff-row">
+              <div class="diff-option">
+                <button class="mini-btn diff-btn" data-mode="high">High</button>
+                <span class="range-label">181 - 260</span>
+              </div>
+              <div class="diff-option">
+                <button class="mini-btn secondary diff-btn" data-mode="random">Random</button>
+                <span class="range-label">60 - 300</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="target-result" class="target-result">
+            <p class="target-label">🎯 Target Score</p>
+            <div id="target-number">000</div>
+
+            <div class="modal-actions">
+              <button id="retryTarget" class="mini-btn">Retry</button>
+              <button id="saveTarget" class="mini-btn secondary">Save</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- === Brick Wall Modal / Target Wall === -->
+      <div id="target-wall-modal" class="modal hidden">
+        <div class="modal-content">
+
+          <!-- Close button -->
+          <button id="closeWallModal" class="modal-close">👋</button>
+
+          <h3>📌 Saved Targets</h3>
+          <div id="brick-wall" class="brick-wall">
+            <!-- Bricks will be dynamically added here -->
+          </div>
+
+          <button id="clearWallBtn" class="clear-wall-btn">Clear All</button>
+        </div>
+      </div>
+
+      <!-- === Delete ball modal === -->
+      <div id="clearAllModal" class="modal hidden">
+        <div class="modal-box">
+
+          <p>Are you sure you want to delete all saved targets?<br>
+            <strong>This can't be undone.</strong>
+          </p>
+
+          <div class="modal-buttons">
+            <button id="confirmClearAll" class="btn confirm">Yes, Delete All</button>
+            <button id="cancelClearAll" class="btn cancel">Cancel</button>
+          </div>
+          
+        </div>
+      </div>
+
 </body>
 </html>
+

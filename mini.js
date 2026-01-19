@@ -153,3 +153,236 @@ window.addEventListener("DOMContentLoaded", () => {
 
 });
 
+
+
+
+
+
+// ===== Target Score Challenge ===== //
+const startTargetBtn = document.getElementById("startTargetBtn");
+const targetModal = document.getElementById("target-modal");
+const diffButtons = document.querySelectorAll(".diff-btn");
+const targetResult = document.getElementById("target-result");
+const targetNumberEl = document.getElementById("target-number");
+const retryTargetBtn = document.getElementById("retryTarget");
+const saveTargetBtn = document.getElementById("saveTarget");
+const targetWallBtn = document.getElementById("targetWallBtn");
+const closeTargetModal = document.getElementById("closeTargetModal");
+const brickWallContainer = document.getElementById("brick-wall");
+
+const targetWallModal = document.getElementById("target-wall-modal");
+const closeWallModal = document.getElementById("closeWallModal");
+let currentMode = null;
+
+// Define ranges for difficulties
+const ranges = {
+  low: [60, 110],
+  medium: [111, 180],
+  high: [181, 260],
+  random: [60, 300]
+};
+
+// Generate random target number based on mode
+function generateTarget(mode) {
+  const [min, max] = ranges[mode];
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Display target with animated digits
+let isRunning = false;
+
+function showTarget() {
+  if (!currentMode) return;
+  const finalValue = generateTarget(currentMode);
+  targetNumberEl.textContent = "";
+  targetResult.classList.remove("hidden");
+
+  // Disable buttons while running
+  isRunning = true;
+  retryTargetBtn.disabled = true;
+  saveTargetBtn.disabled = true;
+  retryTargetBtn.classList.add("disabled-btn");
+  saveTargetBtn.classList.add("disabled-btn");
+
+  const digits = finalValue.toString().padStart(3, "0").split("");
+  let completedDigits = 0;
+
+  digits.forEach((digit, i) => {
+    const span = document.createElement("span");
+    targetNumberEl.appendChild(span);
+
+    const steps = 15;
+    let stepCount = 0;
+
+    const interval = setInterval(() => {
+      span.textContent = Math.floor(Math.random() * 10);
+      stepCount++;
+      if (stepCount >= steps) {
+        clearInterval(interval);
+        span.textContent = digit;
+        span.style.transform = "scale(1.2)";
+        setTimeout(() => (span.style.transform = "scale(1)"), 150);
+
+        completedDigits++;
+        if (completedDigits === digits.length) {
+          isRunning = false;
+          retryTargetBtn.disabled = false;
+          saveTargetBtn.disabled = false;
+          retryTargetBtn.classList.remove("disabled-btn");
+          saveTargetBtn.classList.remove("disabled-btn");
+        }
+      }
+    }, 50 + i * 30);
+  });
+}
+
+// Open target modal
+startTargetBtn?.addEventListener("click", () => {
+  targetModal.classList.remove("hidden");
+  targetResult.classList.add("hidden");
+});
+
+// Difficulty buttons click
+diffButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    currentMode = btn.dataset.mode;
+
+    diffButtons.forEach(b => {
+      b.classList.remove("active");
+      b.nextElementSibling?.classList.remove("active-range");
+    });
+
+    btn.classList.add("active");
+    btn.nextElementSibling?.classList.add("active-range");
+
+    showTarget();
+  });
+});
+
+// Retry button
+retryTargetBtn?.addEventListener("click", () => {
+  showTarget();
+});
+
+// Close modal button
+closeTargetModal?.addEventListener("click", () => {
+  targetModal.classList.add("hidden");
+});
+
+// Target Wall button click
+targetWallBtn?.addEventListener("click", () => {
+  targetModal.classList.add("hidden");
+  targetWallModal.classList.remove("hidden");
+});
+
+closeWallModal?.addEventListener("click", () => {
+  targetWallModal.classList.add("hidden");
+});
+
+// ===== Persistent Brick Wall ===== //
+function addBrickToWall(brickData, save = true) {
+  const { score, mode, status } = brickData;
+
+  const brick = document.createElement("div");
+  brick.classList.add("brick");
+  brick.textContent = `${score} (${mode})`;
+
+  const controls = document.createElement("div");
+  controls.classList.add("brick-controls");
+
+  if (!status) {
+    // Only add buttons if no status yet
+    const passBtn = document.createElement("button");
+    passBtn.textContent = "✔";
+    passBtn.classList.add("brick-pass");
+
+    const failBtn = document.createElement("button");
+    failBtn.textContent = "✖";
+    failBtn.classList.add("brick-fail");
+
+    controls.appendChild(failBtn);
+    controls.appendChild(passBtn);
+
+    passBtn.addEventListener("click", () => {
+      brick.classList.add("pass");
+      controls.remove();
+      updateBrickStatus(score, mode, "pass");
+    });
+
+    failBtn.addEventListener("click", () => {
+      brick.classList.add("fail");
+      controls.remove();
+      updateBrickStatus(score, mode, "fail");
+    });
+  } else {
+    brick.classList.add(status);
+  }
+
+  brick.appendChild(controls);
+  brickWallContainer.prepend(brick);
+
+  brick.style.opacity = 0;
+  brick.style.transform = "translateY(-30px)";
+  setTimeout(() => {
+    brick.style.transition = "all 0.4s ease";
+    brick.style.opacity = 1;
+    brick.style.transform = "translateY(0)";
+  }, 10);
+
+  if (save) {
+    // Save brick to localStorage
+    let saved = JSON.parse(localStorage.getItem("savedTargets")) || [];
+    saved.push({ score, mode, status: null });
+    localStorage.setItem("savedTargets", JSON.stringify(saved));
+  }
+}
+
+function updateBrickStatus(score, mode, status) {
+  let saved = JSON.parse(localStorage.getItem("savedTargets")) || [];
+  const index = saved.findIndex(b => b.score === score && b.mode === mode && !b.status);
+  if (index !== -1) {
+    saved[index].status = status;
+    localStorage.setItem("savedTargets", JSON.stringify(saved));
+  }
+}
+
+// Load bricks from localStorage on start
+function loadBricks() {
+  const saved = JSON.parse(localStorage.getItem("savedTargets")) || [];
+  saved.forEach(b => addBrickToWall(b, false));
+}
+
+loadBricks();
+
+// Save new brick on Save button
+saveTargetBtn?.addEventListener("click", () => {
+  if (!currentMode) return;
+  const targetScore = targetNumberEl.textContent;
+  addBrickToWall({ score: targetScore, mode: currentMode });
+  targetModal.classList.add("hidden");
+});
+
+
+
+// ===== Clear All Saved Targets Modal ===== //
+const clearAllBtn = document.getElementById("clearWallBtn"); 
+const clearAllModal = document.getElementById("clearAllModal"); 
+const confirmClearAll = document.getElementById("confirmClearAll"); 
+const cancelClearAll = document.getElementById("cancelClearAll");   
+
+// Open the modal when user clicks "Clear All" button
+clearAllBtn?.addEventListener("click", () => {
+  clearAllModal.classList.remove("hidden");
+});
+
+// Cancel button closes modal without deleting
+cancelClearAll?.addEventListener("click", () => {
+  clearAllModal.classList.add("hidden");
+});
+
+// Confirm button clears saved targets and closes modal
+confirmClearAll?.addEventListener("click", () => {
+  localStorage.removeItem("savedTargets"); 
+  brickWallContainer.innerHTML = "";      
+  clearAllModal.classList.add("hidden");   
+});
