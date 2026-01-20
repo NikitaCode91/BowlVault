@@ -2,18 +2,23 @@
 /**
  * UI Interaction Logic
  * --------------------
- * This script handles global UI interactions used across the site,
- * including theme toggling (light/dark mode).
+ * This script manages global UI interactions and interactive components
+ * used across the site. It controls visual state, user-triggered actions,
+ * modals, animations, and persistent UI data.
  *
  * Features:
  * - Light & Dark mode toggle with saved preference
+ * - Target Score Challenge (generation, animation, difficulty modes)
+ * - Modal management (Target, Wall, Clear Confirmation)
+ * - Persistent Brick Wall with pass / fail tracking
+ * - LocalStorage state handling
  *
  * Comment Structure:
- * 
+ *
  * // ===== Section ===== //      → Marks the start of a major section
- * // -- Comment -- //            → Comment about linked files or references
- * // == Comment == //            → Highlights an importent step or feature within a section
- * // Comment                     → General explanation of code
+ * // -- Comment -- //            → Notes linked files, dependencies, or references
+ * // == Comment == //            → Highlights an important step or feature
+ * // Comment                     → General explanation of logic
  *
  * ===================================
  *  Contents
@@ -21,9 +26,24 @@
  * 1. Light & Dark Mode
  *    - Load saved theme on page load
  *    - Toggle theme on button click
- *    - Update emoji + visual state
+ *    - Update icon / visual state
  *
- */
+ * 2. Target Score Challenge
+ *    - Difficulty selection
+ *    - Animated target generation
+ *    - Retry and save handling
+ *
+ * 3. Target Wall
+ *    - Persistent score storage
+ *    - Pass / fail state updates
+ *    - Animated brick insertion
+ *
+ * 4. Modal Management
+ *    - Open / close Target modal
+ *    - Open / close Wall modal
+ *    - Clear-all confirmation modal
+ *
+ **/
 
 // ===== Light & Dark Mode ===== //
 const toggleBtn = document.getElementById("theme-toggle");
@@ -155,26 +175,37 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 
-
-
-
 // ===== Target Score Challenge ===== //
+// = Dom elements == //
 const startTargetBtn = document.getElementById("startTargetBtn");
 const targetModal = document.getElementById("target-modal");
-const diffButtons = document.querySelectorAll(".diff-btn");
 const targetResult = document.getElementById("target-result");
 const targetNumberEl = document.getElementById("target-number");
+
+const diffButtons = document.querySelectorAll(".diff-btn");
+
 const retryTargetBtn = document.getElementById("retryTarget");
 const saveTargetBtn = document.getElementById("saveTarget");
-const targetWallBtn = document.getElementById("targetWallBtn");
 const closeTargetModal = document.getElementById("closeTargetModal");
+
+const targetWallBtn = document.getElementById("targetWallBtn");
 const brickWallContainer = document.getElementById("brick-wall");
 
 const targetWallModal = document.getElementById("target-wall-modal");
 const closeWallModal = document.getElementById("closeWallModal");
-let currentMode = null;
 
-// Define ranges for difficulties
+const clearAllBtn = document.getElementById("clearWallBtn");
+const clearAllModal = document.getElementById("clearAllModal");
+const confirmClearAll = document.getElementById("confirmClearAll");
+const cancelClearAll = document.getElementById("cancelClearAll");
+
+
+// == Stats == //
+let currentMode = null;
+let isRunning = false;
+
+
+// == CONFIG == //
 const ranges = {
   low: [60, 110],
   medium: [111, 180],
@@ -182,17 +213,16 @@ const ranges = {
   random: [60, 300]
 };
 
-// Generate random target number based on mode
+
+// == Target generate == //
 function generateTarget(mode) {
   const [min, max] = ranges[mode];
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Display target with animated digits
-let isRunning = false;
-
 function showTarget() {
   if (!currentMode) return;
+
   const finalValue = generateTarget(currentMode);
   targetNumberEl.textContent = "";
   targetResult.classList.remove("hidden");
@@ -211,12 +241,13 @@ function showTarget() {
     const span = document.createElement("span");
     targetNumberEl.appendChild(span);
 
-    const steps = 15;
     let stepCount = 0;
+    const steps = 15;
 
     const interval = setInterval(() => {
       span.textContent = Math.floor(Math.random() * 10);
       stepCount++;
+
       if (stepCount >= steps) {
         clearInterval(interval);
         span.textContent = digit;
@@ -236,13 +267,21 @@ function showTarget() {
   });
 }
 
-// Open target modal
+
+// == Target modal events == //
 startTargetBtn?.addEventListener("click", () => {
   targetModal.classList.remove("hidden");
   targetResult.classList.add("hidden");
 });
 
-// Difficulty buttons click
+closeTargetModal?.addEventListener("click", () => {
+  targetModal.classList.add("hidden");
+});
+
+retryTargetBtn?.addEventListener("click", showTarget);
+
+
+// == Difficult btns == //
 diffButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     currentMode = btn.dataset.mode;
@@ -259,17 +298,8 @@ diffButtons.forEach(btn => {
   });
 });
 
-// Retry button
-retryTargetBtn?.addEventListener("click", () => {
-  showTarget();
-});
 
-// Close modal button
-closeTargetModal?.addEventListener("click", () => {
-  targetModal.classList.add("hidden");
-});
-
-// Target Wall button click
+// == Target Wall Modal == //
 targetWallBtn?.addEventListener("click", () => {
   targetModal.classList.add("hidden");
   targetWallModal.classList.remove("hidden");
@@ -279,7 +309,24 @@ closeWallModal?.addEventListener("click", () => {
   targetWallModal.classList.add("hidden");
 });
 
-// ===== Persistent Brick Wall ===== //
+
+// == Clear All Saved Targets Modal == //
+clearAllBtn?.addEventListener("click", () => {
+  clearAllModal.classList.remove("hidden");
+});
+
+cancelClearAll?.addEventListener("click", () => {
+  clearAllModal.classList.add("hidden");
+});
+
+confirmClearAll?.addEventListener("click", () => {
+  localStorage.removeItem("savedTargets");
+  brickWallContainer.innerHTML = "";
+  clearAllModal.classList.add("hidden");
+});
+
+
+// == Persistent Brick Wall == //
 function addBrickToWall(brickData, save = true) {
   const { score, mode, status } = brickData;
 
@@ -291,7 +338,6 @@ function addBrickToWall(brickData, save = true) {
   controls.classList.add("brick-controls");
 
   if (!status) {
-    // Only add buttons if no status yet
     const passBtn = document.createElement("button");
     passBtn.textContent = "✔";
     passBtn.classList.add("brick-pass");
@@ -330,23 +376,24 @@ function addBrickToWall(brickData, save = true) {
   }, 10);
 
   if (save) {
-    // Save brick to localStorage
-    let saved = JSON.parse(localStorage.getItem("savedTargets")) || [];
+    const saved = JSON.parse(localStorage.getItem("savedTargets")) || [];
     saved.push({ score, mode, status: null });
     localStorage.setItem("savedTargets", JSON.stringify(saved));
   }
 }
 
 function updateBrickStatus(score, mode, status) {
-  let saved = JSON.parse(localStorage.getItem("savedTargets")) || [];
-  const index = saved.findIndex(b => b.score === score && b.mode === mode && !b.status);
+  const saved = JSON.parse(localStorage.getItem("savedTargets")) || [];
+  const index = saved.findIndex(
+    b => b.score === score && b.mode === mode && !b.status
+  );
+
   if (index !== -1) {
     saved[index].status = status;
     localStorage.setItem("savedTargets", JSON.stringify(saved));
   }
 }
 
-// Load bricks from localStorage on start
 function loadBricks() {
   const saved = JSON.parse(localStorage.getItem("savedTargets")) || [];
   saved.forEach(b => addBrickToWall(b, false));
@@ -354,35 +401,12 @@ function loadBricks() {
 
 loadBricks();
 
-// Save new brick on Save button
+
+// == Save target == //
 saveTargetBtn?.addEventListener("click", () => {
   if (!currentMode) return;
+
   const targetScore = targetNumberEl.textContent;
   addBrickToWall({ score: targetScore, mode: currentMode });
   targetModal.classList.add("hidden");
-});
-
-
-
-// ===== Clear All Saved Targets Modal ===== //
-const clearAllBtn = document.getElementById("clearWallBtn"); 
-const clearAllModal = document.getElementById("clearAllModal"); 
-const confirmClearAll = document.getElementById("confirmClearAll"); 
-const cancelClearAll = document.getElementById("cancelClearAll");   
-
-// Open the modal when user clicks "Clear All" button
-clearAllBtn?.addEventListener("click", () => {
-  clearAllModal.classList.remove("hidden");
-});
-
-// Cancel button closes modal without deleting
-cancelClearAll?.addEventListener("click", () => {
-  clearAllModal.classList.add("hidden");
-});
-
-// Confirm button clears saved targets and closes modal
-confirmClearAll?.addEventListener("click", () => {
-  localStorage.removeItem("savedTargets"); 
-  brickWallContainer.innerHTML = "";      
-  clearAllModal.classList.add("hidden");   
 });
